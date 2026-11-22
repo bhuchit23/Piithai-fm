@@ -1,6 +1,6 @@
 /* Service worker: ให้เกมเปิดและเล่นได้แม้ออฟไลน์
  * ค่า VERSION ด้านล่างถูกแทนด้วยแฮชของ index.html ตอน build ทุกครั้งที่แก้เกม แอปจะอัปเดตเอง */
-var VERSION = 'd9bd3af589';
+var VERSION = 'd01eece140';
 var CACHE = 'piithai-fm-' + VERSION;
 var SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 

@@ -4,129 +4,242 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0f1720">
+<meta name="theme-color" content="#0E131A">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Piithai FM">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Piithai FM 2027 · Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Piithai FM 2027</title>
 <style>
-  :root { --bg:#0f1720; --card:#17212c; --line:#26354a; --fg:#e8eef5; --mut:#8fa3b8; --acc:#3ddc84; }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.45 system-ui,-apple-system,"Sukhumvit Set","Noto Sans Thai",sans-serif; padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
-  .wrap { max-width:1000px; margin:0 auto; padding:12px; }
-  h1 { font-size:18px; margin:4px 0 2px; }
-  .sub { color:var(--mut); font-size:13px; margin-bottom:10px; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px; }
-  .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-  select, button, .filebtn { background:#0f1a26; color:var(--fg); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font:inherit; min-height:44px; }
-  select { flex:1 1 140px; }
-  button, .filebtn { cursor:pointer; }
-  button.primary { background:var(--acc); color:#06210f; border-color:var(--acc); font-weight:700; flex:1 1 160px; }
-  button.on { border-color:var(--acc); color:var(--acc); }
-  .filebtn input { display:none; }
-  .status { color:var(--mut); font-size:13px; margin-top:8px; }
-  .score { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; text-align:center; }
-  .team { display:flex; flex-direction:column; align-items:center; gap:4px; font-weight:600; }
-  .big { font-size:32px; font-weight:800; letter-spacing:2px; }
-  .min { color:var(--acc); font-size:13px; }
-  .avatar { display:inline-flex; align-items:center; justify-content:center; border-radius:50%; color:#fff; font-weight:700; overflow:hidden; flex:0 0 auto; }
-  .avatar img { width:100%; height:100%; object-fit:cover; }
-  .badge { width:52px; height:52px; font-size:14px; }
-  .face { width:28px; height:28px; font-size:11px; }
-  canvas { width:100%; display:block; border-radius:10px; }
-  .cols { display:grid; grid-template-columns:1fr; gap:12px; }
-  @media (min-width:760px) { .cols { grid-template-columns:1fr 1fr; } .lines { grid-column:1 / -1; } }
-  ul#log { list-style:none; margin:0; padding:0; max-height:260px; overflow:auto; }
-  ul#log li { padding:6px 2px; border-bottom:1px solid var(--line); font-size:14px; }
-  ul#log li.goal { color:var(--acc); font-weight:700; }
-  .lines { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .lines h3 { margin:0 0 6px; font-size:14px; }
-  .prow { display:flex; align-items:center; gap:8px; padding:3px 0; font-size:13px; }
-  .pinfo { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .pmeta { color:var(--mut); font-size:12px; }
-  table { width:100%; border-collapse:collapse; text-align:center; }
-  td, th { padding:5px 4px; border-bottom:1px solid var(--line); font-size:14px; }
-  th { color:var(--mut); font-weight:400; }
-  .tabs button { flex:1 1 0; }
-  .subtabs { display:flex; gap:6px; flex-wrap:wrap; margin:10px 0; }
-  .subtabs button { padding:8px 12px; min-height:40px; }
-  .hdr { font-size:14px; color:var(--mut); }
-  .hdr b { color:var(--fg); }
-  .msg { margin:8px 0; padding:8px 10px; border-radius:8px; background:#10261a; border:1px solid #1d4d32; font-size:14px; }
-  .msg.err { background:#2a1414; border-color:#5a2424; }
-  table.lg td, table.lg th { text-align:right; padding:6px 4px; }
-  table.lg td:nth-child(2), table.lg th:nth-child(2) { text-align:left; }
-  table.lg tr.me { background:rgba(61,220,132,.12); }
-  .results { display:grid; grid-template-columns:1fr 1fr; gap:2px 12px; font-size:13px; margin:6px 0; }
-  .results .me { color:var(--acc); font-weight:700; }
-  .mrow { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--line); font-size:13px; }
-  .mrow .pinfo { flex:1; min-width:0; }
-  .mrow button { padding:6px 10px; min-height:36px; }
-  input[type=search] { background:#0f1a26; color:var(--fg); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font:inherit; min-height:44px; flex:1 1 140px; }
+:root{--bg:#0E131A;--nav:#121922;--top:#111821;--card:#161E28;--card2:#1B2430;--line:#222C38;--line2:#2A3544;--tx:#E6EBF1;--tx2:#C3CCD7;--mut:#9AA6B5;--dim:#7D8896;--acc:#4FD1A5;--acc2:#7FE3C1;--accbg:#15302A;--gold:#F5C76B;--bad:#F2836B;--warn:#F2A07F;--blue:#6FB7F2;--away:#E8A33D}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans Thai',system-ui,-apple-system,sans-serif;font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%}
+button,input,select{font-family:inherit}
+a{color:var(--acc2)}
+#app{display:flex;min-height:100vh}
+#nav{flex:0 0 232px;background:var(--nav);border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:3px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 16px}
+.crest{border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0E131A;flex:none}
+.nv{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:8px;color:var(--tx2);font-size:14px;border:none;background:none;text-align:left;cursor:pointer;width:100%}
+.nv svg{flex:none}
+.nv.on{background:#1D2733;color:var(--tx);font-weight:600}
+.nv.on svg{stroke:var(--acc)}
+.badge{margin-left:auto;background:var(--acc);color:#0E131A;font-size:12px;font-weight:700;border-radius:10px;padding:1px 8px}
+#main{flex:1;min-width:0;display:flex;flex-direction:column}
+#top{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:14px 26px;border-bottom:1px solid var(--line);background:var(--top);position:sticky;top:0;z-index:5}
+#top h1{margin:0;font-size:21px}
+.sub{font-size:12px;color:var(--mut)}
+.grow{flex:1}
+.btn{min-height:44px;padding:0 18px;border-radius:8px;border:1px solid var(--line2);background:var(--card2);color:var(--tx);font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#0B1015;font-weight:700}
+.btn.soft{background:var(--accbg);border-color:#2E5C4E;color:var(--acc2)}
+.btn.danger{background:#3A1F1A;border-color:#5C2E26;color:var(--warn)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.sm{min-height:36px;padding:0 12px;font-size:13px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{min-height:44px;padding:0 16px;border-radius:22px;border:1px solid var(--line2);background:var(--card);color:var(--tx2);font-weight:600;font-size:14px;cursor:pointer}
+.pill.on{background:var(--acc);border-color:var(--acc);color:#0B1015}
+.view{padding:20px 26px;display:flex;flex-direction:column;gap:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.row{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h2{margin:0;font-size:13px;font-weight:600;color:var(--mut);letter-spacing:.04em}
+.kv{display:flex;justify-content:space-between;align-items:center;min-height:38px;border-bottom:1px solid #1E2733;font-size:14px;gap:10px}
+.kv>span:first-child{color:var(--tx2)}
+.kv b{font-weight:600}
+.tbl{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{color:var(--mut);font-size:12px;font-weight:500;text-align:left;padding:11px 8px;background:#131A23;white-space:nowrap}
+th.s{cursor:pointer}
+td{padding:9px 8px;border-top:1px solid var(--line);white-space:nowrap}
+tr.click{cursor:pointer}
+tr.click:hover td{background:#1A2330}
+tr.me td{background:var(--accbg);font-weight:700}
+tr.sel td{background:#1B2532}
+.r{text-align:right}
+.pos{display:inline-block;min-width:40px;text-align:center;padding:3px 6px;border-radius:4px;font-size:12px;font-weight:700;color:#0B1015}
+.pG{background:var(--gold)}.pD{background:var(--blue)}.pM{background:var(--acc2)}.pF{background:var(--warn)}
+.st{color:var(--gold);letter-spacing:1px}.st2{color:#8C7A4F;letter-spacing:1px}
+.tag{font-size:11px;font-weight:700;border-radius:4px;padding:2px 6px;margin-left:6px;color:#0B1015}
+.t-inj{background:var(--bad)}.t-sus{background:var(--gold)}.t-xi{background:var(--acc2)}
+.bar{height:6px;border-radius:3px;background:var(--line2);overflow:hidden;width:56px;display:inline-block;vertical-align:middle}
+.bar i{display:block;height:100%}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.frm{display:flex;gap:6px}
+.frm span{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.W{background:var(--acc);color:#0B1015}.D{background:#5A6676;color:#F0F3F6}.L{background:var(--bad);color:#0B1015}
+.msg{display:flex;gap:12px;padding:12px;border-radius:8px;cursor:pointer;border:none;background:none;color:var(--tx);text-align:left;width:100%}
+.msg.unread{background:#1B2532}
+.msg .d{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none;background:#3A4656}
+.msg.unread .d{background:var(--acc)}
+.mut{color:var(--mut)}.dim{color:var(--dim)}.good{color:var(--acc2)}.badc{color:var(--warn)}.gold{color:var(--gold)}
+.attr{display:flex;justify-content:space-between;min-height:29px;align-items:center;border-bottom:1px solid #1E2733;font-size:14px}
+.attr>span:first-child{color:var(--tx2)}
+.a1{color:var(--dim)}.a2{color:var(--tx2)}.a3{color:#9FDCC4;font-weight:500}.a4{color:var(--acc);font-weight:700}.a5{color:var(--gold);font-weight:700}
+.pitch{position:relative;border-radius:12px;background:#143024;border:2px solid #2D5A45;overflow:hidden}
+.pitch .ln{position:absolute;border:2px solid #2D5A45}
+.slot{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:3px;width:104px;border:none;background:none;color:var(--tx);cursor:pointer;padding:0}
+.slot .c{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#0B1015;border:2px solid #0E131A}
+.slot.on .c{outline:3px solid #fff}
+.slot .n{background:#0E131AE6;border-radius:6px;padding:2px 7px;font-size:12px;font-weight:600;line-height:1.35;text-align:center;max-width:104px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slot .n small{display:block;font-weight:400;color:#9FDCC4}
+.inp{min-height:44px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);background:#0E131A;color:var(--tx);font-size:15px;width:100%}
+label.l{font-size:13px;color:var(--tx2);display:flex;flex-direction:column;gap:6px}
+.kpi{display:flex;flex-direction:column;gap:3px}
+.kpi b{font-size:22px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+#modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+#modal.open{display:flex}
+#modal .box{background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:22px;max-width:520px;width:100%;max-height:90vh;overflow:auto;display:flex;flex-direction:column;gap:14px}
+#modal h3{margin:0;font-size:18px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1D2733;border:1px solid var(--line2);color:var(--tx);padding:12px 18px;border-radius:10px;z-index:60;font-size:14px;max-width:90vw}
+.score{font-size:30px;font-weight:700;letter-spacing:2px}
+.minute{font-size:13px;font-weight:700;color:#0B1015;background:var(--gold);border-radius:4px;padding:0 8px}
+canvas{display:block;width:100%;border-radius:12px}
+.feed{max-height:420px;overflow-y:auto}
+.fe{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #1E2733;font-size:14px;line-height:1.5}
+.fe b{min-width:32px}
+.club{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;border:1px solid var(--line2);background:var(--card2);color:var(--tx);cursor:pointer;text-align:left;width:100%}
+.club.on{border-color:var(--acc);background:var(--accbg)}
+.sched{display:grid;grid-template-columns:64px repeat(7,minmax(0,1fr));gap:6px;font-size:13px;min-width:620px}
+.sched span{min-height:46px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:600;padding:4px}
+.bars{display:flex;align-items:flex-end;gap:14px;height:200px;border-bottom:1px solid var(--line2);padding:0 6px}
+.bars>div{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:4px;height:100%}
+.bars i{width:30%;max-width:28px;border-radius:4px 4px 0 0;display:block}
+@media (max-width:760px){
+  #app{flex-direction:column}
+  #nav{position:sticky;top:0;z-index:10;height:auto;flex:none;flex-direction:row;overflow-x:auto;padding:8px;gap:4px;border-right:none;border-bottom:1px solid var(--line)}
+  .brand{display:none}
+  .nv{width:auto;white-space:nowrap;flex:none;padding:0 10px}
+  #top{position:static;padding:12px 16px}
+  .view{padding:16px}
+}
+
+/* ---------- ส่วนเสริมของเกมหลัก (ใช้โทเค็นเดียวกับสเปก) ---------- */
+#stash{display:none}
+.nv:focus-visible,.btn:focus-visible,.pill:focus-visible,.club:focus-visible,tr.click:focus-visible,.msg:focus-visible,.slot:focus-visible,.inp:focus-visible,summary:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+.sb{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;text-align:center}
+.sbteam{display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:600;font-size:14px}
+.sbmid{display:flex;flex-direction:column;align-items:center;gap:6px}
+.avatar{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:#0B1015;font-weight:700;overflow:hidden;flex:0 0 auto}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.cbadge{width:52px;height:52px;font-size:14px}
+.face{width:28px;height:28px;font-size:11px}
+ul#log{list-style:none;margin:0;padding:0;max-height:300px;overflow:auto}
+ul#log li.goal{color:var(--gold);font-weight:700}
+#stats table{width:100%}
+#stats th{background:none;color:var(--mut);text-align:center;font-weight:500}
+#stats td{text-align:center;font-weight:600}
+.lineh{margin:0 0 6px;font-size:13px;font-weight:600;color:var(--mut)}
+.prow{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:14px;border-bottom:1px solid #1E2733}
+.pinfo{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pmeta{color:var(--mut);font-size:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.sub2{font-size:12px;color:var(--dim)}
+.ctr{text-align:center}
+.nowrap{white-space:nowrap}
+.sortable{cursor:pointer}
+.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}
+.chk input{width:22px;height:22px}
+textarea.inp{min-height:88px;padding:10px 12px;resize:vertical}
+.filebtn{min-height:44px;padding:0 18px;border-radius:8px;border:1px solid var(--line2);background:var(--card2);color:var(--tx);font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.filebtn input{display:none}
+.filebtn:focus-within{outline:2px solid var(--acc2);outline-offset:2px}
+.hint{background:var(--accbg);border:1px solid #2E5C4E;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--tx2)}
+.rep{white-space:pre-line;font-size:14px;line-height:1.7;color:var(--tx2)}
+.knd{font-size:11px;font-weight:700;border-radius:4px;padding:2px 6px;color:#0B1015;background:var(--mut);white-space:nowrap}
+.k-injury{background:var(--bad)}.k-transfer{background:var(--blue)}.k-contract{background:var(--gold)}.k-training{background:var(--acc2)}.k-event{background:var(--warn)}.k-league{background:var(--mut)}.k-report{background:var(--acc)}
+.res{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;font-weight:700;font-size:12px}
+.res.W{background:var(--acc);color:#0B1015}.res.D{background:#5A6676;color:#F0F3F6}.res.L{background:var(--bad);color:#0B1015}
+.meter{height:10px;border-radius:5px;background:var(--line2);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--acc)}
+.grade{font-size:40px;font-weight:700;line-height:1}
+.pos.pX{background:var(--mut)}
+.slot.fit-main .c{background:var(--acc2)}.slot.fit-ok .c{background:var(--gold)}.slot.fit-bad .c{background:var(--bad)}
+.ppitch{position:relative;width:100%;max-width:240px;aspect-ratio:68/105;border-radius:10px;background:#143024;border:2px solid #2D5A45;margin:0 auto}
+.ppitch i{position:absolute;width:26px;height:26px;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:10px;font-weight:700;color:#0B1015;background:#3A4656;opacity:.55}
+.ppitch i.f1{background:var(--acc2);opacity:1}.ppitch i.f2{background:var(--gold);opacity:1}.ppitch i.f3{background:var(--bad);opacity:1}
+.sticky-note{font-size:12px;color:var(--dim)}
+@media (max-width:760px){
+  .sb{gap:4px}
+  .grade{font-size:32px}
+  .slot{width:76px}
+  .slot .n{max-width:76px;font-size:11px}
+  .score{font-size:26px}
+}
+
+/* ปุ่มที่หน้าตาเป็นลิงก์ (ชื่อนักเตะ ฯลฯ) */
+.lnk{background:none;border:0;padding:0;margin:0;color:var(--tx);font:inherit;font-weight:600;cursor:pointer;text-align:left;min-height:0}
+.lnk:hover{color:var(--acc2)}
+.lnk:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:3px}
+
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Piithai FM 2027</h1>
-  <div class="sub">ต้นแบบ: จำลองแมตช์พร้อมภาพสนาม 2D</div>
+<div id="app"><nav id="nav" aria-label="เมนูหลัก"></nav><main id="main"><header id="top"></header><div id="view" class="view"></div></main></div>
+<div id="modal"></div>
 
-  <div class="card" id="installHint" style="display:none">
+<!-- ชิ้นส่วนที่ย้ายเข้าไปแสดงในหน้าจอตามต้องการ (ui.js ย้ายกลับมาเก็บที่นี่ก่อนวาดหน้าใหม่) -->
+<div id="stash">
+  <div class="hint" id="installHint" role="note" style="display:none">
     <b>ติดตั้งเป็นแอป</b>
-    <div class="status">กดปุ่มแชร์ (ไอคอนสี่เหลี่ยมมีลูกศรขึ้น) ใน Safari แล้วเลือก "เพิ่มไปยังหน้าจอโฮม" จะได้ไอคอนเปิดเต็มจอ เล่นออฟไลน์ได้ แนะนำให้ดาวน์โหลดไฟล์เซฟสำรองไว้เป็นระยะ</div>
-    <div class="row" style="margin-top:8px"><button id="installHintClose">เข้าใจแล้ว</button></div>
+    <div style="margin:4px 0 10px">กดปุ่มแชร์ (ไอคอนสี่เหลี่ยมมีลูกศรขึ้น) ใน Safari แล้วเลือก "เพิ่มไปยังหน้าจอโฮม" จะได้ไอคอนเปิดเต็มจอ เล่นออฟไลน์ได้ แนะนำให้ดาวน์โหลดไฟล์เซฟสำรองไว้เป็นระยะ</div>
+    <button class="btn sm" id="installHintClose" type="button">เข้าใจแล้ว</button>
   </div>
 
-  <div class="row tabs" style="margin-bottom:12px">
-    <button id="tabSingle" class="on">⚽ แมตช์เดี่ยว</button>
-    <button id="tabCareer">🏆 โหมดอาชีพ</button>
-  </div>
-
-  <div class="card" id="singleCard">
-    <div class="row">
-      <select id="homeSel" aria-label="ทีมเหย้า"></select>
-      <select id="homeForm" aria-label="แผนทีมเหย้า"></select>
+  <section class="card" id="singlePane" aria-label="แมตช์เดี่ยว">
+    <h2>แมตช์เดี่ยว (เลือกสองทีมใดก็ได้)</h2>
+    <div class="grid2">
+      <label class="l">ทีมเหย้า<select id="homeSel" class="inp"></select></label>
+      <label class="l">แผนทีมเหย้า<select id="homeForm" class="inp"></select></label>
+      <label class="l">ทีมเยือน<select id="awaySel" class="inp"></select></label>
+      <label class="l">แผนทีมเยือน<select id="awayForm" class="inp"></select></label>
     </div>
-    <div class="row" style="margin-top:8px">
-      <select id="awaySel" aria-label="ทีมเยือน"></select>
-      <select id="awayForm" aria-label="แผนทีมเยือน"></select>
+    <div class="pills">
+      <button id="startBtn" class="btn soft" type="button">เริ่มแมตช์</button>
+      <button id="skipBtn" class="btn" type="button">ข้ามไปจบ</button>
     </div>
-    <div class="row" style="margin-top:8px">
-      <button id="startBtn" class="primary">▶ เริ่มแมตช์</button>
-      <button id="skipBtn">⏭ ข้ามไปจบ</button>
-      <button data-speed="1" class="on">1x</button>
-      <button data-speed="2">2x</button>
-      <button data-speed="4">4x</button>
+  </section>
+
+  <section class="card" id="dataPane" aria-label="ข้อมูลนักเตะ">
+    <h2>ข้อมูลนักเตะและสโมสร</h2>
+    <div class="sub" id="dataStatus" role="status"></div>
+    <div class="pills">
+      <label class="filebtn">โหลดไฟล์ข้อมูล (pl_2026_27.json หรือ players.json + clubs.json)<input id="fileInput" type="file" accept=".json,application/json" multiple></label>
+      <button id="clearBtn" class="btn" type="button">ใช้ข้อมูลตัวอย่าง</button>
     </div>
-    <div class="row" style="margin-top:8px">
-      <label class="filebtn">📂 โหลด players.json + clubs.json<input id="fileInput" type="file" accept=".json,application/json" multiple></label>
-      <button id="clearBtn">ใช้ข้อมูลตัวอย่าง</button>
+  </section>
+
+  <section id="matchPane" aria-label="แมตช์สด">
+    <div class="card">
+      <div class="sb">
+        <div class="sbteam"><div id="badgeHome"></div><span id="nameHome"></span></div>
+        <div class="sbmid"><div class="score" id="sbScore" role="status" aria-live="polite">0 - 0</div><span class="minute" id="sbMin">&nbsp;</span></div>
+        <div class="sbteam"><div id="badgeAway"></div><span id="nameAway"></span></div>
+      </div>
+      <div class="pills" role="group" aria-label="ความเร็วการเล่น" style="justify-content:center">
+        <button class="pill on" data-speed="1" aria-pressed="true" type="button">1x</button>
+        <button class="pill" data-speed="2" aria-pressed="false" type="button">2x</button>
+        <button class="pill" data-speed="4" aria-pressed="false" type="button">4x</button>
+        <button class="pill" data-speed="8" aria-pressed="false" type="button">8x</button>
+      </div>
     </div>
-    <div class="status" id="dataStatus"></div>
-  </div>
-
-  <div class="card" id="careerCard" style="display:none"><div id="careerBody"></div></div>
-
-  <div class="card">
-    <div class="score">
-      <div class="team"><div id="badgeHome"></div><div id="nameHome"></div></div>
-      <div><div class="big" id="sbScore">0 - 0</div><div class="min" id="sbMin">&nbsp;</div></div>
-      <div class="team"><div id="badgeAway"></div><div id="nameAway"></div></div>
+    <div class="card" style="margin-top:18px"><canvas id="pitch" role="img" aria-label="ภาพสนาม 2 มิติ แสดงตำแหน่งผู้เล่นและลูกบอลระหว่างแมตช์"></canvas></div>
+    <div class="grid" style="margin-top:18px">
+      <div class="card"><h2>เหตุการณ์</h2><ul id="log" aria-live="polite"></ul></div>
+      <div class="card"><h2>สถิติ</h2><div id="stats" class="sub">เล่นแมตช์เพื่อดูสถิติ</div></div>
     </div>
-  </div>
-
-  <div class="card"><canvas id="pitch"></canvas></div>
-
-  <div class="cols">
-    <div class="card"><h3 style="margin:0 0 6px;font-size:14px">เหตุการณ์</h3><ul id="log"></ul></div>
-    <div class="card"><h3 style="margin:0 0 6px;font-size:14px">สถิติ</h3><div id="stats" class="status">เล่นแมตช์เพื่อดูสถิติ</div></div>
-  </div>
-
-  <div class="card lines" id="lineups">
-    <div id="lineHome"></div>
-    <div id="lineAway"></div>
-  </div>
+    <div class="grid" id="lineups" style="margin-top:18px">
+      <div class="card" id="lineHome"></div>
+      <div class="card" id="lineAway"></div>
+    </div>
+  </section>
 </div>
 
 <script>
@@ -176,13 +289,24 @@
   }
 
   /* เลือก 11 ตัวจริง: คนเก่งที่สุดที่พร้อมลงเล่นในแต่ละตำแหน่ง ถ้าขาดตำแหน่งไหนเอาคนเก่งที่เหลือมาเติม */
-  function pickLineup(players, formation) {
+  function pickLineup(players, formation, forced) {
     var pool = players.filter(isAvailable).sort(function (a, b) { return b.rating - a.rating; });
     var taken = {};
     var filler = 0;
-    return layout(formation).map(function (slot) {
-      var c = null, i;
-      for (i = 0; i < pool.length; i++) {
+    /* forced = รายชื่อไอดีที่ผู้เล่นจัดเองต่อช่อง (null = ให้เลือกอัตโนมัติ) ใช้ได้เฉพาะคนที่พร้อมลงเล่น */
+    var chosen = {};
+    var slots = layout(formation);
+    if (forced && forced.length === slots.length) {
+      forced.forEach(function (id, idx) {
+        if (id == null || taken[id]) return;
+        for (var j = 0; j < pool.length; j++) {
+          if (String(pool[j].id) === String(id)) { chosen[idx] = pool[j]; taken[pool[j].id] = true; break; }
+        }
+      });
+    }
+    return slots.map(function (slot, idx) {
+      var c = chosen[idx] || null, i;
+      for (i = 0; !c && i < pool.length; i++) {
         if (!taken[pool[i].id] && pool[i].position === slot.pos) { c = pool[i]; break; }
       }
       if (!c) {
@@ -214,11 +338,17 @@
     };
   }
 
-  function pickWeighted(xi, weights, rng, excludeId) {
+  /* ค่าจูนจากการทดสอบกับข้อมูลจริง PL 2026-27 (ค่าพลังห่างกันกว่าข้อมูลสมมติ จึงต้องมีความผันผวนมากขึ้น)
+   * form = ความผันผวนฟอร์มวันแข่งของแต่ละทีม, shot/goal = ฐานโอกาสยิง/เข้า, power = เลขชี้กำลังของอัตราส่วนความแข็งแกร่ง,
+   * shooterExp = ความโน้มเอียงที่คนเก่งจะได้ยิง (น้ำหนัก = (rating-40)^shooterExp) */
+  var MENT_ATT = 0.05, MENT_DEF = 0.04;
+  var TUNE = { form: 0.20, shot: 0.28, goal: 0.235, power: 1, shooterExp: 0.6 };
+
+  function pickWeighted(xi, weights, rng, excludeId, exp) {
     var total = 0, i, w, list = [];
     for (i = 0; i < xi.length; i++) {
       if (xi[i].player.id === excludeId) continue;
-      w = (weights[xi[i].pos] || 0) * xi[i].player.rating;
+      w = (weights[xi[i].pos] || 0) * (exp ? Math.pow(Math.max(1, xi[i].player.rating - 40), exp) : xi[i].player.rating);
       if (w > 0) { list.push([xi[i], w]); total += w; }
     }
     var r = rng() * total;
@@ -229,7 +359,7 @@
     return list[list.length - 1][0].player;
   }
 
-  function blank() { return { shots: 0, onTarget: 0, possMin: 0, goals: 0, yellow: 0 }; }
+  function blank() { return { shots: 0, onTarget: 0, possMin: 0, goals: 0, yellow: 0, red: 0 }; }
 
   /* จำลองแมตช์ คืนค่าเหตุการณ์รายนาที ฝั่งที่ครองบอลในแต่ละนาที และสถิติ */
   function simulate(homeXI, awayXI, opts) {
@@ -238,12 +368,13 @@
     var rng = mulberry32(seed);
     var HOME_ADV = 1.05;
     var side = {
-      home: { xi: homeXI, r: teamRatings(homeXI), adv: HOME_ADV },
-      away: { xi: awayXI, r: teamRatings(awayXI), adv: 1 }
+      home: { xi: homeXI, r: teamRatings(homeXI), adv: HOME_ADV, f: 1 + (rng() + rng() - 1) * TUNE.form, m: (opts.mentality && opts.mentality.home) || 0 },
+      away: { xi: awayXI, r: teamRatings(awayXI), adv: 1, f: 1 + (rng() + rng() - 1) * TUNE.form, m: (opts.mentality && opts.mentality.away) || 0 }
     };
     var total = 91 + Math.floor(rng() * 4); /* 90 นาที + ทดเวลา 1-4 */
     var pHome = clamp(0.5 + (side.home.r.midfield * HOME_ADV - side.away.r.midfield) / 150, 0.3, 0.7);
     var events = [], possession = [null];
+    var reds = { home: 0, away: 0 };
     var stats = { home: blank(), away: blank() };
     var score = { home: 0, away: 0 };
     var SHOOT_W = { FWD: 5, MID: 2.5, DEF: 0.7 };
@@ -256,16 +387,19 @@
       possession.push(s);
       stats[s].possMin++;
 
-      var ratio = (side[s].r.attack * side[s].adv) / side[o].r.defense;
-      var shotP = clamp(0.25 * Math.pow(ratio, 2), 0.05, 0.7);
+      /* ทีมที่เหลือผู้เล่นน้อยลง (ใบแดง) บุกแย่ลงและป้องกันแย่ลง */
+      /* แนวทางการเล่น (-2 รับเหนียว ... +2 บุกหนัก): บุกมากขึ้นแต่เปิดช่องรับ */
+      var ratio = (side[s].r.attack * side[s].f * side[s].adv * (1 + MENT_ATT * side[s].m) * Math.pow(0.9, reds[s])) /
+        (side[o].r.defense * side[o].f * (1 - MENT_DEF * side[o].m) * Math.pow(0.93, reds[o]));
+      var shotP = clamp(TUNE.shot * Math.pow(ratio, TUNE.power), 0.05, 0.7);
       if (rng() < shotP) {
-        var shooter = pickWeighted(side[s].xi, SHOOT_W, rng);
+        var shooter = pickWeighted(side[s].xi, SHOOT_W, rng, undefined, TUNE.shooterExp);
         var onTargetP = clamp(0.36 + (shooter.rating - 60) / 250, 0.22, 0.55);
         stats[s].shots++;
         var ev = { minute: m, side: s, attack: true, player: { id: shooter.id, name: shooter.name } };
         if (rng() < onTargetP) {
           stats[s].onTarget++;
-          var goalP = clamp(0.22 * Math.pow(shooter.rating / side[o].r.gk, 2), 0.06, 0.5);
+          var goalP = clamp(TUNE.goal * Math.pow(shooter.rating / side[o].r.gk, TUNE.power), 0.06, 0.5);
           if (rng() < goalP) {
             ev.type = 'goal';
             score[s]++;
@@ -290,6 +424,13 @@
         var cp = pickWeighted(side[cs].xi, CARD_W, rng);
         stats[cs].yellow++;
         events.push({ minute: m, side: cs, attack: false, type: 'yellow', player: { id: cp.id, name: cp.name } });
+      }
+      if (rng() < 0.0009) {
+        var rs = rng() < 0.5 ? 'home' : 'away';
+        var rp = pickWeighted(side[rs].xi, CARD_W, rng);
+        stats[rs].red++;
+        reds[rs]++;
+        events.push({ minute: m, side: rs, attack: false, type: 'red', player: { id: rp.id, name: rp.name } });
       }
     }
 
@@ -343,7 +484,7 @@
 
   var api = {
     FORMATIONS: FORMATIONS, layout: layout, pickLineup: pickLineup, teamRatings: teamRatings,
-    simulate: simulate, makeSampleData: makeSampleData
+    simulate: simulate, makeSampleData: makeSampleData, TUNE: TUNE, MENT_ATT: MENT_ATT, MENT_DEF: MENT_DEF
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.FMEngine = api;
@@ -351,17 +492,34 @@
 
 </script>
 <script>
-/* โหมดอาชีพ: ตารางแข่ง ตารางคะแนน ตลาดซื้อขาย และเซฟ (ตรรกะล้วน ไม่แตะหน้าจอ) */
+/* โหมดอาชีพ: ตารางแข่ง ตารางคะแนน ตลาดซื้อขาย บาดเจ็บ/แบน เหตุการณ์สุ่ม บอร์ด ข่าว และเซฟ
+ * (ตรรกะล้วน ไม่แตะหน้าจอ) */
 (function (root) {
   'use strict';
 
   var E = root.FMEngine || (typeof require === 'function' ? require('./engine.js') : null);
 
+  var VERSION = 3;
   var POS_MIN = { GK: 2, DEF: 5, MID: 5, FWD: 3 };
-  var SQUAD_MIN = 20, SQUAD_MAX = 30;
-  var WEEKLY_INCOME = 2; /* ล้านปอนด์ต่อนัด */
+  var SQUAD_MIN = 20, SQUAD_MAX = 36;   /* ข้อมูลจริงมีทีมละ 22-34 คน */
+  var AI_SQUAD_MAX = 38;      /* ทีมคอมพิวเตอร์รับนักเตะได้ถึงเท่านี้ */
+  var WEEKLY_INCOME = 2;      /* ส่วนที่รายรับเหลือหลังหักค่าเหนื่อบัญชีเริ่มต้น (ล้านปอนด์ต่อนัด) */
+  var WAGE_RATE = 0.008;      /* ค่าเหนื่อต่อนัด = มูลค่า x ค่านี้ */
+  var INJURY_RATE = 0.012;    /* โอกาสบาดเจ็บต่อผู้เล่นตัวจริงต่อนัด */
+  var INTENSITY = {           /* เทรนนิ่ง: xp = ความเร็วพัฒนา, inj = ตัวคูณโอกาสบาดเจ็บ */
+    light: { xp: 0.5, inj: 0.6, label: 'เบา' },
+    normal: { xp: 1, inj: 1, label: 'ปกติ' },
+    hard: { xp: 1.8, inj: 1.7, label: 'หนัก' }
+  };
+  var XP_BASE = 12;           /* xp ที่ต้องใช้ต่อ 1 แต้มค่าพลัง (ยิ่งเก่งยิ่งต้องใช้มากขึ้น) */
+  var AI_DEALS_PRESEASON = 8, AI_DEALS_PER_ROUND = 2;
+  var STARTERS = { GK: 1, DEF: 4, MID: 4, FWD: 2 };
+  var YELLOWS_FOR_BAN = 5;
+  var EVENT_CHANCE = 0.3;     /* โอกาสเกิดเหตุการณ์สุ่มต่อนัด */
+  var NEWS_MAX = 80;
 
   function r1(x) { return Math.round(x * 10) / 10; }
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
   function hash01(n) { var x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
   function mulberry32(a) {
     return function () {
@@ -371,14 +529,35 @@
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
+  function pick(rng, list) { return list[Math.floor(rng() * list.length)]; }
 
   /* ---------- มูลค่านักเตะ (ล้านปอนด์) ---------- */
   function value(p) {
     var price = p.price || 5;
     return Math.max(0.5, r1(price * price * 0.45 * (1 + ((p.rating || 60) - 70) / 100)));
   }
-  function askPrice(p) { return r1(value(p) * (1 + 0.25 * hash01(p.id))); }          /* ราคาที่สโมสรเจ้าของขอ */
-  function bidPrice(p) { return r1(value(p) * (0.85 + 0.15 * hash01(p.id + 1000))); } /* ราคาที่สโมสรอื่นเสนอซื้อ */
+  /* สัญญาเหลือน้อย ราคาถูกลง (สโมสรอยากขายก่อนเสียฟรี) */
+  function contractFactor(p) { var c = p.contract || 3; return c <= 1 ? 0.6 : c === 2 ? 0.85 : 1; }
+  function askPrice(p) { return r1(value(p) * contractFactor(p) * (1 + 0.25 * hash01(p.id))); }          /* ราคาที่สโมสรเจ้าของขอ */
+  function bidPrice(p) { return r1(value(p) * contractFactor(p) * (0.85 + 0.15 * hash01(p.id + 1000))); } /* ราคาที่สโมสรอื่นเสนอซื้อ */
+  function r2(x) { return Math.round(x * 100) / 100; }
+  function baseWage(p) { return Math.max(0.02, r2(value(p) * WAGE_RATE)); }  /* ล้านปอนด์ต่อนัด */
+  function wageBill(state, clubId) {
+    var t = 0;
+    state.players.forEach(function (p) { if (p.club_id === clubId) t += p.wage || 0; });
+    return r2(t);
+  }
+  function seasonNo(state) { return (state.history || []).length; }
+  /* พัฒนาได้สูงสุดต่อฤดูกาล: ฐาน 2-6 แต้ม ปรับตามอายุ (เด็กโตเร็ว คนแก่แทบไม่โต)
+   * และถ้ารู้ CA/PA จะไม่เกินช่องว่างถึงเพดานศักยภาพ (ค่าพลัง 1 แต้ม ≈ CA 2.2) */
+  function ageOf(p) { return p.age != null ? p.age : 26; }
+  function potential(state, p) {
+    var base = 2 + Math.floor(hash01(p.id * 3.7 + seasonNo(state) * 11) * 5), a = ageOf(p);
+    var cap = Math.max(0, base + (a <= 20 ? 2 : a <= 23 ? 1 : a <= 28 ? 0 : a <= 31 ? -1 : -2));
+    if (p.pa != null && p.ca != null) cap = Math.min(cap, Math.max(0, Math.round((p.pa - p.ca) / 2.2)) + (a <= 23 && p.ca < p.pa ? 1 : 0));
+    return cap;
+  }
+  function proneMult(p) { return p.prone != null ? 0.6 + (clamp(p.prone, 1, 20) - 1) / 19 : 1; } /* ความเสี่ยงบาดเจ็บของแต่ละคน 0.6-1.6 เท่า */
 
   /* ---------- ตารางแข่ง (แบบหมุนเวียน เหย้า-เยือน) ---------- */
   function makeFixtures(ids, seed) {
@@ -400,38 +579,132 @@
     return rounds.concat(second);
   }
 
-  /* ---------- เริ่ม/ตรวจเซฟ ---------- */
+  /* ---------- เริ่ม/ตรวจ/อัปเกรดเซฟ ---------- */
+  function clubStrength(players, clubId) {
+    var r = players.filter(function (p) { return p.club_id === clubId; })
+      .map(function (p) { return p.rating; }).sort(function (a, b) { return b - a; }).slice(0, 14);
+    return r.length ? r.reduce(function (x, y) { return x + y; }, 0) / r.length : 0;
+  }
+
+  /* เป้าหมายของบอร์ด: ดูจากความแข็งแกร่งของทีมเทียบกับทั้งลีก */
+  function makeObjective(players, clubs, userClubId) {
+    var ranked = clubs.map(function (c) { return { id: c.id, s: clubStrength(players, c.id) }; })
+      .sort(function (a, b) { return b.s - a.s; });
+    var rank = 1;
+    ranked.forEach(function (c, i) { if (c.id === userClubId) rank = i + 1; });
+    var n = clubs.length;
+    return { target: clamp(Math.round(rank * 0.85), 1, Math.max(1, n - 3)), strengthRank: rank };
+  }
+
+  function initPlayerState(p) {
+    if (p.form === undefined) p.form = 0;
+    if (p.form_rounds === undefined) p.form_rounds = 0;
+    if (p.out === undefined) {
+      p.out = 0;
+      if (p.status === 'i') { p.out = 1 + Math.floor(hash01(p.id + 5) * 6); p.out_reason = 'injury'; }
+      else if (p.status === 's') { p.out = 1 + Math.floor(hash01(p.id + 6) * 2); p.out_reason = 'ban'; }
+    }
+    if (p.contract === undefined) {
+      var r = hash01(p.id + 9);
+      p.contract = r < 0.25 ? 1 : r < 0.5 ? 2 : r < 0.75 ? 3 : r < 0.9 ? 4 : 5;
+    }
+    if (p.wage === undefined) p.wage = baseWage(p);
+    if (p.xp === undefined) p.xp = 0;
+    if (p.grown === undefined) p.grown = 0;
+  }
+
   function newCareer(players, clubs, userClubId, opts) {
     opts = opts || {};
     var seed = opts.seed != null ? opts.seed : (Date.now() & 0x7fffffff);
-    var table = {};
-    clubs.forEach(function (c) { table[c.id] = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 }; });
-    return {
-      version: 1, season: '2026-27', seed: seed, userClubId: userClubId, round: 0,
+    var table = {}, form = {};
+    clubs.forEach(function (c) { table[c.id] = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 }; form[c.id] = ''; });
+    var ps = players.map(function (p) { return Object.assign({}, p); });
+    ps.forEach(initPlayerState);
+    var state = {
+      version: VERSION, season: '2026-27', seed: seed, userClubId: userClubId, round: 0,
       clubs: clubs.map(function (c) { return { id: c.id, name: c.name, short_name: c.short_name }; }),
-      players: players.map(function (p) { return Object.assign({}, p); }),
+      players: ps,
       fixtures: makeFixtures(clubs.map(function (c) { return c.id; }), seed),
-      table: table, budget: opts.budget != null ? opts.budget : 50, formation: '4-4-2',
-      stats: {}, transfers: [], lastResults: []
+      table: table, form: form, budget: opts.budget != null ? opts.budget : 50, formation: '4-4-2',
+      stats: {}, transfers: [], lastResults: [], news: [], deals: [], history: [],
+      training: { focus: 'ALL', intensity: 'normal' },
+      manager: opts.manager || 'ผู้จัดการ', tactic: { mentality: 0 }, lineups: {},
+      results: {}, budgetLog: [], xfer: 0, newsSeq: 0, inboxRead: 0,
+      objective: null, confidence: 60, saved_at: 0, income: 0
     };
+    /* ตลาดช่วงก่อนเปิดฤดูกาล: ทีมคอมพิวเตอร์ซื้อขายกันเองก่อน แล้วค่อยตั้งเป้าหมายบอร์ด/รายรับ */
+    if (!opts.noAiDeals) aiTransfers(state, mulberry32(seed + 99), AI_DEALS_PRESEASON);
+    state.objective = makeObjective(state.players, clubs, userClubId);
+    state.income = r2(wageBill(state, userClubId) + WEEKLY_INCOME);
+    return state;
   }
 
   function isValid(s) {
-    return !!s && s.version === 1 && Array.isArray(s.fixtures) && Array.isArray(s.players) &&
+    return !!s && (s.version === 1 || s.version === 2 || s.version === 3) && Array.isArray(s.fixtures) && Array.isArray(s.players) &&
       Array.isArray(s.clubs) && s.table && typeof s.round === 'number' && s.userClubId !== undefined;
   }
 
-  /* ---------- ฝึกซ้อม/แข่ง ---------- */
+  /* เติมข้อมูลที่เซฟเวอร์ชันเก่าไม่มี */
+  function upgrade(s) {
+    s.players.forEach(initPlayerState);
+    if (!s.form) { s.form = {}; s.clubs.forEach(function (c) { s.form[c.id] = ''; }); }
+    if (!s.news) s.news = [];
+    if (!s.objective) s.objective = makeObjective(s.players, s.clubs, s.userClubId);
+    if (s.confidence === undefined) s.confidence = 60;
+    if (s.saved_at === undefined) s.saved_at = 0;
+    if (!s.deals) s.deals = [];
+    if (!s.history) s.history = [];
+    if (!s.training) s.training = { focus: 'ALL', intensity: 'normal' };
+    if (s.income === undefined) s.income = r2(wageBill(s, s.userClubId) + WEEKLY_INCOME);
+    if (!s.manager) s.manager = 'ผู้จัดการ';
+    if (!s.tactic) s.tactic = { mentality: 0 };
+    if (!s.lineups) s.lineups = {};
+    if (!s.results) s.results = {};
+    if (!s.budgetLog) s.budgetLog = [];
+    if (s.xfer === undefined) s.xfer = 0;
+    if (s.newsSeq === undefined) {          /* ข่าวเก่าที่ยังไม่มีรหัส: ให้รหัสเรียงจากเก่าไปใหม่ และถือว่าอ่านแล้ว */
+      var n = s.news.length;
+      s.news.forEach(function (it, i) { it.id = n - i; });
+      s.newsSeq = n; s.inboxRead = n;
+    }
+    if (s.inboxRead === undefined) s.inboxRead = 0;
+    s.version = VERSION;
+    return s;
+  }
+
+  /* ---------- นักเตะ/ทีม ---------- */
   function squadOf(state, clubId) {
     return state.players.filter(function (p) { return p.club_id === clubId; });
   }
+  /* ค่าพลังที่ใช้จริงในแมตช์ (รวมฟอร์มชั่วคราวจากเหตุการณ์) */
+  function effective(p) {
+    return p.form ? Object.assign({}, p, { rating: clamp(p.rating + p.form, 30, 99) }) : p;
+  }
+  function effectivePlayers(state) { return state.players.map(effective); }
   function formationFor(state, clubId) {
     if (clubId === state.userClubId) return state.formation;
     var names = Object.keys(E.FORMATIONS);
     return names[Math.floor(hash01(clubId * 7 + state.round) * names.length)];
   }
   function lineup(state, clubId) {
-    return E.pickLineup(squadOf(state, clubId), formationFor(state, clubId));
+    var f = formationFor(state, clubId);
+    var forced = clubId === state.userClubId && state.lineups ? state.lineups[f] : null;
+    return E.pickLineup(squadOf(state, clubId).map(effective), f, forced);
+  }
+  /* จัดตัวเอง: วางผู้เล่นลงช่องที่ slot ถ้าผู้เล่นอยู่ในช่องอื่นอยู่แล้วให้สลับกัน */
+  function setLineup(state, slotIdx, playerId) {
+    var f = state.formation, xi = lineup(state, state.userClubId);
+    var ids = xi.map(function (s) { return s.player.id < 0 ? null : s.player.id; });
+    var j = ids.indexOf(playerId);
+    if (j >= 0) { ids[j] = ids[slotIdx]; ids[slotIdx] = playerId; } else ids[slotIdx] = playerId;
+    state.lineups[f] = ids;
+  }
+  function autoLineup(state) { delete state.lineups[state.formation]; }
+  function hasManualLineup(state) { return !!state.lineups[state.formation]; }
+  function setMentality(state, m) { state.tactic.mentality = clamp(Math.round(m), -2, 2); }
+  function outLabel(p) {
+    if (!(p.out > 0)) return '';
+    return (p.out_reason === 'ban' ? 'แบน ' : 'พัก ') + p.out + ' นัด';
   }
   function finished(state) { return state.round >= state.fixtures.length; }
   function userFixture(state) {
@@ -443,41 +716,351 @@
     return null;
   }
 
-  function bump(state, id, key) {
-    if (id < 0) return;
-    var s = state.stats[id] || (state.stats[id] = { g: 0, a: 0, y: 0 });
-    s[key]++;
+  function clubName(state, id) {
+    for (var i = 0; i < state.clubs.length; i++) if (state.clubs[i].id === id) return state.clubs[i].name;
+    return '?';
   }
-  function record(state, f, res) {
+  function addNews(state, kind, text, extra) {
+    state.newsSeq = (state.newsSeq || 0) + 1;
+    state.news.unshift(Object.assign({ id: state.newsSeq, round: state.round, kind: kind, text: text }, extra || {}));
+    if (state.news.length > NEWS_MAX) state.news.length = NEWS_MAX;
+  }
+
+  /* ---------- สถิติ/ผลแมตช์ ---------- */
+  function bump(state, id, key) {
+    if (id < 0) return 0;
+    var s = state.stats[id] || (state.stats[id] = { g: 0, a: 0, y: 0, r: 0 });
+    if (s[key] === undefined) s[key] = 0;
+    return ++s[key];
+  }
+  function pushForm(state, id, ch) {
+    state.form[id] = ((state.form[id] || '') + ch).slice(-12);
+  }
+  function record(state, f, res, bans) {
     var hg = res.score.home, ag = res.score.away, H = state.table[f.h], A = state.table[f.a];
     H.p++; A.p++; H.gf += hg; H.ga += ag; A.gf += ag; A.ga += hg;
-    if (hg > ag) { H.w++; A.l++; H.pts += 3; }
-    else if (hg < ag) { A.w++; H.l++; A.pts += 3; }
-    else { H.d++; A.d++; H.pts++; A.pts++; }
+    if (hg > ag) { H.w++; A.l++; H.pts += 3; pushForm(state, f.h, 'W'); pushForm(state, f.a, 'L'); }
+    else if (hg < ag) { A.w++; H.l++; A.pts += 3; pushForm(state, f.h, 'L'); pushForm(state, f.a, 'W'); }
+    else { H.d++; A.d++; H.pts++; A.pts++; pushForm(state, f.h, 'D'); pushForm(state, f.a, 'D'); }
     res.events.forEach(function (e) {
       if (e.type === 'goal') { bump(state, e.player.id, 'g'); if (e.assist) bump(state, e.assist.id, 'a'); }
-      else if (e.type === 'yellow') bump(state, e.player.id, 'y');
+      else if (e.type === 'yellow') {
+        if (bump(state, e.player.id, 'y') % YELLOWS_FOR_BAN === 0) bans.push({ id: e.player.id, games: 1, why: 'สะสมใบเหลือง' });
+      } else if (e.type === 'red') {
+        bump(state, e.player.id, 'r');
+        bans.push({ id: e.player.id, games: 1 + Math.floor(hash01(e.player.id + state.round) * 3), why: 'ใบแดง' });
+      }
     });
   }
 
-  /* จบนัดปัจจุบัน: ใช้ผลของทีมเราที่เล่นมาแล้ว (ถ้ามี) ที่เหลือจำลองให้ทั้งหมด */
+  function injuryLength(rng) {
+    var r = rng();
+    if (r < 0.5) return 1 + Math.floor(rng() * 2);
+    if (r < 0.85) return 3 + Math.floor(rng() * 4);
+    return 7 + Math.floor(rng() * 8);
+  }
+
+  function isMine(state, p) { return p.club_id === state.userClubId; }
+
+  /* ---------- เหตุการณ์สุ่มของทีมเรา ---------- */
+  function rollEvent(state, rng) {
+    if (rng() >= EVENT_CHANCE) return;
+    var mine = squadOf(state, state.userClubId);
+    var outfield = mine.filter(function (p) { return p.position !== 'GK' && !(p.out > 0); });
+    var types = ['sponsor', 'sponsor', 'sponsor', 'hot', 'hot', 'hot', 'sulk', 'sulk'];
+    if (mine.length < SQUAD_MAX) types.push('youth');
+    if (state.budget >= 10) types.push('repair');
+    var type = pick(rng, types), p;
+
+    if (type === 'sponsor') {
+      var amt = r1(5 + rng() * 7);
+      state.budget = r1(state.budget + amt);
+      addNews(state, 'event', 'สปอนเซอร์รายใหม่เซ็นสัญญากับสโมสร ได้งบเพิ่ม £' + amt + 'm', { club: state.userClubId });
+    } else if (type === 'repair') {
+      var cost = r1(3 + rng() * 3);
+      state.budget = r1(state.budget - cost);
+      addNews(state, 'event', 'ต้องซ่อมสนามฉุกเฉิน เสียค่าใช้จ่าย £' + cost + 'm', { club: state.userClubId });
+    } else if (type === 'hot' && outfield.length) {
+      p = pick(rng, outfield);
+      p.form = 3; p.form_rounds = 3;
+      addNews(state, 'event', '' + p.name + ' ฟอร์มร้อนแรงในการซ้อม ค่าพลัง +3 นาน 3 นัด', { club: state.userClubId });
+    } else if (type === 'sulk' && outfield.length) {
+      p = pick(rng, outfield);
+      p.form = -3; p.form_rounds = 3;
+      addNews(state, 'event', '' + p.name + ' ไม่พอใจเรื่องเวลาลงเล่น ค่าพลัง -3 นาน 3 นัด', { club: state.userClubId });
+    } else if (type === 'youth') {
+      var maxId = 0;
+      state.players.forEach(function (q) { if (q.id > maxId) maxId = q.id; });
+      var pos = pick(rng, ['GK', 'DEF', 'DEF', 'MID', 'MID', 'FWD']);
+      var club = state.clubs.filter(function (c) { return c.id === state.userClubId; })[0];
+      var yp = {
+        id: maxId + 1, name: 'ดาวรุ่ง ' + club.short_name + ' ' + (maxId + 1), first_name: '', second_name: '',
+        club_id: state.userClubId, position: pos, price: 4, status: 'a', news: '', minutes: 0, goals: 0, assists: 0,
+        clean_sheets: 0, xg: 0, xa: 0, rating: 50 + Math.floor(rng() * 13), out: 0, form: 0, form_rounds: 0,
+        age: 17 + Math.floor(rng() * 3)
+      };
+      initPlayerState(yp); yp.contract = 3;
+      state.players.push(yp);
+      addNews(state, 'event', 'ดาวรุ่งจากอะคาเดมีขึ้นสู่ทีมชุดใหญ่: ' + yp.name + ' (' + pos + ' ค่าพลัง ' + yp.rating + ')', { club: state.userClubId });
+    }
+  }
+
+  /* ข่าวจากสถิติจริงในลีก: ชนะ/ไม่แพ้/แพ้ติดต่อกัน และจ่าฝูง */
+  function streakNews(state) {
+    var count = 0;
+    state.clubs.forEach(function (c) {
+      var f = state.form[c.id] || '', n;
+      function run(re) { var m = f.match(re); return m ? m[0].length : 0; }
+      n = run(/W+$/); if (n === 4 || n === 6 || n === 8) { addNews(state, 'league', '' + c.name + ' ชนะติดต่อกัน ' + n + ' นัด', { club: c.id }); count++; }
+      n = run(/[WD]+$/); if (n === 8 || n === 12) { addNews(state, 'league', '' + c.name + ' ไม่แพ้ ' + n + ' นัดติด', { club: c.id }); count++; }
+      n = run(/L+$/); if (n === 4) { addNews(state, 'league', '' + c.name + ' แพ้ติดต่อกัน ' + n + ' นัด', { club: c.id }); count++; }
+    });
+    if (state.round % 5 === 0 && state.round > 0) {
+      var top = standings(state)[0];
+      addNews(state, 'league', 'ผ่านไป ' + state.round + ' นัด ' + top.club.name + ' นำจ่าฝูง ' + top.pts + ' แต้ม', { club: top.club.id });
+    }
+    return count;
+  }
+
+  function updateBoard(state) {
+    if (state.round < 3) return;
+    var st = standings(state), pos = 0;
+    st.forEach(function (r, i) { if (r.club.id === state.userClubId) pos = i + 1; });
+    var delta = clamp((state.objective.target - pos) * 0.5, -4, 3);
+    state.confidence = clamp(Math.round((state.confidence + delta) * 10) / 10, 0, 100);
+  }
+
+  /* จบนัดปัจจุบัน: ใช้ผลของทีมเราที่เล่นมาแล้ว (ถ้ามี) ที่เหลือจำลองให้ทั้งหมด
+   * แล้วจัดการบาดเจ็บ/แบน ฟอร์ม เหตุการณ์สุ่ม ข่าว และบอร์ด */
   function applyRound(state, userMatch) {
     if (finished(state)) return [];
-    var fx = state.fixtures[state.round], out = [];
+    var round = state.round, fx = state.fixtures[round], out = [], bans = [], lineups = [];
+    var rng = mulberry32((state.seed + round * 7919 + 13) | 0);
+
     fx.forEach(function (f, idx) {
-      var res;
-      if (userMatch && userMatch.h === f.h && userMatch.a === f.a) {
-        res = userMatch.result;
-      } else {
-        res = E.simulate(lineup(state, f.h), lineup(state, f.a), { seed: state.seed + state.round * 100 + idx });
-      }
-      record(state, f, res);
+      var xiH = lineup(state, f.h), xiA = lineup(state, f.a), res;
+      if (userMatch && userMatch.h === f.h && userMatch.a === f.a) res = userMatch.result;
+      else res = E.simulate(xiH, xiA, { seed: state.seed + round * 100 + idx });
+      record(state, f, res, bans);
       out.push({ h: f.h, a: f.a, hg: res.score.home, ag: res.score.away });
+      lineups = lineups.concat(xiH, xiA);
     });
+
+    /* 1) ผู้ที่พักครบแล้วกลับมา และฟอร์มชั่วคราวหมดอายุ */
+    state.players.forEach(function (p) {
+      if (p.out > 0) {
+        p.out--;
+        if (p.out <= 0) {
+          p.out = 0; p.status = 'a'; p.news = '';
+          if (isMine(state, p)) addNews(state, 'injury', '' + p.name + ' ' + (p.out_reason === 'ban' ? 'พ้นโทษแบน' : 'หายเจ็บ') + ' พร้อมลงเล่น', { club: state.userClubId });
+        }
+      }
+      if (p.form_rounds > 0) { p.form_rounds--; if (p.form_rounds <= 0) { p.form = 0; p.form_rounds = 0; } }
+    });
+
+    /* 2) บาดเจ็บใหม่จากนัดนี้ (เฉพาะตัวจริง) */
+    var injMult = INTENSITY[(state.training || {}).intensity || 'normal'].inj;
+    lineups.forEach(function (slot) {
+      var p = slot.player;
+      if (p.id < 0 || rng() >= INJURY_RATE * proneMult(p) * (p.club_id === state.userClubId ? injMult : 1)) return;
+      var real = state.players.filter(function (q) { return q.id === p.id; })[0];
+      if (!real || real.out > 0) return;
+      var len = injuryLength(rng);
+      real.status = 'i'; real.out = len; real.out_reason = 'injury'; real.news = 'บาดเจ็บ';
+      if (isMine(state, real)) addNews(state, 'injury', '' + real.name + ' บาดเจ็บ ต้องพักประมาณ ' + len + ' นัด', { club: state.userClubId });
+      else if (real.rating >= 80) addNews(state, 'league', '' + real.name + ' (' + clubName(state, real.club_id) + ') บาดเจ็บ พักประมาณ ' + len + ' นัด', { club: real.club_id });
+    });
+
+    /* 3) แบนจากใบแดง/สะสมใบเหลือง */
+    bans.forEach(function (b) {
+      var real = state.players.filter(function (q) { return q.id === b.id; })[0];
+      if (!real || real.out >= b.games) return;
+      real.status = 's'; real.out = b.games; real.out_reason = 'ban'; real.news = 'โดนแบน';
+      if (isMine(state, real)) addNews(state, 'injury', '' + real.name + ' โดนแบน ' + b.games + ' นัด (' + b.why + ')', { club: state.userClubId });
+    });
+
+    trainRound(state);
+
+    state.results[round] = out;
     state.round++;
-    state.budget = r1(state.budget + WEEKLY_INCOME);
+    /* รายรับ - ค่าเหนื่อทั้งทีม */
+    var wages = wageBill(state, state.userClubId), base = r1(state.budget + state.income - wages);
+    state.budget = base;
     state.lastResults = out;
+    rollEvent(state, rng);
+    state.budgetLog.push({ round: state.round, income: state.income, wages: wages, transfers: r1(state.xfer || 0), events: r1(state.budget - base), balance: state.budget });
+    if (state.budgetLog.length > 40) state.budgetLog.shift();
+    state.xfer = 0;
+    streakNews(state);
+    contractNews(state);
+    if (windowOpen(state)) aiTransfers(state, rng, AI_DEALS_PER_ROUND);
+    updateBoard(state);
+    if (state.budget < 0) state.confidence = clamp(Math.round((state.confidence - 1) * 10) / 10, 0, 100);
     return out;
+  }
+
+  /* ---------- เทรนนิ่ง: ทุกทีมได้ xp ตามแผน (ทีมคอมพิวเตอร์ใช้แผนปกติ) ---------- */
+  function setTraining(state, focus, intensity) {
+    if (focus) state.training.focus = focus;
+    if (intensity && INTENSITY[intensity]) state.training.intensity = intensity;
+  }
+  function trainRound(state) {
+    var tr = state.training || { focus: 'ALL', intensity: 'normal' };
+    state.players.forEach(function (p) {
+      if (p.out > 0 || p.rating >= 99) return;
+      var mine = isMine(state, p);
+      var rate = INTENSITY[mine ? tr.intensity : 'normal'].xp;
+      if (mine && tr.focus !== 'ALL') rate *= (p.position === tr.focus ? 1.6 : 0.7);
+      p.xp = (p.xp || 0) + rate;
+      var cap = potential(state, p);
+      for (;;) {
+        var need = XP_BASE + Math.max(0, p.rating - 75) * 0.8;
+        if (p.xp < need) break;
+        if ((p.grown || 0) >= cap) { p.xp = need - 0.01; break; }
+        p.xp -= need; p.rating++; p.grown = (p.grown || 0) + 1;
+        if (p.ca != null) p.ca = r1(p.ca + 2.2);
+        if (mine) addNews(state, 'training', '' + p.name + ' พัฒนาจากการฝึกซ้อม ค่าพลัง ' + (p.rating - 1) + ' → ' + p.rating, { club: state.userClubId });
+      }
+    });
+  }
+
+  /* ---------- สัญญา ---------- */
+  function contractNews(state) {
+    var left = state.fixtures.length - state.round;
+    if (left !== 4 && left !== 1) return;
+    var list = squadOf(state, state.userClubId).filter(function (p) { return p.contract <= 1; })
+      .sort(function (a, b) { return b.rating - a.rating; });
+    if (!list.length) return;
+    addNews(state, 'contract', 'สัญญาใกล้หมดท้ายฤดูกาล: ' + list.slice(0, 4).map(function (p) { return p.name; }).join(', ') +
+      (list.length > 4 ? ' และอีก ' + (list.length - 4) + ' คน' : '') + ' ถ้าไม่ต่อสัญญาจะออกจากทีมฟรี', { club: state.userClubId });
+  }
+
+  /* ต่อสัญญา: ต่อได้เมื่อสัญญาเหลือไม่เกิน 2 ปี นักเตะที่กำลังไม่พอใจจะปฏิเสธ
+   * ค่าเหนื่อใหม่แพงขึ้นตามจำนวนปี และต้องจ่ายค่าเซ็นสัญญา (ค่าเหนื่อ 6 นัด) */
+  function renewOffer(p, years) {
+    var w = r2(Math.max(p.wage || 0, baseWage(p)) * (1.1 + 0.05 * years) * (p.rating >= 80 ? 1.15 : 1));
+    return { wage: w, bonus: r1(w * 6) };
+  }
+  function renew(state, id, years) {
+    var p = findPlayer(state, id);
+    if (!p || p.club_id !== state.userClubId) return fail('นักเตะคนนี้ไม่ได้อยู่ในทีมคุณ');
+    if (p.contract > 2) return fail(p.name + ' ยังมีสัญญาอีก ' + p.contract + ' ปี ยังไม่ต้องต่อ (ต่อได้เมื่อเหลือไม่เกิน 2 ปี)');
+    if (p.form < 0) return fail(p.name + ' กำลังไม่พอใจ ปฏิเสธการเจรจาต่อสัญญาในตอนนี้');
+    var offer = renewOffer(p, years);
+    if (state.budget < offer.bonus) return fail('งบไม่พอจ่ายค่าเซ็นสัญญา £' + offer.bonus + 'm');
+    state.budget = r1(state.budget - offer.bonus); state.xfer = r1((state.xfer || 0) - offer.bonus);
+    p.contract = Math.min(5, p.contract + years); p.wage = offer.wage;
+    addNews(state, 'contract', 'ต่อสัญญา ' + p.name + ' อีก ' + years + ' ปี (รวมเหลือ ' + p.contract + ' ปี) ค่าเหนื่อ £' + offer.wage + 'm/นัด', { club: state.userClubId });
+    return { ok: true, msg: 'ต่อสัญญา ' + p.name + ' สำเร็จ เหลือ ' + p.contract + ' ปี ค่าเหนื่อ £' + offer.wage + 'm/นัด (ค่าเซ็น £' + offer.bonus + 'm)' };
+  }
+
+  /* ---------- ทีมคอมพิวเตอร์ซื้อขายกันเอง ---------- */
+  function clubRanks(state) {
+    var ranked = state.clubs.map(function (c) { return { id: c.id, s: clubStrength(state.players, c.id) }; })
+      .sort(function (a, b) { return b.s - a.s || (a.id < b.id ? -1 : 1); });
+    var map = {};
+    ranked.forEach(function (c, i) { map[c.id] = i; });
+    return map;
+  }
+  function starterLevel(list, pos) {
+    var r = list.filter(function (p) { return p.position === pos; }).map(function (p) { return p.rating; })
+      .sort(function (a, b) { return b - a; }).slice(0, STARTERS[pos]);
+    while (r.length < STARTERS[pos]) r.push(40);
+    return r.reduce(function (x, y) { return x + y; }, 0) / r.length;
+  }
+  /* ทีมที่อ่อนตำแหน่งไหนก็ซื้อตัวเก่งกว่าตำแหน่งนั้น ภายในงบตามฐานะทีม
+   * ทีมใหญ่ไม่ขายดาวเด่น 3 อันดับแรกให้ทีมที่เล็กกว่า และไม่แตะนักเตะของทีมผู้เล่น */
+  function aiTransfers(state, rng, count) {
+    var n = state.clubs.length, ranks = clubRanks(state), done = 0, tries = 0;
+    while (done < count && tries < count * 15) {
+      tries++;
+      var buyers = state.clubs.filter(function (c) { return c.id !== state.userClubId && squadOf(state, c.id).length < AI_SQUAD_MAX; });
+      if (!buyers.length) break;
+      var b = pick(rng, buyers), bs = squadOf(state, b.id), need = null;
+      ['GK', 'DEF', 'MID', 'FWD'].forEach(function (pos) {
+        var lv = starterLevel(bs, pos) + rng() * 8;
+        if (!need || lv < need.lv) need = { pos: pos, lv: lv, base: starterLevel(bs, pos) };
+      });
+      var maxFee = 6 + 50 * (1 - ranks[b.id] / Math.max(1, n - 1));
+      var cands = state.players.filter(function (p) {
+        return p.position === need.pos && p.club_id !== b.id && p.club_id !== state.userClubId &&
+          p.rating >= need.base + 2 && value(p) * contractFactor(p) <= maxFee;
+      }).sort(function (x, y) { return y.rating - x.rating; }).slice(0, 5);
+      if (!cands.length) continue;
+      var p = pick(rng, cands), from = p.club_id, sq = squadOf(state, from);
+      if (!canLose(sq, p)) continue;
+      var top3 = sq.slice().sort(function (x, y) { return y.rating - x.rating; }).slice(0, 3).map(function (q) { return q.id; });
+      if (top3.indexOf(p.id) >= 0 && ranks[from] < ranks[b.id]) continue;
+      var fee = r1(value(p) * contractFactor(p) * (1 + 0.15 * rng()));
+      p.club_id = b.id; p.contract = 3; p.wage = baseWage(p);
+      state.deals.unshift({ round: state.round, id: p.id, name: p.name, from: from, to: b.id, fee: fee, rating: p.rating });
+      if (state.deals.length > 60) state.deals.length = 60;
+      if (p.rating >= 76 || fee >= 20) {
+        addNews(state, 'transfer', '' + b.name + ' ซื้อ ' + p.name + ' จาก ' + clubName(state, from) + ' ราคา £' + fee + 'm', { club: b.id });
+      }
+      done++;
+    }
+    return done;
+  }
+
+  /* ---------- จบฤดูกาล → ฤดูกาลถัดไป ---------- */
+  function nextSeasonLabel(s) {
+    var m = /^(\d{4})-(\d{2})$/.exec(s || '');
+    if (!m) return s;
+    var y = +m[1] + 1, t = (y + 1) % 100;
+    return y + '-' + (t < 10 ? '0' : '') + t;
+  }
+  function startNextSeason(state) {
+    if (!finished(state)) return fail('ฤดูกาลนี้ยังไม่จบ');
+    var st = standings(state), pos = userPosition(state), met = pos <= state.objective.target;
+    var prize = r1((state.clubs.length - pos) * 1.5);
+    state.history.push({ season: state.season, champion: st[0].club.name, pos: pos, target: state.objective.target });
+    state.budget = r1(state.budget + prize);
+    var rng = mulberry32((state.seed + 5000 + state.history.length * 31) | 0), gone = [];
+
+    state.players.forEach(function (p) {
+      p.contract = (p.contract || 1) - 1;
+      if (p.contract <= 0) {
+        if (isMine(state, p)) gone.push(p);
+        else { p.contract = 2 + Math.floor(rng() * 3); p.wage = baseWage(p); }
+      }
+      p.out = 0; p.status = 'a'; p.news = ''; delete p.out_reason;
+      p.form = 0; p.form_rounds = 0; p.grown = 0; p.xp = 0;
+      /* ผ่านไปหนึ่งปี: อายุ +1 คนอายุเกิน 30 มีโอกาสถดถอยสูงขึ้นตามอายุ (ไม่รู้อายุใช้โอกาสคงที่) */
+      var a0 = p.age, chance = a0 == null ? 0.2 : a0 >= 30 ? Math.min(0.9, 0.3 + (a0 - 30) * 0.12) : 0.04;
+      if (p.age != null) p.age = a0 + 1;
+      if (p.rating > 40 && rng() < chance) {
+        p.rating -= (a0 != null && a0 >= 34 && rng() < 0.5) ? 2 : 1;
+        if (p.ca != null) p.ca = r1(p.ca - 2.2);
+      }
+    });
+    /* สัญญาของผู้เล่นทีมเราหมด: ออกไปอยู่ทีมอื่นแบบไร้ค่าตัว */
+    gone.forEach(function (p) {
+      var buyers = state.clubs.filter(function (c) { return c.id !== state.userClubId && squadOf(state, c.id).length < AI_SQUAD_MAX; });
+      if (!buyers.length) return;
+      var b = pick(rng, buyers);
+      p.club_id = b.id; p.contract = 3; p.wage = baseWage(p);
+    });
+
+    state.season = nextSeasonLabel(state.season);
+    state.seed = (state.seed + 1013) | 0;
+    state.round = 0;
+    state.fixtures = makeFixtures(state.clubs.map(function (c) { return c.id; }), state.seed);
+    state.clubs.forEach(function (c) { state.table[c.id] = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 }; state.form[c.id] = ''; });
+    state.stats = {}; state.transfers = []; state.lastResults = []; state.lastReport = null; state.digest = null;
+    state.results = {}; state.budgetLog = []; state.xfer = 0;
+    state.confidence = clamp(state.confidence + (met ? 10 : -10), 0, 100);
+
+    addNews(state, 'league', 'เริ่มฤดูกาล ' + state.season + ' · จบฤดูกาลก่อนอันดับ ' + pos + ' ได้เงินรางวัล £' + prize + 'm', { club: state.userClubId });
+    if (gone.length) {
+      addNews(state, 'contract', 'สัญญาหมด ออกจากทีมแบบไร้ค่าตัว: ' + gone.slice().sort(function (a, b) { return b.rating - a.rating; })
+        .slice(0, 5).map(function (p) { return p.name; }).join(', ') + (gone.length > 5 ? ' และอีก ' + (gone.length - 5) + ' คน' : ''), { club: state.userClubId });
+    }
+    aiTransfers(state, rng, AI_DEALS_PRESEASON + 2);
+    state.objective = makeObjective(state.players, state.clubs, state.userClubId);
+    var mine = squadOf(state, state.userClubId).length;
+    if (mine < SQUAD_MIN) addNews(state, 'event', 'ทีมเหลือนักเตะ ' + mine + ' คน ต้องซื้อเพิ่มอย่างน้อย ' + SQUAD_MIN + ' คนในตลาดก่อนเปิดฤดูกาล', { club: state.userClubId });
+    return { ok: true, msg: 'เริ่มฤดูกาล ' + state.season + ' แล้ว', prize: prize, lost: gone.length };
   }
 
   /* ---------- ตลาดซื้อขาย ---------- */
@@ -512,8 +1095,10 @@
     if (!canLose(squadOf(state, p.club_id), p)) return fail('สโมสรเจ้าของปฏิเสธ: ขายแล้วจะเหลือนักเตะไม่พอ');
     var from = p.club_id;
     p.club_id = state.userClubId;
-    state.budget = r1(state.budget - ask);
+    p.contract = 3; p.wage = baseWage(p);
+    state.budget = r1(state.budget - ask); state.xfer = r1((state.xfer || 0) - ask);
     state.transfers.push({ round: state.round, type: 'buy', id: p.id, name: p.name, other: from, fee: ask });
+    addNews(state, 'transfer', 'ซื้อ ' + p.name + ' จาก ' + clubName(state, from) + ' ราคา £' + ask + 'm', { club: state.userClubId });
     return { ok: true, msg: 'ซื้อ ' + p.name + ' สำเร็จ £' + ask + 'm', fee: ask };
   }
 
@@ -525,16 +1110,17 @@
       return fail('ขายไม่ได้: ทีมต้องมีอย่างน้อย ' + SQUAD_MIN + ' คน และแต่ละตำแหน่งต้องไม่ต่ำกว่าขั้นต่ำ');
     }
     var buyers = state.clubs.filter(function (c) {
-      return c.id !== state.userClubId && squadOf(state, c.id).length < SQUAD_MAX;
+      return c.id !== state.userClubId && squadOf(state, c.id).length < AI_SQUAD_MAX;
     });
     if (!buyers.length) return fail('ไม่มีสโมสรสนใจ');
     buyers.sort(function (a, b) {
       return posCount(squadOf(state, a.id), p.position) - posCount(squadOf(state, b.id), p.position) || a.id - b.id;
     });
     var buyer = buyers[0], bid = bidPrice(p);
-    p.club_id = buyer.id;
-    state.budget = r1(state.budget + bid);
+    p.club_id = buyer.id; p.contract = 3; p.wage = baseWage(p);
+    state.budget = r1(state.budget + bid); state.xfer = r1((state.xfer || 0) + bid);
     state.transfers.push({ round: state.round, type: 'sell', id: p.id, name: p.name, other: buyer.id, fee: bid });
+    addNews(state, 'transfer', 'ขาย ' + p.name + ' ให้ ' + buyer.name + ' ราคา £' + bid + 'm', { club: state.userClubId });
     return { ok: true, msg: 'ขาย ' + p.name + ' ให้ ' + buyer.name + ' £' + bid + 'm', fee: bid };
   }
 
@@ -547,6 +1133,11 @@
       return b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || a.club.name.localeCompare(b.club.name);
     });
   }
+  function userPosition(state) {
+    var pos = 0;
+    standings(state).forEach(function (r, i) { if (r.club.id === state.userClubId) pos = i + 1; });
+    return pos;
+  }
   function topScorers(state, n) {
     var list = [];
     Object.keys(state.stats).forEach(function (id) {
@@ -558,15 +1149,504 @@
   }
 
   var api = {
-    POS_MIN: POS_MIN, SQUAD_MIN: SQUAD_MIN, SQUAD_MAX: SQUAD_MAX,
+    POS_MIN: POS_MIN, SQUAD_MIN: SQUAD_MIN, SQUAD_MAX: SQUAD_MAX, INTENSITY: INTENSITY,
     value: value, askPrice: askPrice, bidPrice: bidPrice, makeFixtures: makeFixtures,
-    newCareer: newCareer, isValid: isValid, squadOf: squadOf, formationFor: formationFor,
+    baseWage: baseWage, wageBill: wageBill, potential: potential, proneMult: proneMult, renew: renew, renewOffer: renewOffer,
+    setTraining: setTraining, aiTransfers: aiTransfers, startNextSeason: startNextSeason,
+    findPlayer: findPlayer, mulberry32: mulberry32, addNews: addNews, lineup: lineup, setLineup: setLineup,
+    autoLineup: autoLineup, hasManualLineup: hasManualLineup, setMentality: setMentality, hash01: hash01,
+    newCareer: newCareer, isValid: isValid, upgrade: upgrade, squadOf: squadOf,
+    effectivePlayers: effectivePlayers, formationFor: formationFor, outLabel: outLabel,
     finished: finished, userFixture: userFixture, applyRound: applyRound,
     windowRange: windowRange, windowOpen: windowOpen, buy: buy, sell: sell,
-    standings: standings, topScorers: topScorers
+    standings: standings, userPosition: userPosition, topScorers: topScorers, clubName: clubName
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.FMSeason = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* ข่าวและบทบรรยาย: เทมเพลตภาษาไทย (ใช้ได้ออฟไลน์เสมอ) + ตัวเลือกให้ Claude เขียนใหม่
+ * หลักการ: เนื้อหาทุกอย่างมาจากข้อมูลในเกม AI เขียนได้เฉพาะจากข้อมูลที่ส่งให้ และมีตัวตรวจก่อนนำไปแสดง */
+(function (root) {
+  'use strict';
+
+  var AI_KEY = 'fm_ai_v1';
+  var DEFAULT_MODEL = 'claude-haiku-5-5';
+
+  function hash01(n) { var x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+  function pickT(list, seed) { return list[Math.floor(hash01(seed) * list.length)]; }
+
+  /* ---------- บทบรรยายรายเหตุการณ์ ---------- */
+  /* ctx = { team, opp, sf, sa } : sf/sa คือสกอร์หลังเกิดประตู (ของทีมที่ยิง/ทีมที่เสีย) */
+  function eventLine(e, ctx) {
+    var m = e.minute, p = e.player.name, seed = m * 31 + (e.player.id || 0) * 7, t;
+    switch (e.type) {
+      case 'goal':
+        var a = e.assist ? ' จ่ายให้โดย ' + e.assist.name : '';
+        var state = '';
+        if (ctx.sf === ctx.sa) state = ' ตีเสมอเป็น ' + ctx.sf + '-' + ctx.sa;
+        else if (ctx.sf === 1 && ctx.sa === 0) state = ' ขึ้นนำ 1-0';
+        else if (ctx.sf > ctx.sa) state = ' ทีมนำ ' + ctx.sf + '-' + ctx.sa;
+        else state = ' ไล่ตามมาเป็น ' + ctx.sf + '-' + ctx.sa;
+        t = pickT([
+          '' + m + "' ประตู! " + p + ' (' + ctx.team + ')' + a + state,
+          '' + m + "' " + p + ' ทำประตูให้ ' + ctx.team + a + state,
+          '' + m + "' เข้าไปแล้ว! " + p + ' ยิงให้ ' + ctx.team + state + a
+        ], seed);
+        return [t, 'goal'];
+      case 'save':
+        return [pickT([
+          '' + m + "' " + e.gk.name + ' (' + ctx.opp + ') เซฟลูกยิงของ ' + p + ' ไว้ได้',
+          '' + m + "' " + p + ' (' + ctx.team + ') ยิงตรงกรอบ แต่ ' + e.gk.name + ' ปัดออก'
+        ], seed), ''];
+      case 'miss':
+        return [pickT([
+          '' + m + "' " + p + ' (' + ctx.team + ') ยิงไม่เข้ากรอบ',
+          '' + m + "' โอกาสของ " + ctx.team + ' ' + p + ' ยิงไม่ตรงกรอบ'
+        ], seed), ''];
+      case 'yellow':
+        return ['' + m + "' " + p + ' (' + ctx.team + ') โดนใบเหลือง', ''];
+      case 'red':
+        return ['' + m + "' " + p + ' (' + ctx.team + ') โดนใบแดง! เหลือผู้เล่น 10 คน', 'goal'];
+    }
+    return ['', ''];
+  }
+
+  /* ---------- รายงานแมตช์ ---------- */
+  function goalsOf(res) {
+    return res.events.filter(function (e) { return e.type === 'goal'; });
+  }
+  function cardsOf(res, type) {
+    return res.events.filter(function (e) { return e.type === type; });
+  }
+
+  /* ข้อมูลล้วน ส่งให้ AI หรือใช้เขียนเทมเพลต: ตัวเลขทุกตัวในรายงานต้องมาจากที่นี่ */
+  function matchFacts(ctx) {
+    var res = ctx.res, g = goalsOf(res);
+    return {
+      round: ctx.round,
+      home: ctx.home, away: ctx.away,
+      score: { home: res.score.home, away: res.score.away },
+      totalGoals: res.score.home + res.score.away,
+      goals: g.map(function (e) {
+        return { minute: e.minute, team: e.side === 'home' ? ctx.home : ctx.away, scorer: e.player.name, assist: e.assist ? e.assist.name : null };
+      }),
+      shots: { home: res.stats.home.shots, away: res.stats.away.shots },
+      onTarget: { home: res.stats.home.onTarget, away: res.stats.away.onTarget },
+      possessionPercent: { home: res.possessionPct.home, away: res.possessionPct.away },
+      yellowCards: { home: res.stats.home.yellow, away: res.stats.away.yellow },
+      redCards: cardsOf(res, 'red').map(function (e) { return { minute: e.minute, team: e.side === 'home' ? ctx.home : ctx.away, player: e.player.name }; }),
+      managedTeam: ctx.userSide ? (ctx.userSide === 'home' ? ctx.home : ctx.away) : null
+    };
+  }
+
+  function matchReport(ctx) {
+    var f = matchFacts(ctx), hs = f.score.home, as = f.score.away;
+    var parts = [], seed = (ctx.round || 1) * 13 + hs * 5 + as;
+    var user = f.managedTeam, uHome = ctx.userSide === 'home';
+    var line1;
+    if (user) {
+      var mine = uHome ? hs : as, theirs = uHome ? as : hs, opp = uHome ? ctx.away : ctx.home;
+      if (mine > theirs) line1 = pickT([user + ' เอาชนะ ' + opp + ' ' + mine + '-' + theirs, user + ' ทำได้ดี ชนะ ' + opp + ' ' + mine + '-' + theirs], seed);
+      else if (mine < theirs) line1 = pickT([user + ' พ่ายให้ ' + opp + ' ' + mine + '-' + theirs, user + ' แพ้ ' + opp + ' ' + mine + '-' + theirs], seed);
+      else line1 = user + ' เสมอกับ ' + opp + ' ' + mine + '-' + theirs;
+    } else {
+      line1 = f.home + ' ' + hs + '-' + as + ' ' + f.away;
+    }
+    parts.push(line1 + ' ในนัดที่ ' + f.round + ' ของลีก');
+
+    if (!f.goals.length) {
+      parts.push('เกมนี้ไม่มีประตูเกิดขึ้น');
+    } else {
+      parts.push('ประตูของเกม: ' + f.goals.map(function (g) {
+        return g.scorer + " (" + g.team + ' ' + g.minute + "'" + (g.assist ? ' จ่ายโดย ' + g.assist : '') + ')';
+      }).join(', '));
+    }
+
+    parts.push('ยิงทั้งหมด ' + f.shots.home + '-' + f.shots.away + ' (ตรงกรอบ ' + f.onTarget.home + '-' + f.onTarget.away +
+      ') ครองบอล ' + f.possessionPercent.home + '%-' + f.possessionPercent.away + '%');
+
+    var winnerShots = hs > as ? f.shots.home - f.shots.away : as > hs ? f.shots.away - f.shots.home : null;
+    if (winnerShots !== null && winnerShots < 0) parts.push('ทีมที่ชนะยิงน้อยกว่าแต่ใช้โอกาสได้คุ้มกว่า');
+
+    var yc = f.yellowCards.home + f.yellowCards.away;
+    if (yc) parts.push('ใบเหลือง ' + yc + ' ใบ (' + f.yellowCards.home + '-' + f.yellowCards.away + ')');
+    f.redCards.forEach(function (r) { parts.push('ใบแดง: ' + r.player + ' (' + r.team + ' ' + r.minute + "')"); });
+    return parts.join('\n');
+  }
+
+  /* ---------- สรุปสัปดาห์ (ทั้งลีก) ---------- */
+  function roundupFacts(state, S) {
+    var names = {}; state.clubs.forEach(function (c) { names[c.id] = c.name; });
+    var st = S.standings(state);
+    return {
+      round: state.round,
+      results: (state.lastResults || []).map(function (r) { return { home: names[r.h], away: names[r.a], homeGoals: r.hg, awayGoals: r.ag }; }),
+      tableTop3: st.slice(0, 3).map(function (r) { return { club: r.club.name, points: r.pts, played: r.p }; }),
+      tableBottom: st.slice(-1).map(function (r) { return { club: r.club.name, points: r.pts, played: r.p }; }),
+      managedClub: { name: names[state.userClubId], position: S.userPosition(state), points: state.table[state.userClubId].pts },
+      topScorers: S.topScorers(state, 3).map(function (x) { return { player: x.player.name, goals: x.g }; })
+    };
+  }
+
+  function roundup(state, S) {
+    var f = roundupFacts(state, S), parts = [];
+    parts.push('สรุปหลังนัดที่ ' + f.round);
+    if (f.results.length) {
+      var big = f.results.slice().sort(function (a, b) {
+        return Math.abs(b.homeGoals - b.awayGoals) - Math.abs(a.homeGoals - a.awayGoals) || (b.homeGoals + b.awayGoals) - (a.homeGoals + a.awayGoals);
+      })[0];
+      parts.push('ผลที่เด่นที่สุด: ' + big.home + ' ' + big.homeGoals + '-' + big.awayGoals + ' ' + big.away);
+    }
+    parts.push('จ่าฝูง: ' + f.tableTop3[0].club + ' ' + f.tableTop3[0].points + ' แต้ม ตามด้วย ' + f.tableTop3.slice(1).map(function (r) { return r.club + ' ' + r.points; }).join(', '));
+    parts.push(f.managedClub.name + ' อยู่อันดับ ' + f.managedClub.position + ' มี ' + f.managedClub.points + ' แต้ม');
+    if (f.topScorers.length) parts.push('ดาวซัลโว: ' + f.topScorers.map(function (x) { return x.player + ' ' + x.goals + ' ประตู'; }).join(', '));
+    return parts.join('\n');
+  }
+
+  /* ---------- AI (ตัวเลือก: ใช้คีย์ของผู้เล่นเอง เก็บในเครื่องนี้เท่านั้น) ---------- */
+  function aiSettings() {
+    try { return JSON.parse(localStorage.getItem(AI_KEY) || 'null') || {}; } catch (e) { return {}; }
+  }
+  function saveAiSettings(s) {
+    try { localStorage.setItem(AI_KEY, JSON.stringify(s)); return true; } catch (e) { return false; }
+  }
+  function hasAI() { return !!aiSettings().key; }
+
+  var SYSTEM = 'คุณเป็นนักข่าวกีฬาในเกมจำลองการจัดการทีมฟุตบอลที่ผู้เล่นเล่นเอง ' +
+    'เขียนเป็นภาษาไทย กระชับ 3-5 ประโยค ใช้ข้อมูลใน JSON ที่ให้มาเท่านั้น ' +
+    'ห้ามเพิ่มตัวเลข ชื่อ เหตุการณ์ หรือสถิติที่ไม่มีในข้อมูล ห้ามใส่คำพูดที่อ้างว่าเป็นของบุคคลจริง ' +
+    'ห้ามพูดถึงเรื่องส่วนตัวหรือข่าวลือของนักเตะหรือผู้จัดการ ใช้ชื่อสโมสรและนักเตะตรงตามที่ให้ไว้ในตัวอักษรเดิม ' +
+    'ตอบเป็นข้อความธรรมดา ไม่ใช้ markdown ไม่ใช้หัวข้อ';
+
+  var KIND_HINT = {
+    report: 'เขียนรายงานแมตช์ของนัดนี้ ถ้ามี managedTeam ให้เล่าจากมุมของทีมนั้น',
+    roundup: 'เขียนสรุปข่าวประจำสัปดาห์ของลีกจากข้อมูลนี้'
+  };
+
+  /* ตรวจข้อความ AI ให้เข้มกว่าการดูว่า "มีตัวเลขนี้ในข้อมูล":
+   * 1) คำภาษาอังกฤษ/ชื่อทุกคำต้องมีอยู่ในข้อมูล
+   * 2) ตัวเลขเดี่ยวต้องตรงกับค่าตัวเลขจริงในข้อมูล
+   * 3) รูปแบบ "a-b" (สกอร์ สถิติ ครองบอล) ต้องเป็นคู่ที่มีอยู่จริงในข้อมูล (เหย้า-เยือน หรือสลับด้าน) */
+  function collect(facts) {
+    var nums = {}, words = {}, pairs = {}, strs = {};
+    function addPair(a, b) { pairs[a + '-' + b] = true; pairs[b + '-' + a] = true; }
+    function walk(v) {
+      if (typeof v === 'number') nums[String(v)] = true;
+      else if (typeof v === 'string') {
+        strs[v] = true;
+        (v.match(/[A-Za-z][A-Za-z0-9'.\-]*/g) || []).forEach(function (w) { words[w.toLowerCase()] = true; });
+      }
+      else if (Array.isArray(v)) v.forEach(walk);
+      else if (v && typeof v === 'object') {
+        if (typeof v.home === 'number' && typeof v.away === 'number') addPair(v.home, v.away);
+        if (typeof v.homeGoals === 'number' && typeof v.awayGoals === 'number') addPair(v.homeGoals, v.awayGoals);
+        Object.keys(v).forEach(function (k) { walk(v[k]); });
+      }
+    }
+    walk(facts);
+    return { nums: nums, words: words, pairs: pairs, strs: Object.keys(strs).sort(function (a, b) { return b.length - a.length; }) };
+  }
+
+  var LATIN = /[A-Za-z][A-Za-z0-9'.\-]*/g;
+  function guard(text, facts) {
+    var c = collect(facts);
+    /* ตัดชื่อเต็มที่มีอยู่ในข้อมูลออกก่อน (เช่น "Sample Team 18") แล้วค่อยตรวจส่วนที่เหลือ */
+    var cleaned = text;
+    c.strs.forEach(function (name) { if (name) cleaned = cleaned.split(name).join(' '); });
+    var badWord = (cleaned.match(LATIN) || []).filter(function (w) { return !c.words[w.toLowerCase()]; });
+    var rest = cleaned.replace(LATIN, ' ');
+    var badNum = (rest.match(/\d+/g) || []).filter(function (n) { return !c.nums[n]; });
+    var badPair = [], m, re = /(\d+)%?\s*[-\u2013]\s*(\d+)%?/g;
+    while ((m = re.exec(rest))) { if (!c.pairs[m[1] + '-' + m[2]]) badPair.push(m[0]); }
+    return { ok: !badNum.length && !badWord.length && !badPair.length, badNum: badNum, badWord: badWord, badPair: badPair };
+  }
+
+  /* คืนข้อความจาก AI ถ้าผ่านตัวตรวจ ไม่ผ่านจะโยน error ให้ผู้เรียกใช้ข้อความเทมเพลตแทน */
+  function aiWrite(kind, facts, fetchImpl) {
+    var s = aiSettings();
+    if (!s.key) return Promise.reject(new Error('ยังไม่ได้ตั้งค่าคีย์ AI'));
+    var f = fetchImpl || root.fetch.bind(root);
+    var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = ctl ? setTimeout(function () { ctl.abort(); }, 25000) : null;
+    return f('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      signal: ctl ? ctl.signal : undefined,
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': s.key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: s.model || DEFAULT_MODEL,
+        max_tokens: 500,
+        system: SYSTEM,
+        messages: [{ role: 'user', content: KIND_HINT[kind] + '\n\nข้อมูล (JSON):\n' + JSON.stringify(facts) }]
+      })
+    }).then(function (res) {
+      if (timer) clearTimeout(timer);
+      if (res.status === 401) throw new Error('คีย์ AI ไม่ถูกต้อง');
+      if (!res.ok) throw new Error('เรียก AI ไม่สำเร็จ (' + res.status + ')');
+      return res.json();
+    }).then(function (j) {
+      var text = (j.content || []).filter(function (b) { return b.type === 'text'; })
+        .map(function (b) { return b.text; }).join('\n').trim();
+      if (!text) throw new Error('AI ไม่ได้ตอบข้อความ');
+      var g = guard(text, facts);
+      if (!g.ok) throw new Error('AI เขียนข้อมูลที่ไม่อยู่ในเกม จึงไม่นำมาใช้');
+      return text;
+    }).catch(function (e) {
+      if (timer) clearTimeout(timer);
+      throw e.name === 'AbortError' ? new Error('AI ตอบช้าเกินไป') : e;
+    });
+  }
+
+  var api = {
+    eventLine: eventLine, matchFacts: matchFacts, matchReport: matchReport,
+    roundupFacts: roundupFacts, roundup: roundup, guard: guard, aiWrite: aiWrite,
+    aiSettings: aiSettings, saveAiSettings: saveAiSettings, hasAI: hasAI, DEFAULT_MODEL: DEFAULT_MODEL
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  root.FMNarrative = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* ซิงก์เซฟข้ามเครื่องผ่าน GitHub Gist ส่วนตัว (ไม่ต้องมีเซิร์ฟเวอร์ของตัวเอง)
+ * ใช้โทเค็น GitHub ของผู้เล่นเอง เก็บในเครื่องนี้เท่านั้น มีตัวกันชนไม่ให้ทับข้อมูลที่ใหม่กว่า */
+(function (root) {
+  'use strict';
+
+  var KEY = 'fm_sync_v1';
+  var API = 'https://api.github.com';
+  var FILE = 'piithai-fm-career.json';
+  var DESC = 'Piithai FM career save';
+
+  function settings() {
+    try { return JSON.parse(localStorage.getItem(KEY) || 'null') || {}; } catch (e) { return {}; }
+  }
+  function saveSettings(s) {
+    try { localStorage.setItem(KEY, JSON.stringify(s)); return true; } catch (e) { return false; }
+  }
+  function configured() { return !!settings().token; }
+
+  function headers(token, withBody) {
+    var h = {
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    };
+    if (withBody) h['Content-Type'] = 'application/json';
+    return h;
+  }
+
+  function explain(res) {
+    if (res.status === 401) return 'โทเค็นไม่ถูกต้องหรือหมดอายุ';
+    if (res.status === 403 || res.status === 404) return 'โทเค็นไม่มีสิทธิ์ gist หรือไม่พบข้อมูล (' + res.status + ')';
+    return 'GitHub ตอบกลับผิดปกติ (' + res.status + ')';
+  }
+
+  function req(f, url, opt) {
+    return f(url, opt).catch(function () { throw new Error('เชื่อมต่อ GitHub ไม่ได้ (ตรวจสอบอินเทอร์เน็ต)'); });
+  }
+
+  /* หา Gist ที่เคยสร้างไว้จากเครื่องอื่น */
+  function findExisting(s, f) {
+    return req(f, API + '/gists?per_page=100', { headers: headers(s.token) }).then(function (res) {
+      if (!res.ok) throw new Error(explain(res));
+      return res.json();
+    }).then(function (list) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].files && list[i].files[FILE]) return list[i].id;
+      }
+      return null;
+    });
+  }
+
+  /* อ่านเซฟบนคลาวด์ คืน null ถ้ายังไม่มี */
+  function fetchRemote(s, f) {
+    if (!s.gistId) return Promise.resolve(null);
+    return req(f, API + '/gists/' + s.gistId, { headers: headers(s.token) }).then(function (res) {
+      if (!res.ok) throw new Error(explain(res));
+      return res.json();
+    }).then(function (g) {
+      var file = g.files && g.files[FILE];
+      if (!file) return null;
+      if (file.truncated && file.raw_url) {
+        return req(f, file.raw_url, {}).then(function (r) { return r.text(); });
+      }
+      return file.content;
+    }).then(function (content) {
+      return content ? JSON.parse(content) : null;
+    });
+  }
+
+  /* อัปโหลดเซฟขึ้นคลาวด์ opts.force = ทับแม้ข้อมูลบนคลาวด์ใหม่กว่า */
+  function push(career, opts, fetchImpl) {
+    opts = opts || {};
+    var f = fetchImpl || root.fetch.bind(root), s = settings();
+    if (!s.token) return Promise.reject(new Error('ยังไม่ได้ตั้งค่าโทเค็น GitHub'));
+
+    var ready = s.gistId ? Promise.resolve(s.gistId) : findExisting(s, f);
+    return ready.then(function (id) {
+      s.gistId = id || null;
+      return fetchRemote(s, f);
+    }).then(function (remote) {
+      if (remote && !opts.force && remote.saved_at && remote.saved_at > (s.lastSyncedAt || 0) && remote.saved_at !== career.saved_at) {
+        var err = new Error('บนคลาวด์มีเซฟที่ใหม่กว่า (อาจมาจากอีกเครื่อง)');
+        err.conflict = true; err.remoteSavedAt = remote.saved_at;
+        throw err;
+      }
+      var body = { files: {} };
+      body.files[FILE] = { content: JSON.stringify(career) };
+      var url, method;
+      if (s.gistId) { url = API + '/gists/' + s.gistId; method = 'PATCH'; }
+      else { url = API + '/gists'; method = 'POST'; body.description = DESC; body.public = false; }
+      return req(f, url, { method: method, headers: headers(s.token, true), body: JSON.stringify(body) });
+    }).then(function (res) {
+      if (!res.ok) throw new Error(explain(res));
+      return res.json();
+    }).then(function (g) {
+      s.gistId = g.id || s.gistId;
+      s.lastSyncedAt = career.saved_at;
+      s.lastSyncClock = Date.now();
+      saveSettings(s);
+      return { ok: true, gistId: s.gistId };
+    });
+  }
+
+  /* ดึงเซฟจากคลาวด์ คืน { career, saved_at } ผู้เรียกเป็นคนตัดสินใจว่าจะใช้ทับหรือไม่ */
+  function pull(fetchImpl) {
+    var f = fetchImpl || root.fetch.bind(root), s = settings();
+    if (!s.token) return Promise.reject(new Error('ยังไม่ได้ตั้งค่าโทเค็น GitHub'));
+    var ready = s.gistId ? Promise.resolve(s.gistId) : findExisting(s, f);
+    return ready.then(function (id) {
+      if (!id) throw new Error('ยังไม่พบเซฟบนคลาวด์ ให้อัปโหลดจากเครื่องหลักก่อน');
+      s.gistId = id; saveSettings(s);
+      return fetchRemote(s, f);
+    }).then(function (remote) {
+      if (!remote) throw new Error('ไม่พบไฟล์เซฟใน Gist');
+      return { career: remote, saved_at: remote.saved_at || 0 };
+    });
+  }
+
+  /* หลังนำเซฟจากคลาวด์มาใช้แล้ว บันทึกว่าตอนนี้ตรงกับคลาวด์ */
+  function markSynced(savedAt) {
+    var s = settings();
+    s.lastSyncedAt = savedAt; s.lastSyncClock = Date.now();
+    saveSettings(s);
+  }
+
+  var api = { settings: settings, saveSettings: saveSettings, configured: configured, push: push, pull: pull, markSynced: markSynced, FILE: FILE };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  root.FMSync = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* แปลงสแนปช็อตข้อมูลจริง (pl_2026_27.json) เป็นนักเตะ/สโมสรของเกม
+ * ค่าความสามารถรายด้าน (attrs) เก็บแยกจากตัวนักเตะ เพื่อไม่ให้เซฟอาชีพและไฟล์ซิงก์บวม */
+(function (root) {
+  'use strict';
+
+  var FIRST_SEASON_YEAR = 2026;   /* ฤดูกาล 2026-27: สัญญาที่หมด 30 มิ.ย. 2027 = เหลือ 1 ปี */
+
+  var ATTR_TH = {
+    crossing: 'การครอสบอล', dribbling: 'การเลี้ยงบอล', finishing: 'การยิงประตู', first_touch: 'การจับบอลแรก',
+    free_kicks: 'ลูกฟรีคิก', heading: 'การโหม่ง', long_shots: 'การยิงไกล', long_throws: 'การทุ่มไกล',
+    marking: 'การประกบตัว', passing: 'การส่งบอล', penalties: 'ลูกจุดโทษ', tackling: 'การเข้าปะทะ',
+    technique: 'เทคนิค', corners: 'ลูกเตะมุม',
+    aggression: 'ความดุดัน', anticipation: 'การคาดการณ์', bravery: 'ความกล้า', composure: 'ความสงบ',
+    concentration: 'สมาธิ', decisions: 'การตัดสินใจ', determination: 'ความมุ่งมั่น', flair: 'ลูกเล่น',
+    leadership: 'ความเป็นผู้นำ', off_the_ball: 'การวิ่งหาตำแหน่ง', positioning: 'การยืนตำแหน่ง',
+    teamwork: 'การทำงานเป็นทีม', vision: 'วิสัยทัศน์', work_rate: 'ความขยัน',
+    acceleration: 'ความเร็วต้น', agility: 'ความคล่องตัว', balance: 'การทรงตัว', jumping: 'การกระโดด',
+    natural_fitness: 'ความฟิต', pace: 'ความเร็ว', stamina: 'ความอึด', strength: 'ความแข็งแรง',
+    aerial_reach: 'การออกรับลูกสูง', command_of_area: 'การคุมกรอบเขตโทษ', communication: 'การสื่อสาร',
+    eccentricity: 'ความพลิกแพลง', handling: 'การรับบอล', kicking: 'การเตะบอล', one_on_ones: 'การดวลตัวต่อตัว',
+    reflexes: 'ปฏิกิริยา', rushing_out: 'การพุ่งออกมา', punching: 'การชกบอล', throwing: 'การขว้างบอล',
+    consistency: 'ความสม่ำเสมอ', important_matches: 'นัดสำคัญ', injury_proneness: 'ความเสี่ยงบาดเจ็บ', versatility: 'ความอเนกประสงค์'
+  };
+  var GROUPS = [
+    ['เทคนิค', ['finishing', 'passing', 'dribbling', 'first_touch', 'technique', 'crossing', 'heading', 'long_shots', 'tackling', 'marking', 'free_kicks', 'penalties', 'corners', 'long_throws']],
+    ['จิตใจ', ['decisions', 'composure', 'vision', 'positioning', 'anticipation', 'off_the_ball', 'work_rate', 'concentration', 'determination', 'teamwork', 'aggression', 'bravery', 'flair', 'leadership']],
+    ['ร่างกาย', ['pace', 'acceleration', 'stamina', 'strength', 'agility', 'jumping', 'balance', 'natural_fitness']],
+    ['ผู้รักษาประตู', ['handling', 'reflexes', 'one_on_ones', 'aerial_reach', 'command_of_area', 'communication', 'kicking', 'throwing', 'rushing_out', 'punching', 'eccentricity']],
+    ['อื่นๆ', ['consistency', 'important_matches', 'injury_proneness', 'versatility']]
+  ];
+  var POS_TH = {
+    GK: 'ผู้รักษาประตู', DC: 'กองหลังตัวกลาง', DL: 'แบ็กซ้าย', DR: 'แบ็กขวา', WBL: 'วิงแบ็กซ้าย', WBR: 'วิงแบ็กขวา',
+    DM: 'กองกลางตัวรับ', MC: 'กองกลาง', ML: 'ปีกซ้าย(กลาง)', MR: 'ปีกขวา(กลาง)', AML: 'ปีกซ้าย', AMC: 'กองกลางตัวรุก',
+    AMR: 'ปีกขวา', ST: 'กองหน้า'
+  };
+
+  function isSnapshot(o) {
+    return !!o && !Array.isArray(o) && Array.isArray(o.players) && Array.isArray(o.teams) && o.players.length > 0 && o.teams.length >= 2;
+  }
+
+  function contractYears(end) {
+    if (!end) return undefined;
+    var y = +String(end).slice(0, 4);
+    if (!y) return undefined;
+    return Math.max(1, Math.min(5, y - FIRST_SEASON_YEAR));
+  }
+
+  function convert(snap) {
+    var clubs = snap.teams.map(function (t) { return { id: t.id, name: t.name, short_name: t.short_name }; });
+    var keys = [], seen = {};
+    snap.players.forEach(function (p) {
+      Object.keys(p.attrs || {}).forEach(function (k) { if (!seen[k]) { seen[k] = keys.length; keys.push(k); } });
+    });
+    var attrs = { keys: keys, a: {}, e: {} };
+    var players = snap.players.map(function (p) {
+      var st = p.season_stats || {}, at = p.attrs || {};
+      var row = keys.map(function (k) { return at[k] == null ? null : at[k]; });
+      attrs.a[p.id] = row;
+      attrs.e[p.id] = (p.attrs_estimated || []).map(function (k) { return seen[k]; }).filter(function (i) { return i != null; });
+      var out = {
+        id: p.id, name: p.name, full_name: p.full_name || p.name, first_name: '', second_name: p.full_name || '',
+        club_id: p.team_id, position: p.pos_fpl, pos_main: p.pos_main || p.pos_fpl,
+        price: p.price, status: p.status === 'u' ? 'a' : (p.status || 'a'), news: p.news || '',
+        minutes: st.minutes || 0, goals: st.goals_scored || 0, assists: st.assists || 0, clean_sheets: st.clean_sheets || 0, xg: 0, xa: 0,
+        rating: p.ovr, ca: p.ca, pa: p.pa == null ? undefined : p.pa, age: p.age == null ? undefined : p.age,
+        prone: at.injury_proneness == null ? undefined : at.injury_proneness
+      };
+      var c = contractYears(p.contract_end);
+      if (c !== undefined) out.contract = c;
+      return out;
+    });
+    return { players: players, clubs: clubs, attrs: attrs, meta: snap.meta || {} };
+  }
+
+  /* ดึงค่าความสามารถของนักเตะหนึ่งคนเป็นรายการ [กลุ่ม, [[ชื่อ, ค่า, ประเมินหรือไม่]]] */
+  function profile(store, id, isGK) {
+    if (!store || !store.a || !store.a[id]) return null;
+    var row = store.a[id], est = {}, idx = {};
+    (store.e[id] || []).forEach(function (i) { est[i] = true; });
+    store.keys.forEach(function (k, i) { idx[k] = i; });
+    var out = [];
+    GROUPS.forEach(function (g) {
+      if (g[0] === 'ผู้รักษาประตู' && !isGK) return;
+      var rows = [];
+      g[1].forEach(function (k) {
+        if (isGK && g[0] === 'เทคนิค' && ['passing', 'first_touch', 'technique'].indexOf(k) < 0) return;
+        var i = idx[k];
+        if (i == null || row[i] == null) return;
+        if (!isGK && g[0] === 'เทคนิค' && ['free_kicks', 'penalties', 'corners', 'long_throws'].indexOf(k) >= 0 && row[i] <= 5) return;
+        rows.push([ATTR_TH[k] || k, row[i], !!est[i]]);
+      });
+      if (rows.length) out.push([g[0], rows]);
+    });
+    if (isGK) out.sort(function (a, b) { return (b[0] === 'ผู้รักษาประตู') - (a[0] === 'ผู้รักษาประตู'); });
+    return out;
+  }
+
+  var api = { isSnapshot: isSnapshot, convert: convert, profile: profile, ATTR_TH: ATTR_TH, POS_TH: POS_TH, contractYears: contractYears };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  root.FMSnapshot = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
@@ -819,8 +1899,11 @@
       players[0].club_id !== undefined && players[0].rating !== undefined && clubs[0].short_name !== undefined;
   }
 
-  function setData(players, clubs, label) {
+  var attrStore = null;   /* ค่าความสามารถรายด้านของนักเตะ (จากสแนปช็อต) เก็บแยกจากเซฟอาชีพ */
+
+  function setData(players, clubs, label, attrs) {
     state.players = players;
+    attrStore = attrs || null;
     state.clubs = clubs.slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
     ['homeSel', 'awaySel'].forEach(function (id, idx) {
       var sel = $(id);
@@ -843,12 +1926,21 @@
     });
     Promise.all(jobs).then(function (parts) {
       var players = null, clubs = null;
+      var snap = parts.filter(function (p) { return window.FMSnapshot.isSnapshot(p); })[0];
+      if (snap) {
+        var c = window.FMSnapshot.convert(snap);
+        var lbl = 'ข้อมูลจริง ' + (c.meta.league || '') + ' ' + (c.meta.season || '') + ' (' + (c.meta.snapshot_date || '') + ')';
+        setData(c.players, c.clubs, lbl, c.attrs);
+        try { localStorage.setItem(STORE_KEY, JSON.stringify({ players: c.players, clubs: c.clubs, attrs: c.attrs, label: lbl })); }
+        catch (e) { $('dataStatus').textContent += ' (บันทึกไว้ในเครื่องไม่ได้ ต้องโหลดไฟล์ใหม่ทุกครั้ง)'; }
+        return;
+      }
       parts.forEach(function (p) {
         if (!Array.isArray(p) || !p.length) return;
         if (p[0].club_id !== undefined) players = p;
         else if (p[0].short_name !== undefined) clubs = p;
       });
-      if (!validData(players, clubs)) { $('dataStatus').textContent = 'ไฟล์ไม่ถูกต้อง: ต้องเลือก players.json และ clubs.json พร้อมกัน'; return; }
+      if (!validData(players, clubs)) { $('dataStatus').textContent = 'ไฟล์ไม่ถูกต้อง: เลือก pl_2026_27.json หรือเลือก players.json และ clubs.json พร้อมกัน'; return; }
       setData(players, clubs, 'ข้อมูลจากไฟล์ของคุณ');
       try { localStorage.setItem(STORE_KEY, JSON.stringify({ players: players, clubs: clubs })); } catch (e) { /* ไม่เป็นไร */ }
     }).catch(function () { $('dataStatus').textContent = 'อ่านไฟล์ไม่สำเร็จ'; });
@@ -859,13 +1951,22 @@
     setData(sample.players, sample.clubs, 'ข้อมูลตัวอย่าง (สมมติ)');
     var stored = null;
     try { stored = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) { stored = null; }
-    if (stored && validData(stored.players, stored.clubs)) setData(stored.players, stored.clubs, 'ข้อมูลที่เคยโหลดไว้');
-    Promise.all([fetch('data/players.json'), fetch('data/clubs.json')]).then(function (rs) {
-      if (!rs[0].ok || !rs[1].ok) throw new Error('no data');
-      return Promise.all([rs[0].json(), rs[1].json()]);
-    }).then(function (d) {
-      if (validData(d[0], d[1])) setData(d[0], d[1], 'ข้อมูลจากโฟลเดอร์ data');
-    }).catch(function () { /* ไม่มีโฟลเดอร์ data ก็ใช้ที่มีอยู่ */ });
+    if (stored && validData(stored.players, stored.clubs)) setData(stored.players, stored.clubs, stored.label || 'ข้อมูลที่เคยโหลดไว้', stored.attrs);
+    fetch('data/pl_2026_27.json').then(function (r) {
+      if (!r.ok) throw new Error('no snapshot');
+      return r.json();
+    }).then(function (j) {
+      if (!window.FMSnapshot.isSnapshot(j)) throw new Error('bad snapshot');
+      var c = window.FMSnapshot.convert(j);
+      setData(c.players, c.clubs, 'ข้อมูลจริง ' + (c.meta.season || '') + ' จากโฟลเดอร์ data', c.attrs);
+    }).catch(function () {
+      return Promise.all([fetch('data/players.json'), fetch('data/clubs.json')]).then(function (rs) {
+        if (!rs[0].ok || !rs[1].ok) throw new Error('no data');
+        return Promise.all([rs[0].json(), rs[1].json()]);
+      }).then(function (d) {
+        if (validData(d[0], d[1])) setData(d[0], d[1], 'ข้อมูลจากโฟลเดอร์ data');
+      }).catch(function () { /* ไม่มีโฟลเดอร์ data ก็ใช้ที่มีอยู่ */ });
+    });
   }
 
   /* ---------- หน้าจอ ---------- */
@@ -875,7 +1976,7 @@
     el.innerHTML = '';
     if (!club) return;
     var col = clubColor(club).css;
-    el.appendChild(imgOrFallback('assets/clubs/' + club.short_name + '.png', club.short_name, col, 'badge'));
+    el.appendChild(imgOrFallback('assets/clubs/' + club.short_name + '.png', club.short_name, col, 'cbadge'));
   }
 
   function updateBadges(homeClub, awayClub) {
@@ -889,7 +1990,7 @@
     var m = state.match;
     [['home', 'lineHome'], ['away', 'lineAway']].forEach(function (pair) {
       var side = m[pair[0]], el = $(pair[1]);
-      el.innerHTML = '<h3>' + side.club.name + ' (' + side.formation + ')</h3>';
+      el.innerHTML = '<h2>' + side.club.name + ' (' + side.formation + ')</h2>';
       side.xi.forEach(function (s) {
         var p = s.player, row = document.createElement('div');
         row.className = 'prow';
@@ -909,18 +2010,22 @@
   function addLog(text, cls) {
     var li = document.createElement('li');
     li.textContent = text;
-    if (cls) li.className = cls;
+    li.className = 'fe' + (cls ? ' ' + cls : '');
     var log = $('log');
     log.insertBefore(li, log.firstChild);
   }
 
   function describe(e) {
     var m = state.match, team = m[e.side].club.name, opp = m[e.side === 'home' ? 'away' : 'home'].club.name;
+    if (window.FMNarrative) {
+      return window.FMNarrative.eventLine(e, { team: team, opp: opp, sf: state.score[e.side], sa: state.score[e.side === 'home' ? 'away' : 'home'] });
+    }
     switch (e.type) {
-      case 'goal': return ['⚽ ' + e.minute + "' ประตู! " + e.player.name + ' (' + team + ')' + (e.assist ? ' จ่ายโดย ' + e.assist.name : ''), 'goal'];
-      case 'save': return ['🧤 ' + e.minute + "' " + e.gk.name + ' (' + opp + ') เซฟลูกยิงของ ' + e.player.name, ''];
-      case 'miss': return ['💨 ' + e.minute + "' " + e.player.name + ' (' + team + ') ยิงไม่เข้ากรอบ', ''];
-      case 'yellow': return ['🟨 ' + e.minute + "' " + e.player.name + ' (' + team + ') โดนใบเหลือง', ''];
+      case 'goal': return ['' + e.minute + "' ประตู! " + e.player.name + ' (' + team + ')' + (e.assist ? ' จ่ายโดย ' + e.assist.name : ''), 'goal'];
+      case 'save': return ['' + e.minute + "' " + e.gk.name + ' (' + opp + ') เซฟลูกยิงของ ' + e.player.name, ''];
+      case 'miss': return ['' + e.minute + "' " + e.player.name + ' (' + team + ') ยิงไม่เข้ากรอบ', ''];
+      case 'yellow': return ['' + e.minute + "' " + e.player.name + ' (' + team + ') โดนใบเหลือง', ''];
+      case 'red': return ['' + e.minute + "' " + e.player.name + ' (' + team + ') โดนใบแดง', 'goal'];
     }
     return ['', ''];
   }
@@ -936,11 +2041,11 @@
   function processEvents() {
     var res = state.match.result;
     while (state.shown < res.events.length && res.events[state.shown].reveal <= state.t) {
-      var e = res.events[state.shown++], d = describe(e);
+      var e = res.events[state.shown++];
+      if (e.type === 'goal') { state.score[e.side]++; updateScore(); }
+      var d = describe(e);
       addLog(d[0], d[1]);
       if (e.type === 'goal') {
-        state.score[e.side]++;
-        updateScore();
         state.view.showGoal(e.player.name + ' (' + state.match[e.side].club.short_name + ') ' + e.minute + "'");
       }
     }
@@ -953,14 +2058,15 @@
       row('ยิงทั้งหมด', s.home.shots, s.away.shots) +
       row('ยิงตรงกรอบ', s.home.onTarget, s.away.onTarget) +
       row('ครองบอล', r.possessionPct.home + '%', r.possessionPct.away + '%') +
-      row('ใบเหลือง', s.home.yellow, s.away.yellow) + '</table>';
+      row('ใบเหลือง', s.home.yellow, s.away.yellow) +
+      (s.home.red + s.away.red ? row('ใบแดง', s.home.red, s.away.red) : '') + '</table>';
   }
 
   function finish() {
     state.playing = false;
     state.score = { home: state.match.result.score.home, away: state.match.result.score.away };
     updateScore(); updateClock(); showStats();
-    $('startBtn').textContent = '▶ เล่นแมตช์ใหม่';
+    $('startBtn').textContent = 'เล่นแมตช์ใหม่';
     if (state.onFinish) {
       var cb = state.onFinish;
       state.onFinish = null;
@@ -990,7 +2096,7 @@
     runMatch(hid, aid, $('homeForm').value, $('awayForm').value, { skip: skip });
   }
 
-  /* เล่นแมตช์ระหว่างสองสโมสร: opts = { skip, players (ถ้าไม่ใส่ใช้ข้อมูลหลัก), onFinish(result) } */
+  /* เล่นแมตช์ระหว่างสองสโมสร: opts = { skip, players (ถ้าไม่ใส่ใช้ข้อมูลหลัก), homeXI/awayXI (ตัวจริงที่จัดไว้แล้ว), sim (ตัวเลือกเอนจิน), onFinish(result) } */
   function runMatch(hid, aid, hf, af, opts) {
     opts = opts || {};
     var skip = opts.skip, pool = opts.players || state.players;
@@ -998,8 +2104,8 @@
     var hc = clubById(hid), ac = clubById(aid);
     var hp = pool.filter(function (p) { return String(p.club_id) === String(hid); });
     var ap = pool.filter(function (p) { return String(p.club_id) === String(aid); });
-    var hxi = E.pickLineup(hp, hf), axi = E.pickLineup(ap, af);
-    var res = E.simulate(hxi, axi, {});
+    var hxi = opts.homeXI || E.pickLineup(hp, hf), axi = opts.awayXI || E.pickLineup(ap, af);
+    var res = E.simulate(hxi, axi, opts.sim || {});
     var hcol = clubColor(hc), acol = clubColor(ac, hcol.hue);
 
     state.match = { home: { xi: hxi, club: hc, color: hcol.css, formation: hf }, away: { xi: axi, club: ac, color: acol.css, formation: af }, result: res };
@@ -1017,7 +2123,7 @@
       return;
     }
     state.playing = true;
-    $('startBtn').textContent = '⏸ กำลังแข่ง...';
+    $('startBtn').textContent = 'กำลังแข่ง...';
     try { $('pitch').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { /* ไม่เป็นไร */ }
     requestAnimationFrame(loop);
   }
@@ -1036,7 +2142,9 @@
     Array.prototype.forEach.call(document.querySelectorAll('[data-speed]'), function (b) {
       b.addEventListener('click', function () {
         state.speed = +b.getAttribute('data-speed');
-        Array.prototype.forEach.call(document.querySelectorAll('[data-speed]'), function (x) { x.classList.toggle('on', x === b); });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-speed]'), function (x) {
+          x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+        });
       });
     });
     $('fileInput').addEventListener('change', function (e) { if (e.target.files.length) loadFromFiles(e.target.files); });
@@ -1059,7 +2167,14 @@
     clubColor: clubColor,
     getPlayers: function () { return state.players; },
     getClubs: function () { return state.clubs; },
+    getAttrs: function () { return attrStore; },
     isPlaying: function () { return state.playing; },
+    skipNow: function () {
+      if (!state.playing || !state.match) return;
+      var res = state.match.result;
+      state.t = res.total; processEvents(); state.view.draw(res.total); finish();
+    },
+    resizePitch: function () { if (state.view) { state.view.resize(); state.view.draw(state.t); } },
     onData: function (cb) { dataListeners.push(cb); }
   };
 
@@ -1068,283 +2183,891 @@
 
 </script>
 <script>
-/* หน้าจอโหมดอาชีพ: ตาราง ตลาดซื้อขาย ทีมของฉัน ผู้ทำประตู และเซฟ */
+/* หน้าจอหลักของเกมตามสเปก UX/UI (claude/ui-spec.md): เมนูข้าง แถบหัว และหน้าจอส่วนแรก
+ * ส่วนที่เหลือ (แมตช์ ตารางแข่ง ตลาด เทรนนิ่ง การเงิน บอร์ด ตั้งค่า) อยู่ใน ui_more.js
+ * หลักการ: ทุกตัวเลขมาจากสถานะเกมเท่านั้น ถ้าเกมไม่มีข้อมูลนั้นให้ซ่อน ไม่ใส่ค่าปลอม */
 (function () {
   'use strict';
 
-  var S = window.FMSeason, App = window.FMApp, E = window.FMEngine;
+  var S = window.FMSeason, App = window.FMApp, E = window.FMEngine, N = window.FMNarrative, Y = window.FMSync, SN = window.FMSnapshot;
   var KEY = 'fm_career_v1';
-  var career = null, view = 'table', msg = null, marketPos = 'ALL', marketQ = '', confirmReset = false;
+  var G = null;
+  var U = {
+    screen: 'home', sqFilter: 'all', sqSort: 'pos', sqDir: 1, playerId: null, from: 'squad', slot: null,
+    msgId: null, matchPhase: 'pre', post: null, newClub: null, newName: '', fxTab: 'mine', fxRound: null,
+    tfTab: 'buy', tfPos: 'all', tfQ: '', tfMax: '', syncMsg: null, aiBusy: false, pendingCloud: null, single: false
+  };
 
-  function $(id) { return document.getElementById(id); }
-  function h(tag, props, kids) {
-    var el = document.createElement(tag);
-    if (props) {
-      Object.keys(props).forEach(function (k) {
-        if (k === 'text') el.textContent = props[k];
-        else if (k === 'class') el.className = props[k];
-        else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), props[k]);
-        else el.setAttribute(k, props[k]);
+  /* ---------- ตัวช่วย ---------- */
+  var $ = function (s) { return document.querySelector(s); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var money = function (v) { return '£' + (Math.round(v * 10) / 10) + 'm'; };
+  var money2 = function (v) { return '£' + (Math.round(v * 100) / 100) + 'm'; };
+  var club = function (id) {
+    if (!G) return { name: '?', short_name: '?' };
+    for (var i = 0; i < G.clubs.length; i++) if (String(G.clubs[i].id) === String(id)) return G.clubs[i];
+    return { name: '?', short_name: '?' };
+  };
+  var me = function () { return club(G.userClubId); };
+
+  var POS_GROUP = { GK: 'G', DC: 'D', DL: 'D', DR: 'D', WBL: 'D', WBR: 'D', DM: 'M', MC: 'M', ML: 'M', MR: 'M', AMC: 'M', AML: 'F', AMR: 'F', ST: 'F' };
+  var BASIC = { GK: 'GK', DEF: 'DC', MID: 'MC', FWD: 'ST' };
+  var BASIC_GROUP = { GK: 'G', DEF: 'D', MID: 'M', FWD: 'F' };
+  function posLabel(p) { return p.pos_main || BASIC[p.position] || p.position; }
+  function posGroup(p) { return POS_GROUP[p.pos_main] || BASIC_GROUP[p.position] || 'M'; }
+  function posPill(p) { return '<span class="pos p' + posGroup(p) + '">' + esc(posLabel(p)) + '</span>'; }
+  function stars(ca) {
+    if (ca == null) return '';
+    var s = Math.max(0, Math.min(5, ca / 40)), full = Math.floor(s + 0.001), half = s - full >= 0.5;
+    return '<span class="st" aria-label="ความสามารถ ' + (Math.round(s * 2) / 2) + ' ดาว">' + '★'.repeat(full) + (half ? '½' : '') + '</span>';
+  }
+  var aCls = function (v) { return v >= 18 ? 'a5' : v >= 15 ? 'a4' : v >= 11 ? 'a3' : v >= 7 ? 'a2' : 'a1'; };
+
+  function crest(c, size) {
+    size = size || 40;
+    var hue = App.clubColor(c).hue;
+    return '<span class="crest" data-logo="' + esc(c.short_name) + '" style="width:' + size + 'px;height:' + size + 'px;background:hsl(' + hue + ',62%,64%);font-size:' + Math.round(size * 0.32) + 'px' + (size >= 50 ? ';border-radius:50%' : '') + '">' + esc(c.short_name) + '</span>';
+  }
+  function face(p, size) {
+    size = size || 40;
+    var c = club(p.club_id), hue = App.clubColor(c).hue;
+    return '<span class="avatar" data-face="' + p.id + '" style="width:' + size + 'px;height:' + size + 'px;background:hsl(' + hue + ',62%,64%);font-size:' + Math.round(size * 0.34) + 'px" aria-hidden="true">' + esc(String(p.name).slice(0, 2).toUpperCase()) + '</span>';
+  }
+  function hydrate(root) {
+    [['.crest[data-logo]', function (el) { return 'assets/clubs/' + el.getAttribute('data-logo') + '.png'; }],
+      ['.avatar[data-face]', function (el) { return 'assets/players/' + el.getAttribute('data-face') + '.png'; }]].forEach(function (pair) {
+      Array.prototype.forEach.call(root.querySelectorAll(pair[0]), function (el) {
+        var img = new Image();
+        img.onload = function () { el.textContent = ''; el.style.background = 'transparent'; img.alt = ''; el.appendChild(img); };
+        img.src = pair[1](el);
       });
-    }
-    (kids || []).forEach(function (c) {
-      if (c == null) return;
-      el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
     });
-    return el;
   }
 
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(career)); } catch (e) { /* ไม่เป็นไร */ } }
+  function toast(t) {
+    var d = document.createElement('div'); d.className = 'toast'; d.setAttribute('role', 'status'); d.textContent = t;
+    document.body.appendChild(d); setTimeout(function () { d.remove(); }, 3200);
+  }
+  function modal(html) { var m = $('#modal'); m.innerHTML = '<div class="box" role="dialog" aria-modal="true">' + html + '</div>'; m.classList.add('open'); var b = m.querySelector('button'); if (b) b.focus(); }
+  function closeModal() { var m = $('#modal'); m.classList.remove('open'); m.innerHTML = ''; }
+  function say(r) { if (r && r.msg) toast(r.msg); }
+
+  /* ---------- เก็บ/โหลด และซิงก์ ---------- */
+  var syncTimer = null;
+  function save() {
+    if (!G) return;
+    G.saved_at = Date.now();
+    try { localStorage.setItem(KEY, JSON.stringify(G)); } catch (e) { /* ไม่เป็นไร */ }
+    var st = Y.settings();
+    if (st.token && st.auto) { clearTimeout(syncTimer); syncTimer = setTimeout(function () { doPush(false, true); }, 1500); }
+  }
   function load() {
     try {
       var s = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if (S.isValid(s)) career = s;
-    } catch (e) { career = null; }
+      if (S.isValid(s)) G = S.upgrade(s);
+    } catch (e) { G = null; }
+  }
+  function doPush(force, silent) {
+    U.syncMsg = { ok: true, msg: 'กำลังอัปโหลด...' };
+    if (!silent && U.screen === 'settings') render();
+    return Y.push(G, { force: force }).then(function () {
+      U.syncMsg = { ok: true, msg: 'อัปโหลดขึ้นคลาวด์แล้ว ' + new Date().toLocaleTimeString('th-TH') };
+    }).catch(function (e) {
+      U.syncMsg = { ok: false, msg: e.message, conflict: !!e.conflict };
+    }).then(function () { if (U.screen === 'settings') render(); });
+  }
+  function applyLoaded(obj, note) {
+    G = S.upgrade(obj); U.screen = 'home'; U.matchPhase = 'pre'; U.post = null;
+    try { localStorage.setItem(KEY, JSON.stringify(G)); } catch (e) { /* ไม่เป็นไร */ }
+    toast(note);
+  }
+  function cloudPull() {
+    U.syncMsg = { ok: true, msg: 'กำลังดึงจากคลาวด์...' }; render();
+    Y.pull().then(function (r) {
+      var local = G ? G.saved_at : 0;
+      if (G && local > (Y.settings().lastSyncedAt || 0) && r.saved_at <= local) {
+        U.pendingCloud = r; U.syncMsg = { ok: false, msg: 'เซฟในเครื่องนี้ใหม่กว่าหรือมีการแก้ไขที่ยังไม่ได้อัปโหลด' };
+      } else { applyLoaded(r.career, 'ดึงเซฟจากคลาวด์สำเร็จ'); Y.markSynced(r.saved_at); U.syncMsg = null; }
+      render();
+    }).catch(function (e) { U.syncMsg = { ok: false, msg: e.message }; render(); });
   }
 
-  function club(id) {
-    for (var i = 0; i < career.clubs.length; i++) if (career.clubs[i].id === id) return career.clubs[i];
-    return { name: '?', short_name: '?' };
-  }
-  function money(x) { return '£' + x + 'm'; }
-  function statusIcon(p) { return p.status === 'i' ? ' 🤕' : p.status === 's' ? ' 🚫' : p.status === 'd' ? ' ⚠️' : ''; }
-  function busy() { return App.isPlaying(); }
+  /* ---------- โครงหน้า ---------- */
+  var ICON = {
+    home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', inbox: '<path d="M4 4h16v16H4z"/><path d="M4 13h5l1 3h4l1-3h5"/>',
+    squad: '<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 15c3 0 5 2 5 5"/>',
+    tactics: '<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M12 4v16"/><circle cx="12" cy="12" r="3"/>', match: '<circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/>',
+    fixtures: '<rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/>', transfers: '<path d="M4 8h13l-3-3M20 16H7l3 3"/>',
+    training: '<path d="M6 6v12M18 6v12M3 9v6M21 9v6M6 12h12"/>', finance: '<path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/>', board: '<path d="M4 21V4h11l-1 4 6 1-2 7H4"/>',
+    settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>'
+  };
+  var NAV = [['home', 'หน้าหลัก'], ['inbox', 'กล่องข้อความ'], ['squad', 'ทีม'], ['tactics', 'แท็กติก'], ['match', 'แมตช์'], ['fixtures', 'ตารางแข่ง'],
+    ['transfers', 'ตลาดซื้อขาย'], ['training', 'เทรนนิ่ง'], ['finance', 'การเงิน'], ['board', 'บอร์ดบริหาร'], ['settings', 'ตั้งค่า']];
+  var TITLES = { home: 'ภาพรวม', inbox: 'กล่องข้อความ', squad: 'ทีม', player: 'โปรไฟล์นักเตะ', tactics: 'แท็กติก', match: 'แมตช์', fixtures: 'ตารางแข่ง',
+    transfers: 'ตลาดซื้อขาย', training: 'เทรนนิ่ง', finance: 'การเงิน', board: 'บอร์ดบริหาร', settings: 'ตั้งค่า', single: 'แมตช์เดี่ยว', newgame: 'เริ่มเกมใหม่' };
+  function svg(k) { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' + ICON[k] + '</svg>'; }
 
-  /* ---------- เริ่มอาชีพ / โหลดเซฟ ---------- */
-  function renderStart(body) {
-    var clubs = App.getClubs();
-    var sel = h('select', { id: 'careerClub', 'aria-label': 'เลือกสโมสรที่จะคุม' },
-      clubs.map(function (c) { return h('option', { value: c.id, text: c.name }); }));
-    body.appendChild(h('h3', { text: 'เริ่มโหมดอาชีพ ฤดูกาล 2026-27', style: 'margin:0 0 8px;font-size:15px' }));
-    body.appendChild(h('div', { class: 'status', text: 'เลือกสโมสรที่จะคุม ตลาดซื้อขายเปิดก่อนเริ่มฤดูกาลและช่วงกลางฤดูกาล' }));
-    body.appendChild(h('div', { class: 'row', style: 'margin-top:8px' }, [
-      sel,
-      h('button', { class: 'primary', text: '🏁 เริ่มอาชีพ', onclick: function () {
-        var id = isNaN(+sel.value) ? sel.value : +sel.value;
-        career = S.newCareer(App.getPlayers(), App.getClubs(), id, {});
-        view = 'table'; msg = null; confirmReset = false;
-        save(); render();
-      } })
-    ]));
-    body.appendChild(loadSaveButton());
+  function unread() {
+    if (!G) return 0;
+    return G.news.filter(function (n) { return n.id > (G.inboxRead || 0) && !(G.readIds && G.readIds[n.id]); }).length;
   }
+  function isUnread(n) { return n.id > (G.inboxRead || 0) && !(G.readIds && G.readIds[n.id]); }
 
-  function loadSaveButton() {
-    var input = h('input', { type: 'file', accept: '.json,application/json', style: 'display:none', onchange: function (e) {
-      var f = e.target.files[0];
-      if (!f) return;
-      f.text().then(function (t) {
-        var obj = JSON.parse(t);
-        if (!S.isValid(obj)) throw new Error('bad');
-        career = obj; view = 'table'; msg = { ok: true, msg: 'โหลดเซฟสำเร็จ' };
-        save(); render();
-      }).catch(function () { msg = { ok: false, msg: 'ไฟล์เซฟไม่ถูกต้อง' }; render(); });
-    } });
-    return h('div', { class: 'row', style: 'margin-top:8px' }, [h('label', { class: 'filebtn' }, ['📂 โหลดไฟล์เซฟ', input])]);
-  }
-
-  /* ---------- ส่วนหัว/ปุ่มเล่น ---------- */
-  function playNext(skip) {
-    var fx = S.userFixture(career);
-    if (!fx || busy()) return;
-    msg = null;
-    App.runMatch(fx.h, fx.a, S.formationFor(career, fx.h), S.formationFor(career, fx.a), {
-      skip: skip,
-      players: career.players,
-      onFinish: function (res) {
-        S.applyRound(career, { h: fx.h, a: fx.a, result: res });
-        save(); render();
-      }
+  function renderNav() {
+    var nav = $('#nav');
+    if (!G) { nav.style.display = 'none'; nav.innerHTML = ''; return; }
+    nav.style.display = '';
+    var cur = U.screen === 'player' ? (U.from === 'transfers' ? 'transfers' : 'squad') : U.screen, un = unread();
+    var h = '<div class="brand">' + crest(me(), 40) + '<div style="display:flex;flex-direction:column;min-width:0"><b style="font-size:15px">' + esc(me().name) + '</b><span class="sub">' + esc(G.manager) + '</span></div></div>';
+    NAV.forEach(function (n) {
+      h += '<button type="button" class="nv' + (cur === n[0] ? ' on' : '') + '" data-a="go" data-s="' + n[0] + '"' + (cur === n[0] ? ' aria-current="page"' : '') + '>' + svg(n[0]) + n[1] +
+        (n[0] === 'inbox' && un ? '<span class="badge" aria-label="ยังไม่อ่าน ' + un + ' ข้อความ">' + un + '</span>' : '') + '</button>';
     });
+    nav.innerHTML = h;
   }
 
-  function renderHeader(body) {
-    var total = career.fixtures.length, w = S.windowRange(career), open = S.windowOpen(career);
-    var fx = S.userFixture(career);
-    body.appendChild(h('div', { class: 'hdr' }, [
-      h('b', { text: club(career.userClubId).name }), ' · ฤดูกาล ' + career.season + ' · ผ่านมา ' + career.round + '/' + total + ' นัด',
-      h('br'), 'งบ ', h('b', { text: money(career.budget) }),
-      ' · ตลาด: ', h('b', { text: open ? 'เปิด' : 'ปิด' }),
-      open ? '' : ' (เปิดอีกครั้งหลังนัดที่ ' + w.from + ' ถึง ' + w.to + ')'
-    ]));
-
-    if (S.finished(career)) {
-      var st = S.standings(career), pos = 0;
-      st.forEach(function (r, i) { if (r.club.id === career.userClubId) pos = i + 1; });
-      body.appendChild(h('div', { class: 'msg', text: 'จบฤดูกาล! แชมป์: ' + st[0].club.name + ' (' + st[0].pts + ' แต้ม) · ทีมคุณอยู่อันดับ ' + pos }));
-    } else if (fx) {
-      var home = fx.h === career.userClubId;
-      body.appendChild(h('div', { style: 'margin:8px 0;font-weight:600', text: 'นัดต่อไป: ' + club(fx.h).name + ' vs ' + club(fx.a).name + (home ? ' (เหย้า)' : ' (เยือน)') }));
-      var form = h('select', { 'aria-label': 'แผนการเล่น', onchange: function (e) { career.formation = e.target.value; save(); } },
-        Object.keys(E.FORMATIONS).map(function (f) {
-          var o = h('option', { value: f, text: f });
-          if (f === career.formation) o.selected = true;
-          return o;
-        }));
-      var dis = busy() ? { disabled: 'disabled' } : {};
-      body.appendChild(h('div', { class: 'row' }, [
-        form,
-        h('button', Object.assign({ class: 'primary', text: '▶ เล่นนัดต่อไป (2D)', onclick: function () { playNext(false); } }, dis)),
-        h('button', Object.assign({ text: '⏭ จำลองเลย', onclick: function () { playNext(true); } }, dis))
-      ]));
+  function continueLabel() {
+    if (S.finished(G)) return 'เริ่มฤดูกาลถัดไป';
+    if (U.screen !== 'match') return 'ไปที่แมตช์';
+    if (U.matchPhase === 'pre') return 'เริ่มแมตช์';
+    if (U.matchPhase === 'post') return 'ดำเนินต่อ';
+    return null;
+  }
+  function renderTop() {
+    var top = $('#top');
+    if (!G) {
+      top.innerHTML = '<div style="display:flex;flex-direction:column"><span class="sub">Piithai FM 2027</span><h1>' + esc(TITLES[U.screen] || 'เริ่มเกมใหม่') + '</h1></div><span class="grow"></span>' +
+        (U.screen === 'single' ? '<button type="button" class="btn" data-a="go" data-s="newgame">กลับ</button>' : '');
+      return;
     }
-
-    if (career.lastResults && career.lastResults.length) {
-      var box = h('div', { class: 'results' });
-      career.lastResults.forEach(function (r) {
-        var mine = r.h === career.userClubId || r.a === career.userClubId;
-        box.appendChild(h('div', { class: mine ? 'me' : '', text: club(r.h).short_name + ' ' + r.hg + '-' + r.ag + ' ' + club(r.a).short_name }));
-      });
-      body.appendChild(h('div', { class: 'status', text: 'ผลนัดที่ผ่านมา' }));
-      body.appendChild(box);
+    if (U.screen === 'single') {
+      top.innerHTML = '<div style="display:flex;flex-direction:column"><span class="sub">โหมดเล่นเร็ว ไม่บันทึกผล</span><h1>แมตช์เดี่ยว</h1></div><span class="grow"></span><button type="button" class="btn" data-a="go" data-s="settings">กลับ</button>';
+      return;
     }
-    if (msg) body.appendChild(h('div', { class: 'msg' + (msg.ok ? '' : ' err'), text: msg.msg }));
+    var label = continueLabel();
+    top.innerHTML = '<div style="display:flex;flex-direction:column"><span class="sub">ฤดูกาล ' + esc(G.season) + ' · ผ่านมา ' + G.round + '/' + G.fixtures.length + ' นัด</span><h1>' + esc(TITLES[U.screen] || '') + '</h1></div><span class="grow"></span>' +
+      (label ? '<button type="button" class="btn pri" data-a="continue">' + label + ' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>' : '');
   }
 
-  function renderTabs(body) {
-    var tabs = [['table', 'ตาราง'], ['market', 'ตลาด'], ['squad', 'ทีมของฉัน'], ['scorers', 'ดาวซัลโวย'], ['save', 'เซฟ']];
-    tabs[3][1] = 'ดาวซัลโว';
-    body.appendChild(h('div', { class: 'subtabs' }, tabs.map(function (t) {
-      return h('button', { class: view === t[0] ? 'on' : '', text: t[1], onclick: function () { view = t[0]; confirmReset = false; render(); } });
-    })));
-  }
-
-  /* ---------- แต่ละหน้า ---------- */
-  function renderTable(body) {
-    var t = h('table', { class: 'lg' });
-    t.appendChild(h('tr', {}, ['#', 'ทีม', 'แข่ง', 'ชนะ', 'เสมอ', 'แพ้', 'ผลต่าง', 'แต้ม'].map(function (x) { return h('th', { text: x }); })));
-    S.standings(career).forEach(function (r, i) {
-      var tr = h('tr', { class: r.club.id === career.userClubId ? 'me' : '' }, [
-        i + 1, r.club.name, r.p, r.w, r.d, r.l, (r.gd > 0 ? '+' : '') + r.gd, h('b', { text: String(r.pts) })
-      ].map(function (v) { return h('td', {}, [typeof v === 'object' ? v : String(v)]); }));
-      t.appendChild(tr);
-    });
-    body.appendChild(t);
-  }
-
-  function playerRow(p, extra) {
-    var c = App.clubColor(club(p.club_id)).css;
-    return h('div', { class: 'mrow' }, [
-      App.imgOrFallback('assets/players/' + p.id + '.png', String(p.name).slice(0, 2).toUpperCase(), c, 'face'),
-      h('div', { class: 'pinfo' }, [
-        h('div', { text: p.name + statusIcon(p) }),
-        h('div', { class: 'pmeta', text: club(p.club_id).short_name + ' · ' + p.position + ' · ค่าพลัง ' + p.rating })
-      ])
-    ].concat(extra));
-  }
-
-  function renderMarket(body) {
-    var open = S.windowOpen(career);
-    body.appendChild(h('div', { class: 'status', text: open ? 'ตลาดเปิด: ราคาที่แสดงคือราคาที่สโมสรเจ้าของขอ' : 'ตลาดปิด ซื้อขายไม่ได้ในตอนนี้' }));
-    var posSel = h('select', { 'aria-label': 'ตำแหน่ง', onchange: function (e) { marketPos = e.target.value; fill(); } },
-      ['ALL', 'GK', 'DEF', 'MID', 'FWD'].map(function (x) {
-        var o = h('option', { value: x, text: x === 'ALL' ? 'ทุกตำแหน่ง' : x });
-        if (x === marketPos) o.selected = true;
-        return o;
-      }));
-    var q = h('input', { type: 'search', placeholder: 'ค้นหาชื่อนักเตะ', value: marketQ, oninput: function (e) { marketQ = e.target.value; fill(); } });
-    var list = h('div');
-    body.appendChild(h('div', { class: 'row', style: 'margin:8px 0' }, [posSel, q]));
-    body.appendChild(list);
-
-    function fill() {
-      list.innerHTML = '';
-      var needle = marketQ.trim().toLowerCase(), n = 0;
-      var cands = career.players.filter(function (p) {
-        return p.club_id !== career.userClubId && (marketPos === 'ALL' || p.position === marketPos) &&
-          (!needle || String(p.name).toLowerCase().indexOf(needle) >= 0 || String(p.second_name || '').toLowerCase().indexOf(needle) >= 0);
-      }).sort(function (a, b) { return b.rating - a.rating; });
-      cands.slice(0, 40).forEach(function (p) {
-        var ask = S.askPrice(p), dis = (!open || busy() || career.budget < ask) ? { disabled: 'disabled' } : {};
-        list.appendChild(playerRow(p, [
-          h('button', Object.assign({ text: 'ซื้อ ' + money(ask), onclick: function () {
-            msg = S.buy(career, p.id); save(); render();
-          } }, dis))
-        ]));
-        n++;
-      });
-      if (!n) list.appendChild(h('div', { class: 'status', text: 'ไม่พบนักเตะ' }));
-      else if (cands.length > 40) list.appendChild(h('div', { class: 'status', text: 'แสดง 40 อันดับแรก จากทั้งหมด ' + cands.length + ' คน ลองค้นหาหรือกรองตำแหน่ง' }));
-    }
-    fill();
-  }
-
-  function renderSquad(body) {
-    var open = S.windowOpen(career);
-    var order = { GK: 0, DEF: 1, MID: 2, FWD: 3 };
-    var mine = S.squadOf(career, career.userClubId).sort(function (a, b) {
-      return order[a.position] - order[b.position] || b.rating - a.rating;
-    });
-    body.appendChild(h('div', { class: 'status', text: 'นักเตะ ' + mine.length + ' คน (ขั้นต่ำ ' + S.SQUAD_MIN + ' สูงสุด ' + S.SQUAD_MAX + ')' }));
-    mine.forEach(function (p) {
-      var bid = S.bidPrice(p), dis = (!open || busy()) ? { disabled: 'disabled' } : {};
-      body.appendChild(playerRow(p, [
-        h('button', Object.assign({ text: 'ขาย ' + money(bid), onclick: function () {
-          msg = S.sell(career, p.id); save(); render();
-        } }, dis))
-      ]));
+  var PANES = ['installHint', 'singlePane', 'dataPane', 'matchPane'];
+  function stashPanes() { var st = $('#stash'); PANES.forEach(function (id) { var el = document.getElementById(id); if (el && el.parentNode !== st) st.appendChild(el); }); }
+  function mountPanes(view) {
+    Array.prototype.forEach.call(view.querySelectorAll('[data-mount]'), function (ph) {
+      var el = document.getElementById(ph.getAttribute('data-mount'));
+      if (el) ph.appendChild(el);
     });
   }
 
-  function renderScorers(body) {
-    var list = S.topScorers(career, 15);
-    if (!list.length) { body.appendChild(h('div', { class: 'status', text: 'ยังไม่มีประตู' })); return; }
-    var t = h('table', { class: 'lg' });
-    t.appendChild(h('tr', {}, ['#', 'นักเตะ', 'ทีม', 'ประตู', 'แอสซิสต์'].map(function (x) { return h('th', { text: x }); })));
-    list.forEach(function (r, i) {
-      t.appendChild(h('tr', {}, [i + 1, r.player.name, club(r.player.club_id).short_name, r.g, r.a].map(function (v) { return h('td', { text: String(v) }); })));
-    });
-    body.appendChild(t);
-  }
-
-  function download() {
-    var url = URL.createObjectURL(new Blob([JSON.stringify(career)], { type: 'application/json' }));
-    var a = document.createElement('a');
-    a.href = url; a.download = 'piithai-fm-career-' + career.season + '.json';
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
-  }
-
-  function renderSave(body) {
-    body.appendChild(h('div', { class: 'status', text: 'เกมบันทึกอัตโนมัติในเบราว์เซอร์นี้ทุกครั้งที่จบนัดหรือซื้อขายนักเตะ ถ้าจะย้ายไปเล่นต่ออีกเครื่อง ให้ดาวน์โหลดไฟล์เซฟแล้วโหลดในเครื่องนั้น' }));
-    body.appendChild(h('div', { class: 'row', style: 'margin-top:8px' }, [
-      h('button', { class: 'primary', text: '💾 ดาวน์โหลดไฟล์เซฟ', onclick: download })
-    ]));
-    body.appendChild(loadSaveButton());
-    body.appendChild(h('div', { class: 'row', style: 'margin-top:8px' }, [
-      h('button', { text: confirmReset ? 'กดอีกครั้งเพื่อยืนยัน: ลบอาชีพนี้' : '🗑 เริ่มอาชีพใหม่', onclick: function () {
-        if (!confirmReset) { confirmReset = true; render(); return; }
-        career = null; confirmReset = false; msg = null;
-        try { localStorage.removeItem(KEY); } catch (e) { /* ไม่เป็นไร */ }
-        render();
-      } })
-    ]));
-  }
+  var SCREENS = {};
+  var narrow = function () { return window.matchMedia && window.matchMedia('(max-width:760px)').matches; };
+  var lastNarrow = narrow();
 
   function render() {
-    var body = $('careerBody');
-    body.innerHTML = '';
-    if (!career) { renderStart(body); if (msg) body.appendChild(h('div', { class: 'msg err', text: msg.msg })); return; }
-    renderHeader(body);
-    renderTabs(body);
-    var v = { table: renderTable, market: renderMarket, squad: renderSquad, scorers: renderScorers, save: renderSave }[view];
-    v(body);
+    stashPanes();
+    var view = $('#view');
+    if (!G && U.screen !== 'single') U.screen = 'newgame';
+    if (G && U.screen === 'newgame') U.screen = 'home';
+    renderNav(); renderTop();
+    var fn = SCREENS[U.screen] || SCREENS.home;
+    view.innerHTML = fn();
+    mountPanes(view);
+    hydrate(view);
+    if ((U.screen === 'match' && (U.matchPhase === 'live' || U.matchPhase === 'post')) || U.screen === 'single') App.resizePitch();
+    window.scrollTo(0, 0);
+  }
+  function rerender() { var y = window.scrollY; render(); window.scrollTo(0, y); }
+  window.addEventListener('resize', function () {
+    var n = narrow();
+    if (n !== lastNarrow) { lastNarrow = n; if (G && (U.screen === 'tactics')) rerender(); }
+    if ((U.screen === 'match' && U.matchPhase === 'live') || U.screen === 'single') App.resizePitch();
+  });
+
+  /* ---------- ชิ้นส่วนที่ใช้ร่วมกัน ---------- */
+  var kv = function (k, v) { return '<div class="kv"><span>' + k + '</span><b>' + v + '</b></div>'; };
+  function kpi(k, v, cls) { return '<div class="card kpi"><span class="sub">' + k + '</span><b class="' + (cls || '') + '">' + v + '</b></div>'; }
+  function pill(act, attrs, label, on) {
+    return '<button type="button" class="pill' + (on ? ' on' : '') + '" aria-pressed="' + (on ? 'true' : 'false') + '" data-a="' + act + '" ' + attrs + '>' + label + '</button>';
+  }
+  var FORM_TH = { W: 'ช', D: 'ส', L: 'พ' };
+  function formBoxes(str, n) {
+    var f = (str || '').slice(-(n || 5));
+    if (!f) return '<span class="sub">ยังไม่มีผลการแข่ง</span>';
+    return '<div class="frm" role="img" aria-label="ฟอร์มล่าสุด ' + f.split('').map(function (c) { return { W: 'ชนะ', D: 'เสมอ', L: 'แพ้' }[c]; }).join(' ') + '">' +
+      f.split('').map(function (c) { return '<span class="' + c + '">' + FORM_TH[c] + '</span>'; }).join('') + '</div>';
+  }
+  function tags(p) {
+    var h = '';
+    if (p.out > 0) h += '<span class="tag ' + (p.out_reason === 'ban' ? 't-sus' : 't-inj') + '">' + (p.out_reason === 'ban' ? 'แบน ' : 'เจ็บ ') + p.out + ' นัด</span>';
+    return h;
+  }
+  function inXI(id) { return S.lineup(G, G.userClubId).some(function (s) { return s.player.id === id; }); }
+  function nameBtn(p) { return '<button type="button" class="lnk" data-a="player" data-id="' + p.id + '" data-from="' + (U.screen === 'transfers' ? 'transfers' : 'squad') + '">' + esc(p.name) + '</button>'; }
+  var KIND = { injury: 'บาดเจ็บ', event: 'เหตุการณ์', league: 'ลีก', transfer: 'ย้ายทีม', training: 'ฝึกซ้อม', contract: 'สัญญา', report: 'รายงานแมตช์' };
+  function kindTag(k) { return '<span class="knd k-' + k + '">' + (KIND[k] || 'ข่าว') + '</span>'; }
+
+  /* ---------- หน้าหลัก ---------- */
+  function miniTable() {
+    var st = S.standings(G), idx = 0;
+    st.forEach(function (r, i) { if (String(r.club.id) === String(G.userClubId)) idx = i; });
+    var from = Math.max(0, Math.min(idx - 3, st.length - 7)), rows = st.slice(from, from + 7);
+    return '<div class="tbl"><table><thead><tr><th>#</th><th>ทีม</th><th class="r">แข่ง</th><th class="r">ผลต่าง</th><th class="r">แต้ม</th></tr></thead><tbody>' +
+      rows.map(function (r, i) {
+        return '<tr class="' + (String(r.club.id) === String(G.userClubId) ? 'me' : '') + '"><td>' + (from + i + 1) + '</td><td>' + esc(r.club.name) + '</td><td class="r">' + r.p + '</td><td class="r">' + (r.gd > 0 ? '+' : '') + r.gd + '</td><td class="r"><b>' + r.pts + '</b></td></tr>';
+      }).join('') + '</tbody></table></div>';
   }
 
-  function setMode(career_) {
-    $('singleCard').style.display = career_ ? 'none' : '';
-    $('careerCard').style.display = career_ ? '' : 'none';
-    $('tabSingle').classList.toggle('on', !career_);
-    $('tabCareer').classList.toggle('on', career_);
-    if (career_) render();
+  SCREENS.home = function () {
+    var fx = S.userFixture(G), pos = S.userPosition(G), obj = G.objective;
+    var h = '<div data-mount="installHint"></div><div class="grid">';
+    if (S.finished(G)) {
+      var st = S.standings(G), met = pos <= obj.target;
+      h += '<section class="card"><h2>จบฤดูกาล</h2><div class="kpi"><b>' + esc(st[0].club.name) + '</b><span class="sub">แชมป์ ' + st[0].pts + ' แต้ม</span></div>' +
+        kv('ทีมเราจบอันดับ', pos) + kv('เป้าหมายของบอร์ด', 'ไม่ต่ำกว่าอันดับ ' + obj.target) + kv('ผล', '<span class="' + (met ? 'good' : 'badc') + '">' + (met ? 'บรรลุเป้าหมาย' : 'ยังไม่ถึงเป้าหมาย') + '</span>') +
+        '<button type="button" class="btn soft" data-a="continue">เริ่มฤดูกาลถัดไป</button></section>';
+    } else if (fx) {
+      var home = String(fx.h) === String(G.userClubId), opp = club(home ? fx.a : fx.h), oppPos = 0;
+      S.standings(G).forEach(function (r, i) { if (String(r.club.id) === String(opp.id)) oppPos = i + 1; });
+      h += '<section class="card"><h2>นัดถัดไป · นัดที่ ' + (G.round + 1) + '</h2><div style="display:flex;align-items:center;justify-content:space-around;gap:10px;padding:8px 0">' +
+        '<div class="ctr" style="flex:1">' + crest(me(), 54) + '<div><b>' + esc(me().name) + '</b></div><span class="sub">อันดับ ' + pos + '</span></div>' +
+        '<span class="sub">' + (home ? 'เหย้า' : 'เยือน') + '</span>' +
+        '<div class="ctr" style="flex:1">' + crest(opp, 54) + '<div><b>' + esc(opp.name) + '</b></div><span class="sub">อันดับ ' + oppPos + '</span></div></div>' +
+        '<div class="pills"><button type="button" class="btn soft" data-a="go" data-s="tactics">จัดแท็กติก</button><button type="button" class="btn" data-a="go" data-s="match">ดูหน้าแมตช์</button></div></section>';
+    }
+    var msgs = G.news.slice(0, 6);
+    h += '<section class="card"><h2>ข้อความล่าสุด</h2>' + (msgs.length ? msgs.map(function (n) {
+      return '<button type="button" class="msg' + (isUnread(n) ? ' unread' : '') + '" data-a="openmsg" data-id="' + n.id + '"><span class="d"></span><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span class="sub">' + kindTag(n.kind) + ' หลังนัดที่ ' + n.round + '</span><b style="font-size:14px">' + esc(n.text) + '</b></span></button>';
+    }).join('') : '<span class="sub">ยังไม่มีข้อความ</span>') + '</section>';
+    h += '<section class="card"><h2>ตารางย่อ</h2>' + miniTable() + '</section>';
+    var mine = S.squadOf(G, G.userClubId), outP = mine.filter(function (p) { return p.out > 0; });
+    h += '<section class="card"><h2>ฟอร์ม 5 นัดล่าสุด</h2>' + formBoxes(G.form[G.userClubId], 5) + '</section>';
+    h += '<section class="card"><h2>สถานะทีม</h2>' +
+      kv('อันดับตอนนี้ เทียบเป้าหมาย', '<span class="' + (pos <= obj.target ? 'good' : 'badc') + '">' + pos + ' / เป้า ' + obj.target + '</span>') +
+      kv('ความเชื่อมั่นของบอร์ด', Math.round(G.confidence) + '%') +
+      kv('นักเตะไม่พร้อมลงเล่น', outP.length ? '<span class="badc">' + outP.length + ' คน</span>' : '0 คน') +
+      (outP.length ? '<div class="sub">' + outP.slice(0, 5).map(function (p) { return esc(p.name) + ' (' + S.outLabel(p) + ')'; }).join(', ') + '</div>' : '') +
+      kv('งบคงเหลือ', money(G.budget)) + '</section>';
+    return h + '</div>';
+  };
+
+  /* ---------- กล่องข้อความ ---------- */
+  function readMsg(id) { G.readIds = G.readIds || {}; if (!G.readIds[id]) { G.readIds[id] = true; save(); } }
+  SCREENS.inbox = function () {
+    if (!G.news.length) return '<section class="card"><h2>กล่องข้อความ</h2><span class="sub">ยังไม่มีข้อความ ข้อความจะเข้ามาเมื่อเกมดำเนินไป</span></section>';
+    var sel = G.news.filter(function (n) { return n.id === U.msgId; })[0] || G.news[0];
+    var list = G.news.map(function (n) {
+      return '<button type="button" class="msg' + (isUnread(n) ? ' unread' : '') + '" data-a="openmsg" data-id="' + n.id + '" aria-current="' + (n.id === sel.id ? 'true' : 'false') + '"' + (n.id === sel.id ? ' style="outline:1px solid var(--line2)"' : '') + '><span class="d"></span><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span class="sub">' + kindTag(n.kind) + ' หลังนัดที่ ' + n.round + '</span><b style="font-size:14px;overflow:hidden;text-overflow:ellipsis">' + esc(n.text) + '</b></span></button>';
+    }).join('');
+    var body = sel.body ? '<div class="rep">' + esc(sel.body) + '</div>' : '<p style="margin:0;line-height:1.7">' + esc(sel.text) + '</p>';
+    var digest = '';
+    if (G.round > 0) {
+      var d = G.digest && G.digest.round === G.round ? G.digest : { text: N.roundup(G, S), ai: false };
+      digest = '<section class="card"><h2>สรุปสัปดาห์' + (d.ai ? ' · เขียนโดย AI' : '') + '</h2><div class="rep">' + esc(d.text) + '</div>' +
+        (N.hasAI() ? '<button type="button" class="btn sm" data-a="aidigest"' + (U.aiBusy ? ' disabled' : '') + '>ให้ AI เขียนสรุป</button>' : '') + '</section>';
+    }
+    return '<div class="row" style="align-items:flex-start"><section class="card" style="flex:1 1 320px;max-width:460px;gap:4px"><h2>ข้อความทั้งหมด (' + G.news.length + ')</h2>' +
+      '<button type="button" class="btn sm" style="align-self:flex-start" data-a="readall">ทำเครื่องหมายว่าอ่านทั้งหมด</button><div class="feed" style="max-height:640px">' + list + '</div></section>' +
+      '<div style="flex:2 1 360px;display:flex;flex-direction:column;gap:18px;min-width:0"><section class="card"><span class="sub">' + kindTag(sel.kind) + ' หลังนัดที่ ' + sel.round + '</span><h2 style="font-size:17px;color:var(--tx)">' + esc(sel.body ? sel.text : 'ข้อความจากสโมสร') + '</h2>' + body +
+      (sel.kind === 'report' && N.hasAI() && G.lastReport && G.lastReport.newsId === sel.id && !G.lastReport.ai ? '<button type="button" class="btn sm" style="align-self:flex-start" data-a="aireport"' + (U.aiBusy ? ' disabled' : '') + '>ให้ AI เขียนรายงานใหม่</button>' : '') + '</section>' + digest + '</div></div>';
+  };
+
+  /* ---------- ทีม ---------- */
+  var SQ_COLS = [['pos', 'ตำแหน่ง'], ['name', 'ชื่อ'], ['age', 'อายุ'], ['rating', 'ค่าพลัง'], ['ca', 'ความสามารถ'], ['contract', 'สัญญา'], ['wage', 'ค่าเหนื่อ/นัด'], ['g', 'ประตู'], ['a', 'แอสซิสต์']];
+  var ORDER = { G: 0, D: 1, M: 2, F: 3 };
+  function sortVal(p, k) {
+    var st = G.stats[p.id] || {};
+    switch (k) {
+      case 'pos': return ORDER[posGroup(p)] * 1000 - p.rating;
+      case 'name': return p.name; case 'age': return p.age == null ? -1 : p.age; case 'rating': return p.rating;
+      case 'ca': return p.ca == null ? -1 : p.ca; case 'contract': return p.contract; case 'wage': return p.wage || 0;
+      case 'g': return st.g || 0; case 'a': return st.a || 0;
+    }
+    return 0;
+  }
+  SCREENS.squad = function () {
+    var f = U.sqFilter, xi = S.lineup(G, G.userClubId).map(function (s) { return s.player.id; });
+    var list = S.squadOf(G, G.userClubId).filter(function (p) { return f === 'all' || posGroup(p) === f; });
+    var has = { age: list.some(function (p) { return p.age != null; }), ca: list.some(function (p) { return p.ca != null; }) };
+    list.sort(function (a, b) {
+      var x = sortVal(a, U.sqSort), y = sortVal(b, U.sqSort);
+      var c = typeof x === 'string' ? x.localeCompare(y) : x - y;
+      return (c || b.rating - a.rating) * U.sqDir;
+    });
+    var cols = SQ_COLS.filter(function (c) { return (c[0] !== 'age' || has.age) && (c[0] !== 'ca' || has.ca); });
+    var head = cols.map(function (c) {
+      var on = U.sqSort === c[0];
+      return '<th class="s' + (['pos', 'name'].indexOf(c[0]) < 0 ? ' r' : '') + '" scope="col" aria-sort="' + (on ? (U.sqDir > 0 ? 'ascending' : 'descending') : 'none') + '"><button type="button" class="lnk" style="color:inherit;font-size:12px" data-a="sort" data-k="' + c[0] + '">' + c[1] + (on ? (U.sqDir > 0 ? ' ▲' : ' ▼') : '') + '</button></th>';
+    }).join('');
+    var rows = list.map(function (p) {
+      var st = G.stats[p.id] || {};
+      return '<tr class="click" tabindex="0" data-a="player" data-id="' + p.id + '" data-from="squad"><td>' + posPill(p) + '</td><td>' + nameBtn(p) + (xi.indexOf(p.id) >= 0 ? '<span class="tag t-xi">ตัวจริง</span>' : '') + tags(p) + '</td>' +
+        (has.age ? '<td class="r">' + (p.age == null ? '–' : p.age) + '</td>' : '') + '<td class="r"><b>' + p.rating + '</b></td>' + (has.ca ? '<td class="r">' + stars(p.ca) + '</td>' : '') +
+        '<td class="r">' + p.contract + ' ปี</td><td class="r">' + money2(p.wage || 0) + '</td><td class="r">' + (st.g || 0) + '</td><td class="r">' + (st.a || 0) + '</td></tr>';
+    }).join('');
+    var groups = [['all', 'ทั้งหมด'], ['G', 'ผู้รักษาประตู'], ['D', 'กองหลัง'], ['M', 'กองกลาง'], ['F', 'กองหน้า']];
+    return '<div class="pills" role="group" aria-label="กรองตามกลุ่มตำแหน่ง">' + groups.map(function (g) { return pill('sqf', 'data-k="' + g[0] + '"', g[1], f === g[0]); }).join('') + '</div>' +
+      '<div class="sub">นักเตะ ' + list.length + ' คน (ขั้นต่ำ ' + S.SQUAD_MIN + ' สูงสุด ' + S.SQUAD_MAX + ') · แตะแถวเพื่อดูโปรไฟล์</div>' +
+      '<div class="tbl"><table><thead><tr>' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+  };
+
+  /* ---------- โปรไฟล์นักเตะ ---------- */
+  var POS_XY = { GK: [50, 92], DL: [13, 76], DC: [50, 78], DR: [87, 76], WBL: [13, 62], WBR: [87, 62], DM: [50, 62], ML: [13, 48], MC: [50, 48], MR: [87, 48], AML: [13, 30], AMC: [50, 32], AMR: [87, 30], ST: [50, 14] };
+  function posChart(p) {
+    var fam = p.positions;
+    if (!fam) return '';
+    var dots = Object.keys(POS_XY).map(function (k) {
+      var v = fam[k] || 0, c = v >= 15 ? 'f1' : v >= 10 ? 'f2' : v > 0 ? 'f3' : '';
+      return '<i class="' + c + '" style="left:' + POS_XY[k][0] + '%;top:' + POS_XY[k][1] + '%" title="' + k + '">' + (v ? v : '') + '</i>';
+    }).join('');
+    var list = Object.keys(fam).filter(function (k) { return fam[k] >= 10; }).sort(function (a, b) { return fam[b] - fam[a]; }).map(function (k) { return k + ' ' + fam[k]; }).join(', ');
+    return '<section class="card"><h2>ผังตำแหน่ง</h2><div class="ppitch" role="img" aria-label="ความถนัดรายตำแหน่ง ' + esc(list) + '">' + dots + '</div><div class="sub ctr">เขียว = ตำแหน่งหลัก (15+), ทอง = พอเล่นได้ (10-14), แดง = ผิดตำแหน่ง</div></section>';
+  }
+  SCREENS.player = function () {
+    var p = S.findPlayer(G, U.playerId);
+    if (!p) { U.screen = 'squad'; return SCREENS.squad(); }
+    var mine = String(p.club_id) === String(G.userClubId), st = G.stats[p.id] || {};
+    var prof = SN.profile(App.getAttrs(), p.id, p.position === 'GK');
+    var h = '<div><button type="button" class="btn sm" data-a="back">กลับ</button></div>';
+    h += '<section class="card"><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">' + face(p, 64) + '<div style="flex:1;min-width:200px"><div style="font-size:21px;font-weight:700">' + esc(p.full_name || p.name) + tags(p) + '</div>' +
+      '<div class="sub" style="margin-top:4px">' + crest(club(p.club_id), 18) + ' ' + esc(club(p.club_id).name) + ' · ' + posPill(p) + (SN.POS_TH[p.pos_main] ? ' ' + esc(SN.POS_TH[p.pos_main]) : '') + (p.age != null ? ' · อายุ ' + p.age + ' ปี' : '') + '</div>' +
+      (p.news ? '<div class="sub">' + esc(p.news) + '</div>' : '') + '</div><div class="pills">' + playerActions(p, mine) + '</div></div></section>';
+    h += '<div class="grid"><section class="card"><h2>ข้อมูลหลัก</h2>' + kv('ค่าพลัง', '<span class="' + aCls(Math.round((p.rating - 40) / 54 * 19 + 1)) + '">' + p.rating + '</span>' + (p.form ? ' <span class="sub">(' + (p.form > 0 ? '+' : '') + p.form + ' ชั่วคราว)</span>' : '')) +
+      (p.ca != null ? kv('ความสามารถ', stars(p.ca) + ' <span class="sub">CA ' + Math.round(p.ca) + '</span>') : '') +
+      (p.pa != null ? kv('ศักยภาพ', '<span class="st2">' + stars(p.pa).replace(/class="st"/, 'class="st2"').replace(/<\/?span[^>]*>/g, '') + '</span> <span class="sub">PA ' + p.pa + '</span>') : '') +
+      kv('มูลค่า', money(S.value(p))) + '</section>';
+    h += '<section class="card"><h2>สัญญา</h2>' + kv('สัญญาเหลือ', '<span class="' + (p.contract <= 1 ? 'badc' : '') + '">' + p.contract + ' ปี</span>') + kv('ค่าเหนื่อ', money2(p.wage || 0) + '/นัด') +
+      (mine ? kv('ราคาที่มีทีมเสนอซื้อ', money(S.bidPrice(p))) : kv('ราคาที่สโมสรขอ', money(S.askPrice(p)))) + '</section>';
+    h += '<section class="card"><h2>สถิติฤดูกาล ' + esc(G.season) + '</h2>' + kv('ประตู', st.g || 0) + kv('แอสซิสต์', st.a || 0) + kv('ใบเหลือง', st.y || 0) + kv('ใบแดง', st.r || 0) + '</section>';
+    h += '<section class="card"><h2>สถานะและการพัฒนา</h2>' + kv('สถานะ', p.out > 0 ? '<span class="badc">' + esc(S.outLabel(p)) + '</span>' : '<span class="good">พร้อมลงเล่น</span>') +
+      (mine ? kv('พัฒนาจากฝึกซ้อมฤดูกาลนี้', '+' + (p.grown || 0) + ' / สูงสุด +' + S.potential(G, p)) : '') + '</section></div>';
+    if (prof) {
+      var est = false;
+      h += '<div class="grid">' + prof.map(function (g) {
+        return '<section class="card"><h2>' + g[0] + '</h2>' + g[1].map(function (a) {
+          if (a[2]) est = true;
+          var neutral = a[0] === 'ความเสี่ยงบาดเจ็บ';
+          return '<div class="attr"><span>' + esc(a[0]) + (a[2] ? ' *' : '') + '</span><span class="' + (neutral ? 'a2' : aCls(a[1])) + '">' + a[1] + '</span></div>';
+        }).join('') + '</section>';
+      }).join('') + posChart(p) + '</div>';
+      if (est) h += '<div class="sub2">* ค่าที่ประเมินจาก CA และตำแหน่ง ไม่ใช่ค่าจริงจากข้อมูลต้นทาง ค่าความสามารถรายด้านไม่เปลี่ยนตามเทรนนิ่ง (เอนจินใช้ค่าพลังรวม)</div>';
+    } else {
+      h += '<section class="card"><h2>ค่าความสามารถ</h2><span class="sub">ยังไม่มีข้อมูลค่าความสามารถรายด้านของนักเตะคนนี้ โหลดไฟล์ pl_2026_27.json ที่หน้า "ตั้งค่า" เพื่อดู</span></section>';
+    }
+    return h;
+  };
+  function playerActions(p, mine) {
+    var open = S.windowOpen(G), busy = App.isPlaying();
+    if (mine) {
+      var b = '';
+      if (p.contract <= 2) [2, 4].forEach(function (y) {
+        var o = S.renewOffer(p, y);
+        b += '<button type="button" class="btn sm" data-a="renew" data-id="' + p.id + '" data-y="' + y + '"' + (busy || G.budget < o.bonus ? ' disabled' : '') + '>ต่อสัญญา +' + y + ' ปี (ค่าเซ็น ' + money(o.bonus) + ')</button>';
+      });
+      b += '<button type="button" class="btn sm danger" data-a="sellask" data-id="' + p.id + '"' + (!open || busy ? ' disabled' : '') + '>ขาย ' + money(S.bidPrice(p)) + '</button>';
+      return b;
+    }
+    return '<button type="button" class="btn sm soft" data-a="buyask" data-id="' + p.id + '"' + (!open || busy || G.budget < S.askPrice(p) ? ' disabled' : '') + '>ซื้อ ' + money(S.askPrice(p)) + '</button>' + (open ? '' : '<span class="sub">ตลาดปิดอยู่</span>');
   }
 
+  /* ---------- แท็กติก ---------- */
+  var MENT = [[-2, 'รับเหนียว'], [-1, 'ค่อนข้างรับ'], [0, 'สมดุล'], [1, 'ค่อนข้างรุก'], [2, 'บุกหนัก']];
+  function mentEffect(m) {
+    if (!m) return 'ไม่ปรับเกมรุกหรือเกมรับ';
+    var a = Math.round(E.MENT_ATT * m * 1000) / 10, d = Math.round(E.MENT_DEF * m * 1000) / 10;
+    return 'เกมรุก ' + (a > 0 ? '+' : '') + a + '% · แนวรับ ' + (d > 0 ? '−' : '+') + Math.abs(d) + '% ' + (m > 0 ? '(เปิดช่องให้คู่แข่ง)' : '(เสียโอกาสทำประตู)');
+  }
+  SCREENS.tactics = function () {
+    var xi = S.lineup(G, G.userClubId), ids = xi.map(function (s) { return s.player.id; }), port = true;
+    var slots = xi.map(function (s, i) {
+      var p = s.player, x = s.x, y = s.y;
+      var left = port ? (y / 68 * 100) : (x / 105 * 100), top = port ? (100 - (x / 105 * 100)) : (y / 68 * 100);
+      if (port) { left = Math.max(10, Math.min(90, left)); top = Math.max(7, Math.min(93, top)); } else { left = Math.max(7, Math.min(93, left)); top = Math.max(10, Math.min(90, top)); }
+      var fit = p.id < 0 ? 'fit-bad' : (p.position === s.pos ? 'fit-main' : 'fit-bad');
+      return '<button type="button" class="slot ' + fit + (U.slot === i ? ' on' : '') + '" style="left:' + left + '%;top:' + top + '%" data-a="slot" data-i="' + i + '" aria-label="' + esc(s.pos + ' ' + (p.id < 0 ? 'ว่าง' : p.name)) + '" aria-pressed="' + (U.slot === i) + '">' +
+        '<span class="c">' + esc(s.pos === 'GK' ? 'GK' : s.pos === 'DEF' ? 'D' : s.pos === 'MID' ? 'M' : 'F') + '</span><span class="n">' + (p.id < 0 ? 'ว่าง' : esc(p.name) + '<small>' + p.rating + '</small>') + '</span></button>';
+    }).join('');
+    var pitchStyle = port ? 'aspect-ratio:68/105;max-width:430px;margin:0 auto;width:100%' : 'aspect-ratio:105/68;width:100%';
+    var lines = port ? '<div class="ln" style="left:0;right:0;top:50%;height:0"></div><div class="ln" style="left:32%;right:32%;top:0;height:16%"></div><div class="ln" style="left:32%;right:32%;bottom:0;height:16%"></div>' :
+      '<div class="ln" style="top:0;bottom:0;left:50%;width:0"></div><div class="ln" style="top:32%;bottom:32%;left:0;width:16%"></div><div class="ln" style="top:32%;bottom:32%;right:0;width:16%"></div>';
+    var formations = Object.keys(E.FORMATIONS);
+    var h = '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))"><section class="card"><h2>แผนการเล่นและตัวจริง</h2><div class="pills" role="group" aria-label="แผนการเล่น">' +
+      formations.map(function (f) { return pill('formation', 'data-f="' + f + '"', f, G.formation === f); }).join('') + '</div>' +
+      '<div class="pitch" role="group" aria-label="ผังตัวจริง แตะตำแหน่งเพื่อเปลี่ยนตัว" style="' + pitchStyle + '">' + lines + slots + '</div>' +
+      '<div class="sub">วงกลมเขียว = ตำแหน่งตรงกับผู้เล่น, แดง = ผิดตำแหน่งหรือไม่มีคนเล่น · แตะตำแหน่งแล้วเลือกผู้เล่นจากแผงด้านข้าง' + (S.hasManualLineup(G) ? ' · ตอนนี้จัดตัวเอง' : ' · ตอนนี้ให้ผู้ช่วยจัด') + '</div>' +
+      '<div class="pills"><button type="button" class="btn soft" data-a="autolineup">ให้ผู้ช่วยจัดตัว</button></div></section>';
+
+    h += '<div style="display:flex;flex-direction:column;gap:18px;min-width:0">';
+    if (U.slot != null && xi[U.slot]) {
+      var slot = xi[U.slot], squad = S.squadOf(G, G.userClubId);
+      var cands = squad.filter(function (p) { return !(p.out > 0); }).sort(function (a, b) {
+        var fa = a.position === slot.pos ? 0 : 1, fb = b.position === slot.pos ? 0 : 1;
+        return fa - fb || b.rating - a.rating;
+      });
+      h += '<section class="card"><h2>เลือกผู้เล่นลงตำแหน่ง ' + slot.pos + '</h2><div class="feed" style="max-height:340px">' + cands.map(function (p) {
+        var inx = ids.indexOf(p.id) >= 0;
+        return '<button type="button" class="msg" data-a="put" data-id="' + p.id + '" style="align-items:center"><span class="d" style="background:' + (p.position === slot.pos ? 'var(--acc)' : 'var(--bad)') + '"></span>' + posPill(p) + '<span style="flex:1;min-width:0"><b>' + esc(p.name) + '</b>' + (inx ? '<span class="tag t-xi">ตัวจริง</span>' : '') + '</span><b>' + p.rating + '</b></button>';
+      }).join('') + '</div></section>';
+    }
+    h += '<section class="card"><h2>แนวทางการเล่น</h2><div class="pills" role="group" aria-label="แนวทางการเล่น">' +
+      MENT.map(function (m) { return pill('ment', 'data-m="' + m[0] + '"', m[1], G.tactic.mentality === m[0]); }).join('') + '</div><div class="sub">' + mentEffect(G.tactic.mentality) + '</div></section>';
+    var bench = S.squadOf(G, G.userClubId).filter(function (p) { return ids.indexOf(p.id) < 0; }).sort(function (a, b) { return (a.out > 0 ? 1 : 0) - (b.out > 0 ? 1 : 0) || b.rating - a.rating; }).slice(0, 9);
+    h += '<section class="card"><h2>ตัวสำรองที่ดีที่สุด</h2>' + bench.map(function (p) {
+      return '<div class="kv"><span>' + posPill(p) + ' ' + esc(p.name) + tags(p) + '</span><b>' + p.rating + '</b></div>';
+    }).join('') + '<div class="sub">ผู้เล่นที่บาดเจ็บหรือโดนแบนจะถูกตัดออกจากตัวจริงอัตโนมัติ</div></section></div></div>';
+    return h;
+  };
+
+  /* ---------- การกระทำ (ตัวจัดการคลิกกลาง) ---------- */
+  var ACT = {};
+  ACT.go = function (t) {
+    U.screen = t.getAttribute('data-s'); U.slot = null;
+    if (U.screen === 'match' && U.matchPhase === 'live' && !App.isPlaying() && !U.launching) U.matchPhase = U.post ? 'post' : 'pre';
+    render();
+  };
+  ACT.back = function () { U.screen = U.from === 'transfers' ? 'transfers' : 'squad'; render(); };
+  ACT.player = function (t, e) {
+    if (e && e.target && e.target.closest && e.target.closest('button.lnk') && e.target.closest('button.lnk') !== t && t.tagName === 'TR') { /* ปุ่มชื่อจัดการเอง */ }
+    U.playerId = +t.getAttribute('data-id'); U.from = t.getAttribute('data-from') || U.from; U.screen = 'player'; render();
+  };
+  ACT.sqf = function (t) { U.sqFilter = t.getAttribute('data-k'); rerender(); };
+  ACT.sort = function (t, e) {
+    var k = t.getAttribute('data-k');
+    if (U.sqSort === k) U.sqDir = -U.sqDir; else { U.sqSort = k; U.sqDir = (k === 'pos' || k === 'name') ? 1 : -1; }
+    if (e) e.stopPropagation(); rerender();
+  };
+  ACT.openmsg = function (t) { U.msgId = +t.getAttribute('data-id'); readMsg(U.msgId); U.screen = 'inbox'; render(); };
+  ACT.readall = function () { G.inboxRead = G.newsSeq; save(); rerender(); };
+  ACT.formation = function (t) { G.formation = t.getAttribute('data-f'); U.slot = null; save(); rerender(); };
+  ACT.slot = function (t) { var i = +t.getAttribute('data-i'); U.slot = U.slot === i ? null : i; rerender(); };
+  ACT.put = function (t) { S.setLineup(G, U.slot, +t.getAttribute('data-id')); U.slot = null; save(); rerender(); };
+  ACT.autolineup = function () { S.autoLineup(G); U.slot = null; save(); rerender(); toast('ให้ผู้ช่วยจัดตัวจริงแล้ว'); };
+  ACT.ment = function (t) { S.setMentality(G, +t.getAttribute('data-m')); save(); rerender(); };
+  ACT.renew = function (t) { say(S.renew(G, +t.getAttribute('data-id'), +t.getAttribute('data-y'))); save(); rerender(); };
+  ACT.mclose = function () { closeModal(); };
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target.closest('[data-a]') : null;
+    if (!t) return;
+    var a = t.getAttribute('data-a');
+    if (ACT[a]) ACT[a](t, e);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Enter' && e.target && e.target.tagName === 'TR' && e.target.getAttribute('data-a')) ACT[e.target.getAttribute('data-a')](e.target, e);
+  });
+
+  /* แชร์ให้ ui_more.js */
+  window.FMUI = {
+    get G() { return G; }, set G(v) { G = v; }, U: U, SCREENS: SCREENS, ACT: ACT, S: S, App: App, E: E, N: N, Y: Y, SN: SN,
+    $: $, esc: esc, money: money, money2: money2, club: club, me: me, crest: crest, face: face, hydrate: hydrate, posPill: posPill, posGroup: posGroup, posLabel: posLabel,
+    stars: stars, aCls: aCls, toast: toast, modal: modal, closeModal: closeModal, say: say, save: save, load: load, render: render, rerender: rerender,
+    kv: kv, kpi: kpi, pill: pill, formBoxes: formBoxes, tags: tags, nameBtn: nameBtn, kindTag: kindTag, isUnread: isUnread, readMsg: readMsg,
+    doPush: doPush, cloudPull: cloudPull, applyLoaded: applyLoaded, unread: unread, narrow: narrow, KEY: KEY, playerActions: playerActions
+  };
+})();
+
+</script>
+<script>
+/* หน้าจอส่วนที่สอง: เริ่มเกม แมตช์ ตารางแข่ง ตลาด เทรนนิ่ง การเงิน บอร์ด ตั้งค่า และตัวเริ่มต้นแอป
+ * ใช้ชิ้นส่วนจาก ui.js ผ่าน window.FMUI */
+(function () {
+  'use strict';
+
+  var X = window.FMUI, U = X.U, S = X.S, App = X.App, E = X.E, N = X.N, Y = X.Y;
+  var SCREENS = X.SCREENS, ACT = X.ACT;
+  var esc = X.esc, money = X.money, money2 = X.money2, club = X.club, kv = X.kv, kpi = X.kpi, pill = X.pill, toast = X.toast, say = X.say, save = X.save;
+  var $ = X.$;
+  function G() { return X.G; }
+
+  /* ---------- เริ่มเกม ---------- */
+  SCREENS.newgame = function () {
+    var clubs = App.getClubs(), n = App.getPlayers().length;
+    var h = '<div data-mount="installHint"></div><div class="grid">';
+    h += '<section class="card"><h2>เริ่มอาชีพผู้จัดการ</h2><div class="sub">เลือกสโมสรที่จะคุมในฤดูกาล 2026-27 ข้อมูลนักเตะ ' + n + ' คน</div>' +
+      '<label class="l">ชื่อผู้จัดการ<input id="mgrName" class="inp" type="text" maxlength="30" value="' + esc(U.newName) + '" placeholder="ผู้จัดการ" autocomplete="off"></label>' +
+      '<div class="pills" role="group" aria-label="เลือกสโมสร">' + clubs.map(function (c) {
+        return '<button type="button" class="pill' + (String(U.newClub) === String(c.id) ? ' on' : '') + '" aria-pressed="' + (String(U.newClub) === String(c.id)) + '" data-a="pickclub" data-id="' + esc(c.id) + '">' + esc(c.name) + '</button>';
+      }).join('') + '</div>' +
+      '<button type="button" class="btn pri" data-a="startcareer"' + (U.newClub == null ? ' disabled' : '') + '>เริ่มเกม</button></section>';
+    h += '<section class="card"><h2>เล่นต่อ</h2><div class="sub">โหลดเซฟที่ดาวน์โหลดไว้ หรือดึงจากคลาวด์ (ตั้งโทเค็นใน "ตั้งค่า" ของเครื่องนี้ก่อน)</div><div class="pills">' + loadSaveBtn() +
+      (Y.configured() ? '<button type="button" class="btn" data-a="cloudpull">ดึงจากคลาวด์</button>' : '') +
+      '<button type="button" class="btn" data-a="go" data-s="single">แมตช์เดี่ยว</button></div>' + syncBox() + '</section>';
+    h += '<div data-mount="dataPane"></div></div>';
+    return h;
+  };
+  ACT.pickclub = function (t) { var el = $('#mgrName'); if (el) U.newName = el.value; U.newClub = t.getAttribute('data-id'); X.rerender(); };
+  ACT.startcareer = function () {
+    var el = $('#mgrName'); if (el) U.newName = el.value;
+    var clubs = App.getClubs(), c = clubs.filter(function (x) { return String(x.id) === String(U.newClub); })[0];
+    if (!c) return;
+    X.G = S.newCareer(App.getPlayers(), clubs, c.id, { manager: (U.newName || '').trim() || 'ผู้จัดการ' });
+    U.screen = 'home'; U.matchPhase = 'pre'; U.post = null; U.msgId = null;
+    save(); X.render();
+  };
+
+  /* ---------- แมตช์ ---------- */
+  function xiRows(xi) {
+    return xi.map(function (s) {
+      var p = s.player;
+      return '<div class="kv"><span><span class="pos p' + ({ GK: 'G', DEF: 'D', MID: 'M', FWD: 'F' }[s.pos]) + '">' + s.pos + '</span> ' + (p.id < 0 ? '<span class="sub">ว่าง</span>' : esc(p.name)) + '</span><b>' + p.rating + '</b></div>';
+    }).join('');
+  }
+  function avg(xi) { return Math.round(xi.reduce(function (a, s) { return a + s.player.rating; }, 0) / xi.length * 10) / 10; }
+  var MENT_TH = { '-2': 'รับเหนียว', '-1': 'ค่อนข้างรับ', '0': 'สมดุล', '1': 'ค่อนข้างรุก', '2': 'บุกหนัก' };
+
+  SCREENS.match = function () {
+    var g = G(), ph = U.matchPhase;
+    if (ph === 'live' && !App.isPlaying() && !U.launching) ph = U.matchPhase = U.post ? 'post' : 'pre';
+    if (ph === 'post' && !U.post) ph = U.matchPhase = 'pre';
+    if (ph === 'live') {
+      return '<div class="pills"><button type="button" class="btn" data-a="skipnow">ข้ามไปจบแมตช์</button></div><div data-mount="matchPane"></div>';
+    }
+    if (ph === 'post') return postMatch();
+    if (S.finished(g)) return '<section class="card"><h2>จบฤดูกาลแล้ว</h2><span class="sub">กด "เริ่มฤดูกาลถัดไป" ที่มุมขวาบนเพื่อไปต่อ</span></section>';
+    var fx = S.userFixture(g), home = String(fx.h) === String(g.userClubId), opp = club(home ? fx.a : fx.h);
+    var mine = S.lineup(g, g.userClubId), oxi = S.lineup(g, opp.id);
+    var h = '<section class="card"><h2>ก่อนแมตช์ · นัดที่ ' + (g.round + 1) + '</h2><div style="display:flex;align-items:center;justify-content:space-around;gap:10px;padding:8px 0">' +
+      '<div class="ctr" style="flex:1">' + X.crest(club(fx.h), 54) + '<div><b>' + esc(club(fx.h).name) + '</b></div></div><span class="sub">พบ</span>' +
+      '<div class="ctr" style="flex:1">' + X.crest(club(fx.a), 54) + '<div><b>' + esc(club(fx.a).name) + '</b></div></div></div>' +
+      '<div class="sub ctr">' + (home ? 'เล่นในบ้าน' : 'เล่นนอกบ้าน') + ' · แผน ' + esc(g.formation) + ' · แนวทาง ' + MENT_TH[g.tactic.mentality] + '</div>' +
+      '<div class="pills" style="justify-content:center"><button type="button" class="btn soft" data-a="playlive">เริ่มแมตช์ (2D)</button><button type="button" class="btn" data-a="playskip">จำลองผลเลย</button><button type="button" class="btn" data-a="go" data-s="tactics">จัดแท็กติก</button></div></section>';
+    h += '<div class="grid"><section class="card"><h2>ตัวจริงของเรา · ค่าพลังเฉลี่ย ' + avg(mine) + '</h2>' + xiRows(mine) + '</section>' +
+      '<section class="card"><h2>ตัวจริงของ ' + esc(opp.name) + ' · ค่าพลังเฉลี่ย ' + avg(oxi) + '</h2>' + xiRows(oxi) + '</section></div>';
+    return h;
+  };
+
+  function playNext(skip) {
+    var g = G(), fx = S.userFixture(g);
+    if (!fx || App.isPlaying()) return;
+    U.screen = 'match'; U.matchPhase = 'live'; U.post = null; U.launching = true; X.render();
+    var userHome = String(fx.h) === String(g.userClubId), m = g.tactic.mentality || 0;
+    App.runMatch(fx.h, fx.a, S.formationFor(g, fx.h), S.formationFor(g, fx.a), {
+      skip: skip, players: S.effectivePlayers(g),
+      homeXI: S.lineup(g, fx.h), awayXI: S.lineup(g, fx.a),
+      sim: { mentality: { home: userHome ? m : 0, away: userHome ? 0 : m } },
+      onFinish: function (res) {
+        var round = g.round + 1;
+        var ctx = { home: club(fx.h).name, away: club(fx.a).name, res: res, round: round, userSide: userHome ? 'home' : 'away' };
+        S.applyRound(g, { h: fx.h, a: fx.a, result: res });
+        var text = N.matchReport(ctx);
+        S.addNews(g, 'report', club(fx.h).name + ' ' + res.score.home + '-' + res.score.away + ' ' + club(fx.a).name, { body: text, round: round });
+        g.lastReport = { round: round, text: text, ai: false, facts: N.matchFacts(ctx), newsId: g.newsSeq };
+        U.post = { h: fx.h, a: fx.a, hg: res.score.home, ag: res.score.away, round: round };
+        U.matchPhase = 'post';
+        save(); X.render();
+        if (N.aiSettings().auto && N.hasAI()) aiReport();
+      }
+    });
+    U.launching = false;
+  }
+  function aiReport() {
+    var g = G(), r = g.lastReport;
+    if (!r || U.aiBusy) return;
+    U.aiBusy = true; toast('AI กำลังเขียนรายงาน...');
+    N.aiWrite('report', r.facts).then(function (text) {
+      g.lastReport = Object.assign({}, r, { text: text, ai: true });
+      g.news.forEach(function (n) { if (n.id === r.newsId) n.body = text; });
+      toast('AI เขียนรายงานเสร็จแล้ว'); save();
+    }).catch(function (e) { toast(e.message + ' (ใช้รายงานมาตรฐานแทน)'); })
+      .then(function () { U.aiBusy = false; if (U.screen === 'match' || U.screen === 'inbox') X.rerender(); });
+  }
+  function aiDigest() {
+    var g = G();
+    if (U.aiBusy) return;
+    U.aiBusy = true; toast('AI กำลังเขียนสรุปสัปดาห์...');
+    N.aiWrite('roundup', N.roundupFacts(g, S)).then(function (text) {
+      g.digest = { round: g.round, text: text, ai: true }; save();
+    }).catch(function (e) { toast(e.message); }).then(function () { U.aiBusy = false; X.rerender(); });
+  }
+  function postMatch() {
+    var g = G(), p = U.post, rep = g.lastReport;
+    var mineHome = String(p.h) === String(g.userClubId), ug = mineHome ? p.hg : p.ag, og = mineHome ? p.ag : p.hg;
+    var verdict = ug > og ? 'ชนะ' : ug < og ? 'แพ้' : 'เสมอ';
+    var h = '<section class="card"><h2>สรุปผล · นัดที่ ' + p.round + '</h2><div style="display:flex;align-items:center;justify-content:space-around;gap:10px;padding:8px 0">' +
+      '<div class="ctr" style="flex:1">' + X.crest(club(p.h), 54) + '<div><b>' + esc(club(p.h).name) + '</b></div></div>' +
+      '<div class="score" style="font-size:34px;font-weight:700">' + p.hg + ' - ' + p.ag + '</div>' +
+      '<div class="ctr" style="flex:1">' + X.crest(club(p.a), 54) + '<div><b>' + esc(club(p.a).name) + '</b></div></div></div><div class="sub ctr">ทีมเรา' + verdict + ' · อันดับตอนนี้ ' + S.userPosition(g) + '</div></section>';
+    if (rep && rep.round === p.round) {
+      h += '<section class="card"><h2>รายงานแมตช์' + (rep.ai ? ' · เขียนโดย AI' : '') + '</h2><div class="rep">' + esc(rep.text) + '</div>' +
+        (N.hasAI() && !rep.ai ? '<button type="button" class="btn sm" data-a="aireport"' + (U.aiBusy ? ' disabled' : '') + '>ให้ AI เขียนใหม่</button>' : '') + '</section>';
+    }
+    h += '<section class="card"><h2>ผลทุกนัดในสัปดาห์นี้</h2>' + (g.lastResults || []).map(function (r) {
+      var mine = String(r.h) === String(g.userClubId) || String(r.a) === String(g.userClubId);
+      return '<div class="kv"' + (mine ? ' style="color:var(--acc2)"' : '') + '><span>' + esc(club(r.h).name) + '</span><b>' + r.hg + ' - ' + r.ag + '</b><span>' + esc(club(r.a).name) + '</span></div>';
+    }).join('') + '</section>';
+    h += '<div data-mount="matchPane"></div>';
+    return h;
+  }
+  ACT.playlive = function () { playNext(false); };
+  ACT.playskip = function () { playNext(true); };
+  ACT.skipnow = function () { App.skipNow(); };
+  ACT.aireport = aiReport;
+  ACT.aidigest = aiDigest;
+  ACT.continue = function () {
+    var g = G(); if (!g) return;
+    if (S.finished(g)) {
+      var r = S.startNextSeason(g); say(r); U.screen = 'home'; U.post = null; U.matchPhase = 'pre'; save(); X.render(); return;
+    }
+    if (U.screen !== 'match') { U.screen = 'match'; if (U.matchPhase === 'live' && !App.isPlaying()) U.matchPhase = U.post ? 'post' : 'pre'; X.render(); return; }
+    if (U.matchPhase === 'pre') return playNext(false);
+    if (U.matchPhase === 'post') { U.post = null; U.matchPhase = 'pre'; X.render(); }
+  };
+
+  /* ---------- ตารางแข่ง ---------- */
+  function resultOf(g, round, f) {
+    var r = (g.results[round] || []).filter(function (x) { return x.h === f.h && x.a === f.a; })[0];
+    return r || null;
+  }
+  SCREENS.fixtures = function () {
+    var g = G(), tab = U.fxTab;
+    var h = '<div class="pills" role="group" aria-label="มุมมองตารางแข่ง">' + [['mine', 'ของทีมเรา'], ['round', 'ทุกคู่ตามนัด'], ['table', 'ตารางคะแนน']].map(function (t) { return pill('fxtab', 'data-k="' + t[0] + '"', t[1], tab === t[0]); }).join('') + '</div>';
+    if (tab === 'mine') {
+      h += '<div class="tbl"><table><thead><tr><th>นัด</th><th>คู่แข่ง</th><th>สนาม</th><th class="r">ผล</th></tr></thead><tbody>' + g.fixtures.map(function (round, i) {
+        var f = round.filter(function (x) { return x.h === g.userClubId || x.a === g.userClubId; })[0];
+        if (!f) return '';
+        var home = f.h === g.userClubId, r = resultOf(g, i, f), res = '<span class="sub">–</span>';
+        if (r) {
+          var ug = home ? r.hg : r.ag, og = home ? r.ag : r.hg, c = ug > og ? 'W' : ug < og ? 'L' : 'D';
+          res = '<span class="frm"><span class="' + c + '">' + { W: 'ช', D: 'ส', L: 'พ' }[c] + '</span></span> ' + r.hg + '-' + r.ag;
+        }
+        return '<tr class="' + (i === g.round ? 'me' : '') + '"><td>' + (i + 1) + '</td><td>' + esc(club(home ? f.a : f.h).name) + '</td><td>' + (home ? 'เหย้า' : 'เยือน') + '</td><td class="r">' + res + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+    } else if (tab === 'round') {
+      var rd = U.fxRound == null ? Math.min(g.round, g.fixtures.length - 1) : U.fxRound;
+      h += '<div class="pills"><button type="button" class="btn sm" data-a="fxr" data-d="-1"' + (rd <= 0 ? ' disabled' : '') + ' aria-label="นัดก่อนหน้า">ก่อนหน้า</button><b style="align-self:center">นัดที่ ' + (rd + 1) + '</b><button type="button" class="btn sm" data-a="fxr" data-d="1"' + (rd >= g.fixtures.length - 1 ? ' disabled' : '') + ' aria-label="นัดถัดไป">ถัดไป</button></div>' +
+        '<section class="card">' + g.fixtures[rd].map(function (f) {
+          var r = resultOf(g, rd, f), mine = f.h === g.userClubId || f.a === g.userClubId;
+          return '<div class="kv"' + (mine ? ' style="color:var(--acc2)"' : '') + '><span>' + esc(club(f.h).name) + '</span><b>' + (r ? r.hg + ' - ' + r.ag : 'พบ') + '</b><span>' + esc(club(f.a).name) + '</span></div>';
+        }).join('') + '</section>';
+    } else {
+      var st = S.standings(g);
+      h += '<div class="tbl"><table><thead><tr><th>#</th><th>ทีม</th><th class="r">แข่ง</th><th class="r">ช</th><th class="r">ส</th><th class="r">พ</th><th class="r">ได้-เสีย</th><th class="r">ผลต่าง</th><th class="r">แต้ม</th></tr></thead><tbody>' + st.map(function (r, i) {
+        return '<tr class="' + (String(r.club.id) === String(g.userClubId) ? 'me' : '') + '"><td>' + (i + 1) + '</td><td>' + esc(r.club.name) + '</td><td class="r">' + r.p + '</td><td class="r">' + r.w + '</td><td class="r">' + r.d + '</td><td class="r">' + r.l + '</td><td class="r">' + r.gf + '-' + r.ga + '</td><td class="r">' + (r.gd > 0 ? '+' : '') + r.gd + '</td><td class="r"><b>' + r.pts + '</b></td></tr>';
+      }).join('') + '</tbody></table></div>';
+      var sc = S.topScorers(g, 10);
+      if (sc.length) h += '<section class="card"><h2>ดาวซัลโว</h2>' + sc.map(function (s, i) {
+        return '<div class="kv"><span>' + (i + 1) + '. ' + esc(s.player.name) + ' <span class="sub">' + esc(club(s.player.club_id).short_name) + '</span></span><b>' + s.g + ' ประตู · ' + s.a + ' แอสซิสต์</b></div>';
+      }).join('') + '</section>';
+    }
+    return h;
+  };
+  ACT.fxtab = function (t) { U.fxTab = t.getAttribute('data-k'); X.rerender(); };
+  ACT.fxr = function (t) { var g = G(), cur = U.fxRound == null ? Math.min(g.round, g.fixtures.length - 1) : U.fxRound; U.fxRound = Math.max(0, Math.min(g.fixtures.length - 1, cur + (+t.getAttribute('data-d')))); X.rerender(); };
+
+  /* ---------- ตลาดซื้อขาย ---------- */
+  SCREENS.transfers = function () {
+    var g = G(), open = S.windowOpen(g), w = S.windowRange(g), tab = U.tfTab;
+    var h = '<section class="card"><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">' + kpi('ตลาด', open ? '<span class="good">เปิด</span>' : '<span class="badc">ปิด</span>') + kpi('งบคงเหลือ', money(g.budget), g.budget < 0 ? 'badc' : '') +
+      kpi('ซื้อ-ขายสุทธิฤดูกาลนี้', (g.xfer > 0 ? '+' : '') + money(g.xfer || 0)) + '</div>' + (open ? '' : '<div class="sub">ตลาดเปิดอีกครั้งหลังนัดที่ ' + w.from + ' ถึง ' + w.to + '</div>') + '</section>';
+    h += '<div class="pills" role="group" aria-label="หมวดตลาด">' + [['buy', 'ซื้อนักเตะ'], ['sell', 'ขายนักเตะ'], ['deals', 'ดีลในลีก']].map(function (t) { return pill('tftab', 'data-k="' + t[0] + '"', t[1], tab === t[0]); }).join('') + '</div>';
+    if (tab === 'buy') {
+      var groups = [['all', 'ทั้งหมด'], ['G', 'GK'], ['D', 'กองหลัง'], ['M', 'กองกลาง'], ['F', 'กองหน้า']];
+      h += '<div class="pills" role="group" aria-label="กรองตำแหน่ง">' + groups.map(function (x) { return pill('tfpos', 'data-k="' + x[0] + '"', x[1], U.tfPos === x[0]); }).join('') + '</div>' +
+        '<div class="grid2"><label class="l">ค้นหาชื่อ<input id="tfQ" class="inp" type="search" value="' + esc(U.tfQ) + '" placeholder="ชื่อนักเตะ" autocomplete="off"></label>' +
+        '<label class="l">ราคาไม่เกิน (£m)<input id="tfMax" class="inp" type="number" min="0" inputmode="numeric" value="' + esc(U.tfMax) + '"></label></div>' +
+        '<div class="pills"><button type="button" class="btn sm" data-a="tffilter">ใช้ตัวกรอง</button></div>';
+      var q = U.tfQ.trim().toLowerCase(), mx = U.tfMax === '' ? Infinity : +U.tfMax;
+      var list = g.players.filter(function (p) {
+        return String(p.club_id) !== String(g.userClubId) && (U.tfPos === 'all' || X.posGroup(p) === U.tfPos) && (!q || String(p.name).toLowerCase().indexOf(q) >= 0) && S.askPrice(p) <= mx;
+      }).sort(function (a, b) { return b.rating - a.rating; }).slice(0, 40);
+      h += '<div class="sub">แสดง ' + list.length + ' คนที่เก่งที่สุดตามตัวกรอง (สูงสุด 40)</div><div class="tbl"><table><thead><tr><th>ตำแหน่ง</th><th>ชื่อ</th><th>สโมสร</th><th class="r">อายุ</th><th class="r">ค่าพลัง</th><th class="r">สัญญา</th><th class="r">ราคา</th><th></th></tr></thead><tbody>' + list.map(function (p) {
+        var ask = S.askPrice(p);
+        return '<tr><td>' + X.posPill(p) + '</td><td>' + X.nameBtn(p) + X.tags(p) + '</td><td>' + esc(club(p.club_id).short_name) + '</td><td class="r">' + (p.age == null ? '–' : p.age) + '</td><td class="r"><b>' + p.rating + '</b></td><td class="r">' + p.contract + ' ปี</td><td class="r">' + money(ask) + '</td>' +
+          '<td class="r"><button type="button" class="btn sm soft" data-a="buyask" data-id="' + p.id + '"' + (!open || g.budget < ask ? ' disabled' : '') + '>ซื้อ</button></td></tr>';
+      }).join('') + '</tbody></table></div>';
+    } else if (tab === 'sell') {
+      var mine = S.squadOf(g, g.userClubId).sort(function (a, b) { return b.rating - a.rating; });
+      h += '<div class="sub">นักเตะ ' + mine.length + ' คน (ขั้นต่ำ ' + S.SQUAD_MIN + ') · ราคาที่มีทีมเสนอซื้อ</div><div class="tbl"><table><thead><tr><th>ตำแหน่ง</th><th>ชื่อ</th><th class="r">ค่าพลัง</th><th class="r">สัญญา</th><th class="r">ราคา</th><th></th></tr></thead><tbody>' + mine.map(function (p) {
+        return '<tr><td>' + X.posPill(p) + '</td><td>' + X.nameBtn(p) + X.tags(p) + '</td><td class="r"><b>' + p.rating + '</b></td><td class="r">' + p.contract + ' ปี</td><td class="r">' + money(S.bidPrice(p)) + '</td>' +
+          '<td class="r"><button type="button" class="btn sm danger" data-a="sellask" data-id="' + p.id + '"' + (!open ? ' disabled' : '') + '>ขาย</button></td></tr>';
+      }).join('') + '</tbody></table></div>';
+    } else {
+      var all = (g.deals || []).slice(0, 30);
+      h += '<section class="card"><h2>ดีลระหว่างสโมสรอื่น</h2>' + (all.length ? all.map(function (d) {
+        return '<div class="kv"><span><span class="sub">นัด ' + d.round + '</span> ' + esc(d.name) + ' <span class="sub">' + esc(club(d.from).short_name) + ' → ' + esc(club(d.to).short_name) + '</span></span><b>' + money(d.fee) + '</b></div>';
+      }).join('') : '<span class="sub">ยังไม่มีดีลในลีก</span>') + '</section>';
+    }
+    return h;
+  };
+  ACT.tftab = function (t) { U.tfTab = t.getAttribute('data-k'); X.rerender(); };
+  ACT.tfpos = function (t) { readFilters(); U.tfPos = t.getAttribute('data-k'); X.rerender(); };
+  function readFilters() { var q = $('#tfQ'), m = $('#tfMax'); if (q) U.tfQ = q.value; if (m) U.tfMax = m.value; }
+  ACT.tffilter = function () { readFilters(); X.rerender(); };
+  ACT.buyask = function (t) {
+    var g = G(), p = S.findPlayer(g, +t.getAttribute('data-id')); if (!p) return;
+    X.modal('<h2 style="margin:0 0 8px">ซื้อ ' + esc(p.name) + '?</h2><p class="sub">จาก ' + esc(club(p.club_id).name) + ' ราคา ' + money(S.askPrice(p)) + ' สัญญา 3 ปี ค่าเหนื่อ ' + money2(S.baseWage(p)) + '/นัด งบคงเหลือหลังซื้อ ' + money(g.budget - S.askPrice(p)) + '</p>' +
+      '<div class="pills"><button type="button" class="btn pri" data-a="buy" data-id="' + p.id + '">ยืนยันซื้อ</button><button type="button" class="btn" data-a="mclose">ยกเลิก</button></div>');
+  };
+  ACT.buy = function (t) { X.closeModal(); say(S.buy(G(), +t.getAttribute('data-id'))); save(); X.rerender(); };
+  ACT.sellask = function (t) {
+    var g = G(), p = S.findPlayer(g, +t.getAttribute('data-id')); if (!p) return;
+    X.modal('<h2 style="margin:0 0 8px">ขาย ' + esc(p.name) + '?</h2><p class="sub">ได้รับ ' + money(S.bidPrice(p)) + ' ขายแล้วย้อนกลับไม่ได้</p>' +
+      '<div class="pills"><button type="button" class="btn danger" data-a="sell" data-id="' + p.id + '">ยืนยันขาย</button><button type="button" class="btn" data-a="mclose">ยกเลิก</button></div>');
+  };
+  ACT.sell = function (t) {
+    X.closeModal(); say(S.sell(G(), +t.getAttribute('data-id'))); save();
+    if (U.screen === 'player') U.screen = U.from === 'transfers' ? 'transfers' : 'squad';
+    X.rerender();
+  };
+
+  /* ---------- เทรนนิ่ง ---------- */
+  var FOCUS = [['ALL', 'ทุกตำแหน่ง'], ['GK', 'ผู้รักษาประตู'], ['DEF', 'กองหลัง'], ['MID', 'กองกลาง'], ['FWD', 'กองหน้า']];
+  var INT_NOTE = { light: 'พัฒนาช้าลงครึ่งหนึ่ง แต่เสี่ยงบาดเจ็บน้อยลง 40%', normal: 'พัฒนาและความเสี่ยงบาดเจ็บตามมาตรฐาน', hard: 'พัฒนาเร็วขึ้น 80% แต่เสี่ยงบาดเจ็บเพิ่มขึ้น 70%' };
+  SCREENS.training = function () {
+    var g = G(), tr = g.training;
+    var mine = S.squadOf(g, g.userClubId).sort(function (a, b) { return (b.grown || 0) - (a.grown || 0) || b.rating - a.rating; });
+    var h = '<div class="grid"><section class="card"><h2>ตำแหน่งที่เน้น</h2><div class="pills" role="group" aria-label="ตำแหน่งที่เน้นฝึก">' +
+      FOCUS.map(function (f) { return pill('tfocus', 'data-k="' + f[0] + '"', f[1], tr.focus === f[0]); }).join('') + '</div><div class="sub">ตำแหน่งที่เน้นพัฒนาเร็วขึ้น 60% ตำแหน่งอื่นช้าลง 30%</div></section>' +
+      '<section class="card"><h2>ความหนักของการซ้อม</h2><div class="pills" role="group" aria-label="ความหนักของการซ้อม">' +
+      Object.keys(S.INTENSITY).map(function (k) { return pill('tint', 'data-k="' + k + '"', S.INTENSITY[k].label, tr.intensity === k); }).join('') + '</div><div class="sub">' + INT_NOTE[tr.intensity] + '</div></section></div>';
+    h += '<div class="tbl"><table><thead><tr><th>ตำแหน่ง</th><th>ชื่อ</th><th class="r">อายุ</th><th class="r">ค่าพลัง</th><th class="r">พัฒนาฤดูกาลนี้</th><th class="r">เพดาน</th></tr></thead><tbody>' + mine.map(function (p) {
+      return '<tr><td>' + X.posPill(p) + '</td><td>' + X.nameBtn(p) + '</td><td class="r">' + (p.age == null ? '–' : p.age) + '</td><td class="r"><b>' + p.rating + '</b></td><td class="r">+' + (p.grown || 0) + '</td><td class="r">+' + S.potential(g, p) + '</td></tr>';
+    }).join('') + '</tbody></table></div><div class="sub">ผู้เล่นอายุมากพัฒนาน้อยลงและค่าพลังลดลงเมื่อขึ้นฤดูกาลใหม่ เพดานคำนวณจากอายุและศักยภาพ</div>';
+    return h;
+  };
+  ACT.tfocus = function (t) { S.setTraining(G(), t.getAttribute('data-k'), null); save(); X.rerender(); };
+  ACT.tint = function (t) { S.setTraining(G(), null, t.getAttribute('data-k')); save(); X.rerender(); };
+
+  /* ---------- การเงิน ---------- */
+  SCREENS.finance = function () {
+    var g = G(), bill = S.wageBill(g, g.userClubId), net = Math.round((g.income - bill) * 100) / 100;
+    var h = '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">' + kpi('งบคงเหลือ', money(g.budget), g.budget < 0 ? 'badc' : '') + kpi('รายรับต่อนัด', money(g.income)) + kpi('ค่าเหนื่อต่อนัด', money(bill)) +
+      kpi('สุทธิต่อนัด', (net > 0 ? '+' : '') + money(net), net < 0 ? 'badc' : 'good') + '</div>';
+    if (g.budget < 0) h += '<section class="card"><b class="badc">งบติดลบ</b><span class="sub">ความเชื่อมั่นของบอร์ดจะลดลงทุกนัดจนกว่างบจะกลับมาเป็นบวก</span></section>';
+    var log = (g.budgetLog || []).slice(-6);
+    if (log.length) {
+      var mx = Math.max.apply(null, log.map(function (l) { return Math.abs(l.balance); }).concat([1]));
+      h += '<section class="card"><h2>งบคงเหลือ ' + log.length + ' นัดล่าสุด</h2><div class="bars" role="img" aria-label="กราฟงบคงเหลือ ' + log.map(function (l) { return 'นัดที่ ' + l.round + ' ' + money(l.balance); }).join(', ') + '">' +
+        log.map(function (l) { return '<div title="' + money(l.balance) + '"><i style="height:' + Math.max(3, Math.round(Math.abs(l.balance) / mx * 100)) + '%;background:' + (l.balance < 0 ? 'var(--bad)' : 'var(--acc)') + '"></i></div>'; }).join('') +
+        '</div><div class="bars" style="height:auto;border:0;padding:4px 6px" aria-hidden="true">' + log.map(function (l) { return '<div style="justify-content:center"><span class="sub">' + l.round + '</span></div>'; }).join('') + '</div></section>' +
+        '<div class="tbl"><table><thead><tr><th>นัด</th><th class="r">รายรับ</th><th class="r">ค่าเหนื่อ</th><th class="r">ซื้อ-ขาย</th><th class="r">เหตุการณ์</th><th class="r">คงเหลือ</th></tr></thead><tbody>' + log.slice().reverse().map(function (l) {
+          return '<tr><td>' + l.round + '</td><td class="r">' + money(l.income) + '</td><td class="r">−' + money(l.wages) + '</td><td class="r">' + money(l.transfers) + '</td><td class="r">' + money(l.events) + '</td><td class="r"><b>' + money(l.balance) + '</b></td></tr>';
+        }).join('') + '</tbody></table></div>';
+    } else h += '<section class="card"><span class="sub">ยังไม่มีประวัติการเงิน จะเริ่มบันทึกหลังจบนัดแรก</span></section>';
+    var tx = (g.transfers || []).slice(-8).reverse();
+    if (tx.length) h += '<section class="card"><h2>การซื้อขายของเรา</h2>' + tx.map(function (t) {
+      return '<div class="kv"><span><span class="sub">นัด ' + t.round + '</span> ' + (t.type === 'buy' ? 'ซื้อ' : 'ขาย') + ' ' + esc(t.name) + ' <span class="sub">' + (t.type === 'buy' ? 'จาก ' : 'ให้ ') + esc(club(t.other).short_name) + '</span></span><b>' + money(t.fee) + '</b></div>';
+    }).join('') + '</section>';
+    return h;
+  };
+
+  /* ---------- บอร์ดบริหาร ---------- */
+  function grade(c) { return c >= 80 ? 'A' : c >= 65 ? 'B' : c >= 50 ? 'C' : c >= 35 ? 'D' : 'E'; }
+  SCREENS.board = function () {
+    var g = G(), c = Math.round(g.confidence), pos = S.userPosition(g), obj = g.objective;
+    var h = '<div class="grid"><section class="card"><h2>ความเชื่อมั่นของบอร์ด</h2><div style="display:flex;align-items:center;gap:16px"><div style="font-size:48px;font-weight:700;color:var(--acc)" aria-label="เกรด ' + grade(c) + '">' + grade(c) + '</div><div style="flex:1">' +
+      '<div class="bar" style="width:100%;height:10px" role="img" aria-label="ความเชื่อมั่น ' + c + ' เปอร์เซ็นต์"><i style="width:' + Math.max(0, Math.min(100, c)) + '%;background:' + (c < 35 ? 'var(--bad)' : c < 50 ? 'var(--warn)' : 'var(--acc)') + '"></i></div><div class="sub" style="margin-top:6px">' + c + '%</div></div></div>' +
+      (c < 25 ? '<div class="badc">ความเชื่อมั่นต่ำมาก ผลงานแย่ต่อเนื่องอาจทำให้เสี่ยงถูกปลด</div>' : '') + '</section>';
+    h += '<section class="card"><h2>เป้าหมายฤดูกาล ' + esc(g.season) + '</h2>' + kv('เป้าหมาย', 'จบอันดับไม่ต่ำกว่า ' + obj.target) + kv('อันดับตอนนี้', '<span class="' + (pos <= obj.target ? 'good' : 'badc') + '">' + pos + '</span>') +
+      kv('นัดที่เหลือ', g.fixtures.length - g.round) + '</section></div>';
+    var hist = g.history || [];
+    h += '<section class="card"><h2>ประวัติฤดูกาล</h2>' + (hist.length ? '<div class="tbl"><table><thead><tr><th>ฤดูกาล</th><th>แชมป์</th><th class="r">เราจบ</th><th class="r">เป้า</th></tr></thead><tbody>' + hist.slice().reverse().map(function (r) {
+      return '<tr><td>' + esc(r.season) + '</td><td>' + esc(r.champion) + '</td><td class="r"><span class="' + (r.pos <= r.target ? 'good' : 'badc') + '">' + r.pos + '</span></td><td class="r">' + r.target + '</td></tr>';
+    }).join('') + '</tbody></table></div>' : '<span class="sub">ยังไม่มีฤดูกาลที่จบ</span>') + '</section>';
+    return h;
+  };
+
+  /* ---------- ตั้งค่า ---------- */
+  function syncBox() {
+    var h = '';
+    if (U.syncMsg) {
+      h += '<div class="msg" role="status" style="cursor:default"><span style="font-size:14px;color:' + (U.syncMsg.ok ? 'var(--tx)' : 'var(--bad)') + '">' + esc(U.syncMsg.msg) + '</span></div>';
+      if (U.syncMsg.conflict) h += '<div class="pills"><button type="button" class="btn sm" data-a="cloudpull">ดึงจากคลาวด์แทน</button><button type="button" class="btn sm danger" data-a="pushforce">ทับด้วยเซฟเครื่องนี้</button></div>';
+    }
+    if (U.pendingCloud) h += '<div class="pills"><button type="button" class="btn sm" data-a="usecloud">ใช้เซฟจากคลาวด์ทับเครื่องนี้</button><button type="button" class="btn sm" data-a="cancelcloud">ยกเลิก</button></div>';
+    return h;
+  }
+  function loadSaveBtn() {
+    return '<label class="filebtn">โหลดไฟล์เซฟ<input id="saveFile" type="file" accept=".json,application/json"></label>';
+  }
+  SCREENS.settings = function () {
+    var g = G(), ys = Y.settings(), as = N.aiSettings();
+    var h = '<div data-mount="installHint"></div><div class="grid">';
+    h += '<section class="card"><h2>สถานะการบันทึก</h2>' + kv('บันทึกอัตโนมัติในเครื่อง', '<span class="good">เปิดอยู่</span>') + kv('บันทึกล่าสุด', g.saved_at ? new Date(g.saved_at).toLocaleString('th-TH') : '–') +
+      kv('ซิงก์คลาวด์', ys.token ? (ys.auto ? 'ตั้งไว้ (อัตโนมัติ)' : 'ตั้งไว้ (ด้วยมือ)') : 'ยังไม่ได้ตั้ง') + '<div class="pills"><button type="button" class="btn" data-a="download">ดาวน์โหลดไฟล์เซฟ</button>' + loadSaveBtn() + '</div>' +
+      '<label class="l">รหัสเซฟ (คัดลอกไปวางอีกเครื่อง)<textarea id="saveCode" class="inp" rows="3" placeholder="วางรหัสเซฟที่นี่เพื่อนำเข้า"></textarea></label>' +
+      '<div class="pills"><button type="button" class="btn sm" data-a="copycode">คัดลอกรหัสเซฟ</button><button type="button" class="btn sm" data-a="importcode">นำเข้ารหัสเซฟ</button></div></section>';
+    h += '<section class="card"><h2>ผู้จัดการ</h2><label class="l">ชื่อผู้จัดการ<input id="mgrSet" class="inp" type="text" maxlength="30" value="' + esc(g.manager) + '" autocomplete="off"></label><div class="pills"><button type="button" class="btn sm" data-a="savemgr">บันทึกชื่อ</button></div></section>';
+    h += '<section class="card"><h2>ซิงก์ข้ามเครื่อง (GitHub Gist ส่วนตัว)</h2><div class="sub">สร้างโทเค็นแบบ classic ที่ github.com/settings/tokens ติ๊กสิทธิ์ gist อย่างเดียว ตั้งวันหมดอายุ โทเค็นเก็บในเครื่องนี้เท่านั้น</div>' +
+      '<label class="l">โทเค็น GitHub<input id="tokIn" class="inp" type="password" autocomplete="off" placeholder="' + (ys.token ? '•••••• (บันทึกแล้ว)' : 'วางโทเค็น') + '"></label><div class="pills"><button type="button" class="btn sm" data-a="savetoken">บันทึกโทเค็น</button>' + (ys.token ? '<button type="button" class="btn sm" data-a="deltoken">ลบโทเค็น</button>' : '') + '</div>' +
+      (ys.token ? '<label class="chk"><input type="checkbox" id="autoSync"' + (ys.auto ? ' checked' : '') + ' data-a="autosync"> อัปโหลดอัตโนมัติทุกครั้งที่บันทึก</label><div class="pills"><button type="button" class="btn" data-a="pushnow">อัปโหลดขึ้นคลาวด์</button><button type="button" class="btn" data-a="cloudpull">ดึงจากคลาวด์</button></div>' : '') + syncBox() + '</section>';
+    h += '<section class="card"><h2>AI เขียนข่าวและรายงาน (ไม่บังคับ)</h2><div class="sub">ถ้าไม่ตั้งค่า เกมใช้รายงานมาตรฐานที่ทำงานออฟไลน์ ถ้าใส่คีย์ Anthropic API ของคุณเอง ระบบจะเรียก Claude จากเครื่องนี้ตรงๆ (มีค่าใช้จ่ายตามการใช้งาน) คีย์เก็บในเครื่องนี้เท่านั้น ข้อความที่มีชื่อหรือตัวเลขนอกข้อมูลเกมจะถูกตัดทิ้ง</div>' +
+      '<label class="l">คีย์ API<input id="aiKey" class="inp" type="password" autocomplete="off" placeholder="' + (as.key ? '•••••• (บันทึกแล้ว)' : 'sk-ant-...') + '"></label>' +
+      '<label class="l">ชื่อโมเดล<input id="aiModel" class="inp" type="text" value="' + esc(as.model || N.DEFAULT_MODEL) + '"></label>' +
+      '<label class="chk"><input type="checkbox" id="aiAuto"' + (as.auto ? ' checked' : '') + '> ให้ AI เขียนรายงานอัตโนมัติหลังจบนัด</label>' +
+      '<div class="pills"><button type="button" class="btn sm" data-a="saveai">บันทึกการตั้งค่า AI</button><button type="button" class="btn sm" data-a="delai">ลบคีย์ AI</button></div></section>';
+    h += '<div data-mount="dataPane"></div>';
+    h += '<section class="card"><h2>อื่นๆ</h2><div class="pills"><button type="button" class="btn" data-a="go" data-s="single">แมตช์เดี่ยว (เล่นเร็ว ไม่บันทึกผล)</button><button type="button" class="btn danger" data-a="resetask">เริ่มอาชีพใหม่</button></div></section>';
+    return h + '</div>';
+  };
+  SCREENS.single = function () { return '<div data-mount="singlePane"></div><div data-mount="matchPane" style="margin-top:18px"></div>'; };
+
+  function b64(s) { return btoa(unescape(encodeURIComponent(s))); }
+  function unb64(s) { return decodeURIComponent(escape(atob(s))); }
+  ACT.download = function () {
+    var g = G(), url = URL.createObjectURL(new Blob([JSON.stringify(g)], { type: 'application/json' })), a = document.createElement('a');
+    a.href = url; a.download = 'piithai-fm-career-' + g.season + '.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  };
+  ACT.copycode = function () {
+    var code = b64(JSON.stringify(G()));
+    var done = function () { toast('คัดลอกรหัสเซฟแล้ว'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, function () { fallbackCopy(code); });
+    else fallbackCopy(code);
+  };
+  function fallbackCopy(code) { var ta = $('#saveCode'); if (!ta) return; ta.value = code; ta.select(); try { document.execCommand('copy'); toast('คัดลอกรหัสเซฟแล้ว'); } catch (e) { toast('คัดลอกไม่ได้ ให้กดค้างที่ช่องแล้วคัดลอกเอง'); } }
+  ACT.importcode = function () {
+    var ta = $('#saveCode'); if (!ta || !ta.value.trim()) { toast('วางรหัสเซฟก่อน'); return; }
+    try {
+      var obj = JSON.parse(unb64(ta.value.trim()));
+      if (!S.isValid(obj)) throw new Error('bad');
+      X.applyLoaded(obj, 'นำเข้ารหัสเซฟสำเร็จ'); X.render();
+    } catch (e) { toast('รหัสเซฟไม่ถูกต้อง'); }
+  };
+  ACT.savemgr = function () { var v = ($('#mgrSet').value || '').trim(); if (!v) return; G().manager = v; save(); toast('บันทึกชื่อแล้ว'); X.rerender(); };
+  ACT.savetoken = function () {
+    var v = ($('#tokIn').value || '').trim(); if (!v) return;
+    var s = Y.settings(); s.token = v; s.gistId = null; s.lastSyncedAt = 0; Y.saveSettings(s); U.syncMsg = { ok: true, msg: 'บันทึกโทเค็นแล้ว' }; X.rerender();
+  };
+  ACT.deltoken = function () { Y.saveSettings({}); U.syncMsg = { ok: true, msg: 'ลบโทเค็นแล้ว' }; X.rerender(); };
+  ACT.autosync = function (t) { var s = Y.settings(); s.auto = t.checked; Y.saveSettings(s); };
+  ACT.pushnow = function () { X.doPush(false, false); };
+  ACT.pushforce = function () { X.doPush(true, false); };
+  ACT.cloudpull = function () { X.cloudPull(); };
+  ACT.usecloud = function () { var r = U.pendingCloud; X.applyLoaded(r.career, 'ใช้เซฟจากคลาวด์แล้ว'); Y.markSynced(r.saved_at); U.pendingCloud = null; U.syncMsg = null; X.render(); };
+  ACT.cancelcloud = function () { U.pendingCloud = null; U.syncMsg = null; X.rerender(); };
+  ACT.saveai = function () {
+    var s = N.aiSettings(), k = ($('#aiKey').value || '').trim();
+    if (k) s.key = k;
+    s.model = ($('#aiModel').value || '').trim() || N.DEFAULT_MODEL; s.auto = $('#aiAuto').checked;
+    N.saveAiSettings(s); toast('บันทึกการตั้งค่า AI แล้ว'); X.rerender();
+  };
+  ACT.delai = function () { N.saveAiSettings({}); toast('ลบคีย์ AI แล้ว'); X.rerender(); };
+  ACT.resetask = function () {
+    X.modal('<h2 style="margin:0 0 8px">เริ่มอาชีพใหม่?</h2><p class="sub">เซฟปัจจุบันในเครื่องนี้จะถูกลบและกู้คืนไม่ได้ (เว้นแต่คุณดาวน์โหลดหรืออัปโหลดสำรองไว้แล้ว)</p><div class="pills"><button type="button" class="btn danger" data-a="resetgo">ลบและเริ่มใหม่</button><button type="button" class="btn" data-a="mclose">ยกเลิก</button></div>');
+  };
+  ACT.resetgo = function () {
+    X.closeModal(); X.G = null; try { localStorage.removeItem(X.KEY); } catch (e) { /* ไม่เป็นไร */ }
+    U.screen = 'newgame'; U.post = null; U.matchPhase = 'pre'; U.newClub = null; U.syncMsg = null; X.render();
+  };
+
+  /* ไฟล์เซฟที่เลือกจากเครื่อง (ใช้ทั้งหน้าเริ่มเกมและหน้าตั้งค่า) */
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t && t.id === 'saveFile' && t.files && t.files[0]) {
+      t.files[0].text().then(function (txt) {
+        var obj = JSON.parse(txt);
+        if (!S.isValid(obj)) throw new Error('bad');
+        X.applyLoaded(obj, 'โหลดเซฟสำเร็จ'); X.render();
+      }).catch(function () { toast('ไฟล์เซฟไม่ถูกต้อง'); });
+    }
+    if (t && t.getAttribute && t.getAttribute('data-a') === 'autosync') ACT.autosync(t);
+  });
+
+  /* ตัวติดตั้งแอป: ปุ่ม "เข้าใจแล้ว" (pwa.js เป็นตัวตัดสินว่าจะแสดงเมื่อไร) */
+  /* ---------- เริ่มต้นแอป ---------- */
   document.addEventListener('DOMContentLoaded', function () {
-    load();
-    $('tabSingle').addEventListener('click', function () { setMode(false); });
-    $('tabCareer').addEventListener('click', function () { setMode(true); });
-    /* ข้อมูลหลักเปลี่ยน (โหลดไฟล์ใหม่) ตอนยังไม่มีอาชีพ ให้รายชื่อทีมในหน้าเริ่มอัปเดต */
-    App.onData(function () { if (!career && $('careerCard').style.display !== 'none') render(); });
+    X.load();
+    X.render();
+    App.onData(function () { if (!G() && U.screen !== 'single') X.rerender(); });
   });
 })();
 
