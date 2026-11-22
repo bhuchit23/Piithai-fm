@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f1720">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Piithai FM">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Piithai FM 2027 · Prototype</title>
+<style>
+  :root { --bg:#0f1720; --card:#17212c; --line:#26354a; --fg:#e8eef5; --mut:#8fa3b8; --acc:#3ddc84; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.45 system-ui,-apple-system,"Sukhumvit Set","Noto Sans Thai",sans-serif; padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
+  .wrap { max-width:1000px; margin:0 auto; padding:12px; }
+  h1 { font-size:18px; margin:4px 0 2px; }
+  .sub { color:var(--mut); font-size:13px; margin-bottom:10px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px; }
+  .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  select, button, .filebtn { background:#0f1a26; color:var(--fg); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font:inherit; min-height:44px; }
+  select { flex:1 1 140px; }
+  button, .filebtn { cursor:pointer; }
+  button.primary { background:var(--acc); color:#06210f; border-color:var(--acc); font-weight:700; flex:1 1 160px; }
+  button.on { border-color:var(--acc); color:var(--acc); }
+  .filebtn input { display:none; }
+  .status { color:var(--mut); font-size:13px; margin-top:8px; }
+  .score { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; text-align:center; }
+  .team { display:flex; flex-direction:column; align-items:center; gap:4px; font-weight:600; }
+  .big { font-size:32px; font-weight:800; letter-spacing:2px; }
+  .min { color:var(--acc); font-size:13px; }
+  .avatar { display:inline-flex; align-items:center; justify-content:center; border-radius:50%; color:#fff; font-weight:700; overflow:hidden; flex:0 0 auto; }
+  .avatar img { width:100%; height:100%; object-fit:cover; }
+  .badge { width:52px; height:52px; font-size:14px; }
+  .face { width:28px; height:28px; font-size:11px; }
+  canvas { width:100%; display:block; border-radius:10px; }
+  .cols { display:grid; grid-template-columns:1fr; gap:12px; }
+  @media (min-width:760px) { .cols { grid-template-columns:1fr 1fr; } .lines { grid-column:1 / -1; } }
+  ul#log { list-style:none; margin:0; padding:0; max-height:260px; overflow:auto; }
+  ul#log li { padding:6px 2px; border-bottom:1px solid var(--line); font-size:14px; }
+  ul#log li.goal { color:var(--acc); font-weight:700; }
+  .lines { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .lines h3 { margin:0 0 6px; font-size:14px; }
+  .prow { display:flex; align-items:center; gap:8px; padding:3px 0; font-size:13px; }
+  .pinfo { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pmeta { color:var(--mut); font-size:12px; }
+  table { width:100%; border-collapse:collapse; text-align:center; }
+  td, th { padding:5px 4px; border-bottom:1px solid var(--line); font-size:14px; }
+  th { color:var(--mut); font-weight:400; }
+  .tabs button { flex:1 1 0; }
+  .subtabs { display:flex; gap:6px; flex-wrap:wrap; margin:10px 0; }
+  .subtabs button { padding:8px 12px; min-height:40px; }
+  .hdr { font-size:14px; color:var(--mut); }
+  .hdr b { color:var(--fg); }
+  .msg { margin:8px 0; padding:8px 10px; border-radius:8px; background:#10261a; border:1px solid #1d4d32; font-size:14px; }
+  .msg.err { background:#2a1414; border-color:#5a2424; }
+  table.lg td, table.lg th { text-align:right; padding:6px 4px; }
+  table.lg td:nth-child(2), table.lg th:nth-child(2) { text-align:left; }
+  table.lg tr.me { background:rgba(61,220,132,.12); }
+  .results { display:grid; grid-template-columns:1fr 1fr; gap:2px 12px; font-size:13px; margin:6px 0; }
+  .results .me { color:var(--acc); font-weight:700; }
+  .mrow { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--line); font-size:13px; }
+  .mrow .pinfo { flex:1; min-width:0; }
+  .mrow button { padding:6px 10px; min-height:36px; }
+  input[type=search] { background:#0f1a26; color:var(--fg); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font:inherit; min-height:44px; flex:1 1 140px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Piithai FM 2027</h1>
+  <div class="sub">ต้นแบบ: จำลองแมตช์พร้อมภาพสนาม 2D</div>
+
+  <div class="card" id="installHint" style="display:none">
+    <b>ติดตั้งเป็นแอป</b>
+    <div class="status">กดปุ่มแชร์ (ไอคอนสี่เหลี่ยมมีลูกศรขึ้น) ใน Safari แล้วเลือก "เพิ่มไปยังหน้าจอโฮม" จะได้ไอคอนเปิดเต็มจอ เล่นออฟไลน์ได้ แนะนำให้ดาวน์โหลดไฟล์เซฟสำรองไว้เป็นระยะ</div>
+    <div class="row" style="margin-top:8px"><button id="installHintClose">เข้าใจแล้ว</button></div>
+  </div>
+
+  <div class="row tabs" style="margin-bottom:12px">
+    <button id="tabSingle" class="on">⚽ แมตช์เดี่ยว</button>
+    <button id="tabCareer">🏆 โหมดอาชีพ</button>
+  </div>
+
+  <div class="card" id="singleCard">
+    <div class="row">
+      <select id="homeSel" aria-label="ทีมเหย้า"></select>
+      <select id="homeForm" aria-label="แผนทีมเหย้า"></select>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <select id="awaySel" aria-label="ทีมเยือน"></select>
+      <select id="awayForm" aria-label="แผนทีมเยือน"></select>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button id="startBtn" class="primary">▶ เริ่มแมตช์</button>
+      <button id="skipBtn">⏭ ข้ามไปจบ</button>
+      <button data-speed="1" class="on">1x</button>
+      <button data-speed="2">2x</button>
+      <button data-speed="4">4x</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <label class="filebtn">📂 โหลด players.json + clubs.json<input id="fileInput" type="file" accept=".json,application/json" multiple></label>
+      <button id="clearBtn">ใช้ข้อมูลตัวอย่าง</button>
+    </div>
+    <div class="status" id="dataStatus"></div>
+  </div>
+
+  <div class="card" id="careerCard" style="display:none"><div id="careerBody"></div></div>
+
+  <div class="card">
+    <div class="score">
+      <div class="team"><div id="badgeHome"></div><div id="nameHome"></div></div>
+      <div><div class="big" id="sbScore">0 - 0</div><div class="min" id="sbMin">&nbsp;</div></div>
+      <div class="team"><div id="badgeAway"></div><div id="nameAway"></div></div>
+    </div>
+  </div>
+
+  <div class="card"><canvas id="pitch"></canvas></div>
+
+  <div class="cols">
+    <div class="card"><h3 style="margin:0 0 6px;font-size:14px">เหตุการณ์</h3><ul id="log"></ul></div>
+    <div class="card"><h3 style="margin:0 0 6px;font-size:14px">สถิติ</h3><div id="stats" class="status">เล่นแมตช์เพื่อดูสถิติ</div></div>
+  </div>
+
+  <div class="card lines" id="lineups">
+    <div id="lineHome"></div>
+    <div id="lineAway"></div>
+  </div>
+</div>
+
+<script>
+/* เอนจินจำลองแมตช์: ตัวเลขล้วน ไม่ใช้ AI
+ * ใช้ได้ทั้งในเบราว์เซอร์ (window.FMEngine) และ Node (module.exports) */
+(function (root) {
+  'use strict';
+
+  var FORMATIONS = {
+    '4-4-2': { DEF: 4, MID: 4, FWD: 2 },
+    '4-3-3': { DEF: 4, MID: 3, FWD: 3 },
+    '3-5-2': { DEF: 3, MID: 5, FWD: 2 },
+    '4-5-1': { DEF: 4, MID: 5, FWD: 1 }
+  };
+  var LINE_X = { GK: 5, DEF: 24, MID: 47, FWD: 72 };
+  var HALF_WIDTH = { 1: 0, 2: 10, 3: 20, 4: 24, 5: 26 };
+
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function lineSlots(pos, n) {
+    var slots = [];
+    for (var i = 0; i < n; i++) {
+      var y = n === 1 ? 34 : 34 + (i - (n - 1) / 2) * (2 * HALF_WIDTH[n] / (n - 1));
+      slots.push({ pos: pos, x: LINE_X[pos], y: y });
+    }
+    return slots;
+  }
+
+  /* ตำแหน่งยืนของทีมที่รุกไปทางขวา (x เพิ่ม) สนามขนาด 105 x 68 */
+  function layout(formation) {
+    var f = FORMATIONS[formation] || FORMATIONS['4-4-2'];
+    return [{ pos: 'GK', x: LINE_X.GK, y: 34 }]
+      .concat(lineSlots('DEF', f.DEF), lineSlots('MID', f.MID), lineSlots('FWD', f.FWD));
+  }
+
+  function isAvailable(p) {
+    return p.status !== 'i' && p.status !== 's' && p.status !== 'u';
+  }
+
+  /* เลือก 11 ตัวจริง: คนเก่งที่สุดที่พร้อมลงเล่นในแต่ละตำแหน่ง ถ้าขาดตำแหน่งไหนเอาคนเก่งที่เหลือมาเติม */
+  function pickLineup(players, formation) {
+    var pool = players.filter(isAvailable).sort(function (a, b) { return b.rating - a.rating; });
+    var taken = {};
+    var filler = 0;
+    return layout(formation).map(function (slot) {
+      var c = null, i;
+      for (i = 0; i < pool.length; i++) {
+        if (!taken[pool[i].id] && pool[i].position === slot.pos) { c = pool[i]; break; }
+      }
+      if (!c) {
+        for (i = 0; i < pool.length; i++) {
+          if (!taken[pool[i].id]) { c = pool[i]; break; }
+        }
+      }
+      if (!c) {
+        filler--;
+        c = { id: filler, name: '-', position: slot.pos, rating: 40, club_id: 0 };
+      } else {
+        taken[c.id] = true;
+      }
+      return { pos: slot.pos, x: slot.x, y: slot.y, player: c };
+    });
+  }
+
+  function teamRatings(xi) {
+    function avg(pos) {
+      var a = xi.filter(function (s) { return s.pos === pos; }).map(function (s) { return s.player.rating; });
+      return a.length ? a.reduce(function (x, y) { return x + y; }, 0) / a.length : 50;
+    }
+    var gk = avg('GK'), def = avg('DEF'), mid = avg('MID'), fwd = avg('FWD');
+    return {
+      attack: 0.55 * fwd + 0.35 * mid + 0.10 * def,
+      defense: 0.45 * def + 0.20 * mid + 0.35 * gk,
+      midfield: mid,
+      gk: gk
+    };
+  }
+
+  function pickWeighted(xi, weights, rng, excludeId) {
+    var total = 0, i, w, list = [];
+    for (i = 0; i < xi.length; i++) {
+      if (xi[i].player.id === excludeId) continue;
+      w = (weights[xi[i].pos] || 0) * xi[i].player.rating;
+      if (w > 0) { list.push([xi[i], w]); total += w; }
+    }
+    var r = rng() * total;
+    for (i = 0; i < list.length; i++) {
+      r -= list[i][1];
+      if (r <= 0) return list[i][0].player;
+    }
+    return list[list.length - 1][0].player;
+  }
+
+  function blank() { return { shots: 0, onTarget: 0, possMin: 0, goals: 0, yellow: 0 }; }
+
+  /* จำลองแมตช์ คืนค่าเหตุการณ์รายนาที ฝั่งที่ครองบอลในแต่ละนาที และสถิติ */
+  function simulate(homeXI, awayXI, opts) {
+    opts = opts || {};
+    var seed = opts.seed != null ? opts.seed : (Date.now() ^ 0x9e3779b9);
+    var rng = mulberry32(seed);
+    var HOME_ADV = 1.05;
+    var side = {
+      home: { xi: homeXI, r: teamRatings(homeXI), adv: HOME_ADV },
+      away: { xi: awayXI, r: teamRatings(awayXI), adv: 1 }
+    };
+    var total = 91 + Math.floor(rng() * 4); /* 90 นาที + ทดเวลา 1-4 */
+    var pHome = clamp(0.5 + (side.home.r.midfield * HOME_ADV - side.away.r.midfield) / 150, 0.3, 0.7);
+    var events = [], possession = [null];
+    var stats = { home: blank(), away: blank() };
+    var score = { home: 0, away: 0 };
+    var SHOOT_W = { FWD: 5, MID: 2.5, DEF: 0.7 };
+    var ASSIST_W = { MID: 3, FWD: 2, DEF: 1 };
+    var CARD_W = { GK: 0.3, DEF: 3, MID: 3, FWD: 1.5 };
+
+    for (var m = 1; m <= total; m++) {
+      var s = rng() < pHome ? 'home' : 'away';
+      var o = s === 'home' ? 'away' : 'home';
+      possession.push(s);
+      stats[s].possMin++;
+
+      var ratio = (side[s].r.attack * side[s].adv) / side[o].r.defense;
+      var shotP = clamp(0.25 * Math.pow(ratio, 2), 0.05, 0.7);
+      if (rng() < shotP) {
+        var shooter = pickWeighted(side[s].xi, SHOOT_W, rng);
+        var onTargetP = clamp(0.36 + (shooter.rating - 60) / 250, 0.22, 0.55);
+        stats[s].shots++;
+        var ev = { minute: m, side: s, attack: true, player: { id: shooter.id, name: shooter.name } };
+        if (rng() < onTargetP) {
+          stats[s].onTarget++;
+          var goalP = clamp(0.22 * Math.pow(shooter.rating / side[o].r.gk, 2), 0.06, 0.5);
+          if (rng() < goalP) {
+            ev.type = 'goal';
+            score[s]++;
+            stats[s].goals++;
+            if (rng() < 0.65) {
+              var a = pickWeighted(side[s].xi, ASSIST_W, rng, shooter.id);
+              ev.assist = { id: a.id, name: a.name };
+            }
+          } else {
+            ev.type = 'save';
+            var keeper = side[o].xi[0].player;
+            ev.gk = { id: keeper.id, name: keeper.name };
+          }
+        } else {
+          ev.type = 'miss';
+        }
+        events.push(ev);
+      }
+
+      if (rng() < 0.035) {
+        var cs = rng() < 0.5 ? 'home' : 'away';
+        var cp = pickWeighted(side[cs].xi, CARD_W, rng);
+        stats[cs].yellow++;
+        events.push({ minute: m, side: cs, attack: false, type: 'yellow', player: { id: cp.id, name: cp.name } });
+      }
+    }
+
+    /* เรียงตามเวลาที่ "เฉลย" ในแอนิเมชัน: ใบเหลืองกลางนาที ผลการยิงท้ายนาที */
+    events.forEach(function (e) { e.reveal = e.minute - 1 + (e.attack ? 0.85 : 0.5); });
+    events.sort(function (x, y) { return x.reveal - y.reveal; });
+
+    return {
+      seed: seed,
+      total: total,
+      events: events,
+      possession: possession,
+      score: score,
+      stats: stats,
+      possessionPct: {
+        home: Math.round(100 * stats.home.possMin / total),
+        away: Math.round(100 * stats.away.possMin / total)
+      },
+      ratings: { home: side.home.r, away: side.away.r }
+    };
+  }
+
+  /* ข้อมูลตัวอย่าง (สโมสร/นักเตะสมมติ) ไว้เล่นก่อนมีไฟล์จริง */
+  function makeSampleData(seed, nClubs) {
+    var rng = mulberry32(seed || 7);
+    var base = [['Rovers', 'ROV'], ['United FC', 'UTD'], ['City Stars', 'CST'],
+      ['Athletic', 'ATH'], ['Wanderers', 'WAN'], ['Albion', 'ALB']];
+    var count = nClubs || base.length;
+    var names = [];
+    for (var k = 0; k < count; k++) {
+      names.push(base[k] || ['Team ' + (k + 1), 'T' + (k < 9 ? '0' : '') + (k + 1)]);
+    }
+    var counts = { GK: 2, DEF: 7, MID: 7, FWD: 5 };
+    var clubs = [], players = [], pid = 1;
+    names.forEach(function (n, ci) {
+      var level = 58 + rng() * 20;
+      clubs.push({ id: ci + 1, name: 'Sample ' + n[0], short_name: n[1], strength: null });
+      Object.keys(counts).forEach(function (pos) {
+        for (var i = 0; i < counts[pos]; i++) {
+          players.push({
+            id: pid++, name: n[1] + ' ' + pos + (i + 1), first_name: '', second_name: '',
+            club_id: ci + 1, position: pos, price: 5, status: 'a', news: '', minutes: 0,
+            goals: 0, assists: 0, clean_sheets: 0, xg: 0, xa: 0,
+            rating: Math.round(clamp(level + (rng() - 0.5) * 22, 40, 95))
+          });
+        }
+      });
+    });
+    return { players: players, clubs: clubs };
+  }
+
+  var api = {
+    FORMATIONS: FORMATIONS, layout: layout, pickLineup: pickLineup, teamRatings: teamRatings,
+    simulate: simulate, makeSampleData: makeSampleData
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  root.FMEngine = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* โหมดอาชีพ: ตารางแข่ง ตารางคะแนน ตลาดซื้อขาย และเซฟ (ตรรกะล้วน ไม่แตะหน้าจอ) */
+(function (root) {
+  'use strict';
+
+  var E = root.FMEngine || (typeof require === 'function' ? require('./engine.js') : null);
+
+  var POS_MIN = { GK: 2, DEF: 5, MID: 5, FWD: 3 };
+  var SQUAD_MIN = 20, SQUAD_MAX = 30;
+  var WEEKLY_INCOME = 2; /* ล้านปอนด์ต่อนัด */
+
+  function r1(x) { return Math.round(x * 10) / 10; }
+  function hash01(n) { var x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ---------- มูลค่านักเตะ (ล้านปอนด์) ---------- */
+  function value(p) {
+    var price = p.price || 5;
+    return Math.max(0.5, r1(price * price * 0.45 * (1 + ((p.rating || 60) - 70) / 100)));
+  }
+  function askPrice(p) { return r1(value(p) * (1 + 0.25 * hash01(p.id))); }          /* ราคาที่สโมสรเจ้าของขอ */
+  function bidPrice(p) { return r1(value(p) * (0.85 + 0.15 * hash01(p.id + 1000))); } /* ราคาที่สโมสรอื่นเสนอซื้อ */
+
+  /* ---------- ตารางแข่ง (แบบหมุนเวียน เหย้า-เยือน) ---------- */
+  function makeFixtures(ids, seed) {
+    var rng = mulberry32(seed), teams = ids.slice(), i, j, t;
+    for (i = teams.length - 1; i > 0; i--) { j = Math.floor(rng() * (i + 1)); t = teams[i]; teams[i] = teams[j]; teams[j] = t; }
+    if (teams.length % 2) teams.push(null);
+    var n = teams.length, arr = teams.slice(), rounds = [];
+    for (var r = 0; r < n - 1; r++) {
+      var round = [];
+      for (var k = 0; k < n / 2; k++) {
+        var a = arr[k], b = arr[n - 1 - k];
+        if (a === null || b === null) continue;
+        round.push((r + k) % 2 === 0 ? { h: a, a: b } : { h: b, a: a });
+      }
+      rounds.push(round);
+      arr.splice(1, 0, arr.pop());
+    }
+    var second = rounds.map(function (rd) { return rd.map(function (f) { return { h: f.a, a: f.h }; }); });
+    return rounds.concat(second);
+  }
+
+  /* ---------- เริ่ม/ตรวจเซฟ ---------- */
+  function newCareer(players, clubs, userClubId, opts) {
+    opts = opts || {};
+    var seed = opts.seed != null ? opts.seed : (Date.now() & 0x7fffffff);
+    var table = {};
+    clubs.forEach(function (c) { table[c.id] = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 }; });
+    return {
+      version: 1, season: '2026-27', seed: seed, userClubId: userClubId, round: 0,
+      clubs: clubs.map(function (c) { return { id: c.id, name: c.name, short_name: c.short_name }; }),
+      players: players.map(function (p) { return Object.assign({}, p); }),
+      fixtures: makeFixtures(clubs.map(function (c) { return c.id; }), seed),
+      table: table, budget: opts.budget != null ? opts.budget : 50, formation: '4-4-2',
+      stats: {}, transfers: [], lastResults: []
+    };
+  }
+
+  function isValid(s) {
+    return !!s && s.version === 1 && Array.isArray(s.fixtures) && Array.isArray(s.players) &&
+      Array.isArray(s.clubs) && s.table && typeof s.round === 'number' && s.userClubId !== undefined;
+  }
+
+  /* ---------- ฝึกซ้อม/แข่ง ---------- */
+  function squadOf(state, clubId) {
+    return state.players.filter(function (p) { return p.club_id === clubId; });
+  }
+  function formationFor(state, clubId) {
+    if (clubId === state.userClubId) return state.formation;
+    var names = Object.keys(E.FORMATIONS);
+    return names[Math.floor(hash01(clubId * 7 + state.round) * names.length)];
+  }
+  function lineup(state, clubId) {
+    return E.pickLineup(squadOf(state, clubId), formationFor(state, clubId));
+  }
+  function finished(state) { return state.round >= state.fixtures.length; }
+  function userFixture(state) {
+    if (finished(state)) return null;
+    var fx = state.fixtures[state.round];
+    for (var i = 0; i < fx.length; i++) {
+      if (fx[i].h === state.userClubId || fx[i].a === state.userClubId) return fx[i];
+    }
+    return null;
+  }
+
+  function bump(state, id, key) {
+    if (id < 0) return;
+    var s = state.stats[id] || (state.stats[id] = { g: 0, a: 0, y: 0 });
+    s[key]++;
+  }
+  function record(state, f, res) {
+    var hg = res.score.home, ag = res.score.away, H = state.table[f.h], A = state.table[f.a];
+    H.p++; A.p++; H.gf += hg; H.ga += ag; A.gf += ag; A.ga += hg;
+    if (hg > ag) { H.w++; A.l++; H.pts += 3; }
+    else if (hg < ag) { A.w++; H.l++; A.pts += 3; }
+    else { H.d++; A.d++; H.pts++; A.pts++; }
+    res.events.forEach(function (e) {
+      if (e.type === 'goal') { bump(state, e.player.id, 'g'); if (e.assist) bump(state, e.assist.id, 'a'); }
+      else if (e.type === 'yellow') bump(state, e.player.id, 'y');
+    });
+  }
+
+  /* จบนัดปัจจุบัน: ใช้ผลของทีมเราที่เล่นมาแล้ว (ถ้ามี) ที่เหลือจำลองให้ทั้งหมด */
+  function applyRound(state, userMatch) {
+    if (finished(state)) return [];
+    var fx = state.fixtures[state.round], out = [];
+    fx.forEach(function (f, idx) {
+      var res;
+      if (userMatch && userMatch.h === f.h && userMatch.a === f.a) {
+        res = userMatch.result;
+      } else {
+        res = E.simulate(lineup(state, f.h), lineup(state, f.a), { seed: state.seed + state.round * 100 + idx });
+      }
+      record(state, f, res);
+      out.push({ h: f.h, a: f.a, hg: res.score.home, ag: res.score.away });
+    });
+    state.round++;
+    state.budget = r1(state.budget + WEEKLY_INCOME);
+    state.lastResults = out;
+    return out;
+  }
+
+  /* ---------- ตลาดซื้อขาย ---------- */
+  function windowRange(state) {
+    var mid = Math.floor(state.fixtures.length / 2);
+    return { from: mid - 1, to: mid + 3 };
+  }
+  function windowOpen(state) {
+    var w = windowRange(state);
+    return state.round === 0 || (state.round >= w.from && state.round <= w.to);
+  }
+  function posCount(list, pos) {
+    return list.filter(function (p) { return p.position === pos; }).length;
+  }
+  function canLose(list, p) {
+    return list.length - 1 >= SQUAD_MIN && posCount(list, p.position) - 1 >= POS_MIN[p.position];
+  }
+  function findPlayer(state, id) {
+    for (var i = 0; i < state.players.length; i++) if (state.players[i].id === id) return state.players[i];
+    return null;
+  }
+  function fail(msg) { return { ok: false, msg: msg }; }
+
+  function buy(state, id) {
+    if (!windowOpen(state)) return fail('ตลาดปิดอยู่');
+    var p = findPlayer(state, id);
+    if (!p) return fail('ไม่พบนักเตะ');
+    if (p.club_id === state.userClubId) return fail('นักเตะคนนี้อยู่ในทีมคุณแล้ว');
+    if (squadOf(state, state.userClubId).length >= SQUAD_MAX) return fail('ทีมเต็ม (สูงสุด ' + SQUAD_MAX + ' คน)');
+    var ask = askPrice(p);
+    if (state.budget < ask) return fail('งบไม่พอ ต้องใช้ £' + ask + 'm');
+    if (!canLose(squadOf(state, p.club_id), p)) return fail('สโมสรเจ้าของปฏิเสธ: ขายแล้วจะเหลือนักเตะไม่พอ');
+    var from = p.club_id;
+    p.club_id = state.userClubId;
+    state.budget = r1(state.budget - ask);
+    state.transfers.push({ round: state.round, type: 'buy', id: p.id, name: p.name, other: from, fee: ask });
+    return { ok: true, msg: 'ซื้อ ' + p.name + ' สำเร็จ £' + ask + 'm', fee: ask };
+  }
+
+  function sell(state, id) {
+    if (!windowOpen(state)) return fail('ตลาดปิดอยู่');
+    var p = findPlayer(state, id);
+    if (!p || p.club_id !== state.userClubId) return fail('นักเตะคนนี้ไม่ได้อยู่ในทีมคุณ');
+    if (!canLose(squadOf(state, state.userClubId), p)) {
+      return fail('ขายไม่ได้: ทีมต้องมีอย่างน้อย ' + SQUAD_MIN + ' คน และแต่ละตำแหน่งต้องไม่ต่ำกว่าขั้นต่ำ');
+    }
+    var buyers = state.clubs.filter(function (c) {
+      return c.id !== state.userClubId && squadOf(state, c.id).length < SQUAD_MAX;
+    });
+    if (!buyers.length) return fail('ไม่มีสโมสรสนใจ');
+    buyers.sort(function (a, b) {
+      return posCount(squadOf(state, a.id), p.position) - posCount(squadOf(state, b.id), p.position) || a.id - b.id;
+    });
+    var buyer = buyers[0], bid = bidPrice(p);
+    p.club_id = buyer.id;
+    state.budget = r1(state.budget + bid);
+    state.transfers.push({ round: state.round, type: 'sell', id: p.id, name: p.name, other: buyer.id, fee: bid });
+    return { ok: true, msg: 'ขาย ' + p.name + ' ให้ ' + buyer.name + ' £' + bid + 'm', fee: bid };
+  }
+
+  /* ---------- ตาราง/สถิติ ---------- */
+  function standings(state) {
+    return state.clubs.map(function (c) {
+      var t = state.table[c.id];
+      return { club: c, p: t.p, w: t.w, d: t.d, l: t.l, gf: t.gf, ga: t.ga, gd: t.gf - t.ga, pts: t.pts };
+    }).sort(function (a, b) {
+      return b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || a.club.name.localeCompare(b.club.name);
+    });
+  }
+  function topScorers(state, n) {
+    var list = [];
+    Object.keys(state.stats).forEach(function (id) {
+      var p = findPlayer(state, +id);
+      if (p && state.stats[id].g > 0) list.push({ player: p, g: state.stats[id].g, a: state.stats[id].a });
+    });
+    list.sort(function (x, y) { return y.g - x.g || y.a - x.a || x.player.name.localeCompare(y.player.name); });
+    return list.slice(0, n || 10);
+  }
+
+  var api = {
+    POS_MIN: POS_MIN, SQUAD_MIN: SQUAD_MIN, SQUAD_MAX: SQUAD_MAX,
+    value: value, askPrice: askPrice, bidPrice: bidPrice, makeFixtures: makeFixtures,
+    newCareer: newCareer, isValid: isValid, squadOf: squadOf, formationFor: formationFor,
+    finished: finished, userFixture: userFixture, applyRound: applyRound,
+    windowRange: windowRange, windowOpen: windowOpen, buy: buy, sell: sell,
+    standings: standings, topScorers: topScorers
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  root.FMSeason = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* วาดแมตช์ 2D บน Canvas จากผลของเอนจิน (หน่วยในสนามเป็นเมตร 105 x 68) */
+(function (root) {
+  'use strict';
+
+  var W = 105, H = 68, PAD = 3;
+
+  function hash(n) {
+    var x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+    return x - Math.floor(x);
+  }
+  function lerp(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
+  function ease(x) { return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  function PitchView(canvas) {
+    this.c = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.match = null;
+    this.flash = null;
+    this.resize();
+  }
+
+  PitchView.prototype.resize = function () {
+    var dpr = root.devicePixelRatio || 1;
+    var w = this.c.clientWidth || 640;
+    var h = w * (H + 2 * PAD) / (W + 2 * PAD);
+    this.c.width = Math.round(w * dpr);
+    this.c.height = Math.round(h * dpr);
+    this.c.style.height = h + 'px';
+    this.scale = w / (W + 2 * PAD);
+    this.dpr = dpr;
+    this.showNames = w >= 680;
+  };
+
+  /* match = { home:{xi,color}, away:{xi,color}, result } */
+  PitchView.prototype.setMatch = function (match) {
+    this.match = match;
+    this.flash = null;
+    var res = match.result, total = res.total;
+    var byMinute = {};
+    res.events.forEach(function (e) { if (e.attack) byMinute[e.minute] = e; });
+
+    var keys = [null];
+    var nextStart = { x: 52.5, y: 34 };
+    for (var m = 1; m <= total; m++) {
+      var ev = byMinute[m];
+      var S = nextStart, k;
+      if (ev) {
+        var dir = ev.side === 'home' ? 1 : -1;
+        var P = { x: dir > 0 ? 86 + hash(m) * 6 : 19 - hash(m) * 6, y: 34 + (hash(m * 3) - 0.5) * 26 };
+        var G = { x: dir > 0 ? W : 0, y: 34 + (hash(m * 5) - 0.5) * 5 };
+        var end;
+        if (ev.type === 'goal') end = { x: dir > 0 ? W + 2.2 : -2.2, y: G.y };
+        else if (ev.type === 'save') end = { x: G.x - dir * 6, y: 34 + (hash(m * 9) - 0.5) * 12 };
+        else end = { x: G.x + dir * 3, y: G.y + (hash(m * 11) > 0.5 ? 1 : -1) * (7 + hash(m * 13) * 6) };
+        k = { ev: ev, S: S, P: P, G: G, end: end };
+        nextStart = ev.type === 'goal' ? { x: 52.5, y: 34 } : end;
+      } else {
+        var d2 = res.possession[m] === 'home' ? 1 : -1;
+        var P2 = { x: 52.5 + d2 * (8 + hash(m) * 14), y: 34 + (hash(m * 7) - 0.5) * 40 };
+        k = { ev: null, S: S, P: P2, end: P2 };
+        nextStart = P2;
+      }
+      keys.push(k);
+    }
+    this.keys = keys;
+  };
+
+  PitchView.prototype.ballAt = function (t) {
+    var total = this.match.result.total;
+    t = clamp(t, 0, total - 0.0001);
+    var m = Math.floor(t) + 1, u = t - (m - 1), k = this.keys[m], p;
+    if (k.ev) {
+      if (u < 0.6) p = lerp(k.S, k.P, ease(u / 0.6));
+      else if (u < 0.85) p = lerp(k.P, k.G, (u - 0.6) / 0.25);
+      else p = lerp(k.G, k.end, ease((u - 0.85) / 0.15));
+    } else {
+      p = lerp(k.S, k.P, ease(u));
+    }
+    return p;
+  };
+
+  PitchView.prototype.positions = function (sideName, ball, t) {
+    var side = this.match[sideName];
+    var dir = sideName === 'home' ? 1 : -1;
+    var m = clamp(Math.floor(t) + 1, 1, this.match.result.total);
+    var hasBall = this.match.result.possession[m] === sideName;
+    var out = [], i, s, x, y, push;
+    for (i = 0; i < side.xi.length; i++) {
+      s = side.xi[i];
+      x = sideName === 'home' ? s.x : W - s.x;
+      y = sideName === 'home' ? s.y : H - s.y;
+      var gk = s.pos === 'GK';
+      push = hasBall && !gk ? dir * 4 : 0;
+      x += (ball.x - W / 2) * (gk ? 0.08 : 0.4) + push;
+      y += (ball.y - H / 2) * (gk ? 0.12 : 0.25);
+      x += Math.sin(t * 1.7 + i * 1.3) * 0.9;
+      y += Math.cos(t * 1.3 + i * 2.1) * 0.9;
+      out.push({ x: clamp(x, 1, W - 1), y: clamp(y, 1, H - 1), slot: s });
+    }
+    if (hasBall) {
+      var best = -1, bd = 1e9;
+      for (i = 1; i < out.length; i++) {
+        var dx = out[i].x - ball.x, dy = out[i].y - ball.y, d = dx * dx + dy * dy;
+        if (d < bd) { bd = d; best = i; }
+      }
+      if (best > 0) {
+        out[best].x = clamp(ball.x - dir * 1.3, 1, W - 1);
+        out[best].y = clamp(ball.y, 1, H - 1);
+      }
+    }
+    return out;
+  };
+
+  PitchView.prototype.showGoal = function (text) {
+    this.flash = { text: text, until: Date.now() + 2400 };
+  };
+
+  PitchView.prototype.drawPitch = function (ctx) {
+    var i;
+    ctx.fillStyle = '#1f7a3a';
+    ctx.fillRect(-PAD, -PAD, W + 2 * PAD, H + 2 * PAD);
+    for (i = 0; i < 10; i++) {
+      ctx.fillStyle = i % 2 ? 'rgba(255,255,255,0.045)' : 'rgba(0,0,0,0.035)';
+      ctx.fillRect(i * W / 10, 0, W / 10, H);
+    }
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+    ctx.lineWidth = 0.35;
+    ctx.strokeRect(0, 0, W, H);
+    ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H); ctx.stroke();
+    ctx.beginPath(); ctx.arc(W / 2, H / 2, 9.15, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(W / 2, H / 2, 0.5, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.fill();
+    ctx.strokeRect(0, (H - 40.3) / 2, 16.5, 40.3);
+    ctx.strokeRect(W - 16.5, (H - 40.3) / 2, 16.5, 40.3);
+    ctx.strokeRect(0, (H - 18.3) / 2, 5.5, 18.3);
+    ctx.strokeRect(W - 5.5, (H - 18.3) / 2, 5.5, 18.3);
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.fillRect(-2.4, (H - 7.32) / 2, 2.4, 7.32);
+    ctx.fillRect(W, (H - 7.32) / 2, 2.4, 7.32);
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+    ctx.strokeRect(-2.4, (H - 7.32) / 2, 2.4, 7.32);
+    ctx.strokeRect(W, (H - 7.32) / 2, 2.4, 7.32);
+  };
+
+  PitchView.prototype.draw = function (t) {
+    var ctx = this.ctx, k = this.dpr * this.scale;
+    ctx.setTransform(k, 0, 0, k, PAD * k, PAD * k);
+    this.drawPitch(ctx);
+    if (!this.match) return;
+
+    var ball = this.ballAt(t);
+    var sides = ['home', 'away'], si, i;
+    var gkColors = { home: '#f4d03f', away: '#58d68d' };
+    for (si = 0; si < 2; si++) {
+      var name = sides[si], pos = this.positions(name, ball, t), color = this.match[name].color;
+      for (i = 0; i < pos.length; i++) {
+        var p = pos[i], isGk = p.slot.pos === 'GK';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.9, 0, Math.PI * 2);
+        ctx.fillStyle = isGk ? gkColors[name] : color;
+        ctx.fill();
+        ctx.lineWidth = 0.3;
+        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+        ctx.stroke();
+        ctx.fillStyle = isGk ? '#222' : '#fff';
+        ctx.font = 'bold 2.3px system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(String(i === 0 ? 1 : i + 1), p.x, p.y + 0.1);
+        if (this.showNames) {
+          var nm = String(p.slot.player.name || '').split(' ').pop();
+          ctx.font = '1.7px system-ui, sans-serif';
+          ctx.fillStyle = 'rgba(255,255,255,0.92)';
+          ctx.fillText(nm, p.x, p.y + 3);
+        }
+      }
+    }
+
+    ctx.beginPath();
+    ctx.arc(ball.x + 0.3, ball.y + 0.4, 0.95, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, 0.95, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    ctx.lineWidth = 0.15;
+    ctx.strokeStyle = '#222';
+    ctx.stroke();
+
+    if (this.flash && Date.now() < this.flash.until) {
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      ctx.fillRect(W / 2 - 30, H / 2 - 7, 60, 14);
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = 'bold 5px system-ui, sans-serif';
+      ctx.fillText('GOAL!', W / 2, H / 2 - 2);
+      ctx.font = '3px system-ui, sans-serif';
+      ctx.fillText(this.flash.text, W / 2, H / 2 + 3.5);
+    }
+  };
+
+  root.PitchView = PitchView;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* ส่วนหน้าจอและการควบคุมเกม */
+(function () {
+  'use strict';
+
+  var E = window.FMEngine, PitchView = window.PitchView;
+  var STORE_KEY = 'fm_data_v1';
+  var BASE_MIN_PER_SEC = 6;   /* 1x: 6 นาทีเกมต่อ 1 วินาที */
+  var SLOW_FACTOR = 0.15;     /* นาทีที่มีจังหวะยิงเล่นช้าลง */
+
+  var state = { clubs: [], players: [], match: null, view: null, t: 0, speed: 1, playing: false, lastTs: 0, shown: 0, score: { home: 0, away: 0 } };
+  function $(id) { return document.getElementById(id); }
+
+  function clubColor(club, avoidHue) {
+    var h = 0, s = club.name + club.short_name;
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360;
+    if (avoidHue != null) {
+      var d = Math.abs(h - avoidHue); d = Math.min(d, 360 - d);
+      if (d < 50) h = (h + 140) % 360;
+    }
+    return { hue: h, css: 'hsl(' + h + ',68%,42%)' };
+  }
+
+  /* รูปจากโฟลเดอร์ในเครื่อง ถ้าไม่มีไฟล์จะแสดงตัวย่อ/สีแทน */
+  function imgOrFallback(src, fallbackText, bg, cls) {
+    var wrap = document.createElement('span');
+    wrap.className = 'avatar ' + (cls || '');
+    wrap.style.background = bg;
+    wrap.textContent = fallbackText;
+    var img = new Image();
+    img.onload = function () { wrap.textContent = ''; wrap.style.background = 'transparent'; wrap.appendChild(img); };
+    img.src = src;
+    return wrap;
+  }
+
+  /* ---------- ข้อมูล ---------- */
+  function validData(players, clubs) {
+    return Array.isArray(players) && Array.isArray(clubs) && players.length > 0 && clubs.length >= 2 &&
+      players[0].club_id !== undefined && players[0].rating !== undefined && clubs[0].short_name !== undefined;
+  }
+
+  function setData(players, clubs, label) {
+    state.players = players;
+    state.clubs = clubs.slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
+    ['homeSel', 'awaySel'].forEach(function (id, idx) {
+      var sel = $(id);
+      sel.innerHTML = '';
+      state.clubs.forEach(function (c) {
+        var o = document.createElement('option');
+        o.value = c.id; o.textContent = c.name;
+        sel.appendChild(o);
+      });
+      sel.selectedIndex = Math.min(idx, state.clubs.length - 1);
+    });
+    $('dataStatus').textContent = label + ' · ' + clubs.length + ' ทีม · ' + players.length + ' นักเตะ';
+    updateBadges();
+    dataListeners.forEach(function (cb) { cb(); });
+  }
+
+  function loadFromFiles(files) {
+    var jobs = Array.prototype.map.call(files, function (f) {
+      return f.text().then(function (t) { return JSON.parse(t); });
+    });
+    Promise.all(jobs).then(function (parts) {
+      var players = null, clubs = null;
+      parts.forEach(function (p) {
+        if (!Array.isArray(p) || !p.length) return;
+        if (p[0].club_id !== undefined) players = p;
+        else if (p[0].short_name !== undefined) clubs = p;
+      });
+      if (!validData(players, clubs)) { $('dataStatus').textContent = 'ไฟล์ไม่ถูกต้อง: ต้องเลือก players.json และ clubs.json พร้อมกัน'; return; }
+      setData(players, clubs, 'ข้อมูลจากไฟล์ของคุณ');
+      try { localStorage.setItem(STORE_KEY, JSON.stringify({ players: players, clubs: clubs })); } catch (e) { /* ไม่เป็นไร */ }
+    }).catch(function () { $('dataStatus').textContent = 'อ่านไฟล์ไม่สำเร็จ'; });
+  }
+
+  function initData() {
+    var sample = E.makeSampleData();
+    setData(sample.players, sample.clubs, 'ข้อมูลตัวอย่าง (สมมติ)');
+    var stored = null;
+    try { stored = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) { stored = null; }
+    if (stored && validData(stored.players, stored.clubs)) setData(stored.players, stored.clubs, 'ข้อมูลที่เคยโหลดไว้');
+    Promise.all([fetch('data/players.json'), fetch('data/clubs.json')]).then(function (rs) {
+      if (!rs[0].ok || !rs[1].ok) throw new Error('no data');
+      return Promise.all([rs[0].json(), rs[1].json()]);
+    }).then(function (d) {
+      if (validData(d[0], d[1])) setData(d[0], d[1], 'ข้อมูลจากโฟลเดอร์ data');
+    }).catch(function () { /* ไม่มีโฟลเดอร์ data ก็ใช้ที่มีอยู่ */ });
+  }
+
+  /* ---------- หน้าจอ ---------- */
+  function clubById(id) { return state.clubs.filter(function (c) { return String(c.id) === String(id); })[0]; }
+
+  function setBadge(el, club) {
+    el.innerHTML = '';
+    if (!club) return;
+    var col = clubColor(club).css;
+    el.appendChild(imgOrFallback('assets/clubs/' + club.short_name + '.png', club.short_name, col, 'badge'));
+  }
+
+  function updateBadges(homeClub, awayClub) {
+    var h = homeClub || clubById($('homeSel').value), a = awayClub || clubById($('awaySel').value);
+    setBadge($('badgeHome'), h); setBadge($('badgeAway'), a);
+    $('nameHome').textContent = h ? h.name : '';
+    $('nameAway').textContent = a ? a.name : '';
+  }
+
+  function renderLineups() {
+    var m = state.match;
+    [['home', 'lineHome'], ['away', 'lineAway']].forEach(function (pair) {
+      var side = m[pair[0]], el = $(pair[1]);
+      el.innerHTML = '<h3>' + side.club.name + ' (' + side.formation + ')</h3>';
+      side.xi.forEach(function (s) {
+        var p = s.player, row = document.createElement('div');
+        row.className = 'prow';
+        row.appendChild(imgOrFallback('assets/players/' + p.id + '.png', String(p.name).slice(0, 2).toUpperCase(), side.color, 'face'));
+        var info = document.createElement('span');
+        info.className = 'pinfo';
+        info.textContent = p.name;
+        var meta = document.createElement('span');
+        meta.className = 'pmeta';
+        meta.textContent = s.pos + ' · ' + p.rating;
+        row.appendChild(info); row.appendChild(meta);
+        el.appendChild(row);
+      });
+    });
+  }
+
+  function addLog(text, cls) {
+    var li = document.createElement('li');
+    li.textContent = text;
+    if (cls) li.className = cls;
+    var log = $('log');
+    log.insertBefore(li, log.firstChild);
+  }
+
+  function describe(e) {
+    var m = state.match, team = m[e.side].club.name, opp = m[e.side === 'home' ? 'away' : 'home'].club.name;
+    switch (e.type) {
+      case 'goal': return ['⚽ ' + e.minute + "' ประตู! " + e.player.name + ' (' + team + ')' + (e.assist ? ' จ่ายโดย ' + e.assist.name : ''), 'goal'];
+      case 'save': return ['🧤 ' + e.minute + "' " + e.gk.name + ' (' + opp + ') เซฟลูกยิงของ ' + e.player.name, ''];
+      case 'miss': return ['💨 ' + e.minute + "' " + e.player.name + ' (' + team + ') ยิงไม่เข้ากรอบ', ''];
+      case 'yellow': return ['🟨 ' + e.minute + "' " + e.player.name + ' (' + team + ') โดนใบเหลือง', ''];
+    }
+    return ['', ''];
+  }
+
+  function updateScore() {
+    $('sbScore').textContent = state.score.home + ' - ' + state.score.away;
+  }
+  function updateClock() {
+    var res = state.match.result, minute = Math.min(res.total, Math.floor(state.t) + 1);
+    $('sbMin').textContent = state.t >= res.total ? 'จบเกม' : (minute > 90 ? '90+' + (minute - 90) : minute) + "'";
+  }
+
+  function processEvents() {
+    var res = state.match.result;
+    while (state.shown < res.events.length && res.events[state.shown].reveal <= state.t) {
+      var e = res.events[state.shown++], d = describe(e);
+      addLog(d[0], d[1]);
+      if (e.type === 'goal') {
+        state.score[e.side]++;
+        updateScore();
+        state.view.showGoal(e.player.name + ' (' + state.match[e.side].club.short_name + ') ' + e.minute + "'");
+      }
+    }
+  }
+
+  function showStats() {
+    var r = state.match.result, s = r.stats;
+    function row(label, a, b) { return '<tr><td>' + a + '</td><th>' + label + '</th><td>' + b + '</td></tr>'; }
+    $('stats').innerHTML = '<table>' +
+      row('ยิงทั้งหมด', s.home.shots, s.away.shots) +
+      row('ยิงตรงกรอบ', s.home.onTarget, s.away.onTarget) +
+      row('ครองบอล', r.possessionPct.home + '%', r.possessionPct.away + '%') +
+      row('ใบเหลือง', s.home.yellow, s.away.yellow) + '</table>';
+  }
+
+  function finish() {
+    state.playing = false;
+    state.score = { home: state.match.result.score.home, away: state.match.result.score.away };
+    updateScore(); updateClock(); showStats();
+    $('startBtn').textContent = '▶ เล่นแมตช์ใหม่';
+    if (state.onFinish) {
+      var cb = state.onFinish;
+      state.onFinish = null;
+      cb(state.match.result);
+    }
+  }
+
+  function loop(ts) {
+    if (!state.playing) return;
+    var res = state.match.result;
+    var dt = state.lastTs ? Math.min(0.1, (ts - state.lastTs) / 1000) : 0;
+    state.lastTs = ts;
+    var m = Math.min(res.total, Math.floor(state.t) + 1);
+    var inAttack = state.view.keys[m] && state.view.keys[m].ev;
+    var rate = BASE_MIN_PER_SEC * state.speed * (inAttack ? SLOW_FACTOR : 1);
+    state.t = Math.min(res.total, state.t + dt * rate);
+    processEvents();
+    state.view.draw(state.t);
+    updateClock();
+    if (state.t >= res.total) { finish(); state.view.draw(res.total); return; }
+    requestAnimationFrame(loop);
+  }
+
+  function startMatch(skip) {
+    var hid = $('homeSel').value, aid = $('awaySel').value;
+    if (hid === aid) { $('dataStatus').textContent = 'เลือกสองทีมที่ต่างกัน'; return; }
+    runMatch(hid, aid, $('homeForm').value, $('awayForm').value, { skip: skip });
+  }
+
+  /* เล่นแมตช์ระหว่างสองสโมสร: opts = { skip, players (ถ้าไม่ใส่ใช้ข้อมูลหลัก), onFinish(result) } */
+  function runMatch(hid, aid, hf, af, opts) {
+    opts = opts || {};
+    var skip = opts.skip, pool = opts.players || state.players;
+    state.onFinish = opts.onFinish || null;
+    var hc = clubById(hid), ac = clubById(aid);
+    var hp = pool.filter(function (p) { return String(p.club_id) === String(hid); });
+    var ap = pool.filter(function (p) { return String(p.club_id) === String(aid); });
+    var hxi = E.pickLineup(hp, hf), axi = E.pickLineup(ap, af);
+    var res = E.simulate(hxi, axi, {});
+    var hcol = clubColor(hc), acol = clubColor(ac, hcol.hue);
+
+    state.match = { home: { xi: hxi, club: hc, color: hcol.css, formation: hf }, away: { xi: axi, club: ac, color: acol.css, formation: af }, result: res };
+    if (!state.view) state.view = new PitchView($('pitch'));
+    state.view.resize();
+    state.view.setMatch(state.match);
+    state.t = 0; state.shown = 0; state.score = { home: 0, away: 0 }; state.lastTs = 0;
+    $('log').innerHTML = ''; $('stats').innerHTML = '';
+    updateScore(); updateBadges(hc, ac); renderLineups();
+    if (skip) {
+      state.t = res.total;
+      processEvents();
+      state.view.draw(res.total);
+      finish();
+      return;
+    }
+    state.playing = true;
+    $('startBtn').textContent = '⏸ กำลังแข่ง...';
+    try { $('pitch').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { /* ไม่เป็นไร */ }
+    requestAnimationFrame(loop);
+  }
+
+  function init() {
+    Object.keys(E.FORMATIONS).forEach(function (f) {
+      ['homeForm', 'awayForm'].forEach(function (id) {
+        var o = document.createElement('option'); o.value = f; o.textContent = f; $(id).appendChild(o);
+      });
+    });
+    initData();
+    $('homeSel').addEventListener('change', function () { updateBadges(); });
+    $('awaySel').addEventListener('change', function () { updateBadges(); });
+    $('startBtn').addEventListener('click', function () { if (!state.playing) startMatch(false); });
+    $('skipBtn').addEventListener('click', function () { state.playing = false; startMatch(true); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-speed]'), function (b) {
+      b.addEventListener('click', function () {
+        state.speed = +b.getAttribute('data-speed');
+        Array.prototype.forEach.call(document.querySelectorAll('[data-speed]'), function (x) { x.classList.toggle('on', x === b); });
+      });
+    });
+    $('fileInput').addEventListener('change', function (e) { if (e.target.files.length) loadFromFiles(e.target.files); });
+    $('clearBtn').addEventListener('click', function () {
+      try { localStorage.removeItem(STORE_KEY); } catch (e) { /* ไม่เป็นไร */ }
+      var s = E.makeSampleData(); setData(s.players, s.clubs, 'ข้อมูลตัวอย่าง (สมมติ)');
+    });
+    window.addEventListener('resize', function () {
+      if (state.view) { state.view.resize(); state.view.draw(state.t); }
+    });
+    state.view = new PitchView($('pitch'));
+    state.view.draw(0);
+  }
+
+  /* ให้โหมดอาชีพ (career_ui.js) เรียกใช้ */
+  var dataListeners = [];
+  window.FMApp = {
+    runMatch: runMatch,
+    imgOrFallback: imgOrFallback,
+    clubColor: clubColor,
+    getPlayers: function () { return state.players; },
+    getClubs: function () { return state.clubs; },
+    isPlaying: function () { return state.playing; },
+    onData: function (cb) { dataListeners.push(cb); }
+  };
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+
+</script>
+<script>
+/* หน้าจอโหมดอาชีพ: ตาราง ตลาดซื้อขาย ทีมของฉัน ผู้ทำประตู และเซฟ */
+(function () {
+  'use strict';
+
+  var S = window.FMSeason, App = window.FMApp, E = window.FMEngine;
+  var KEY = 'fm_career_v1';
+  var career = null, view = 'table', msg = null, marketPos = 'ALL', marketQ = '', confirmReset = false;
+
+  function $(id) { return document.getElementById(id); }
+  function h(tag, props, kids) {
+    var el = document.createElement(tag);
+    if (props) {
+      Object.keys(props).forEach(function (k) {
+        if (k === 'text') el.textContent = props[k];
+        else if (k === 'class') el.className = props[k];
+        else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), props[k]);
+        else el.setAttribute(k, props[k]);
+      });
+    }
+    (kids || []).forEach(function (c) {
+      if (c == null) return;
+      el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return el;
+  }
+
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(career)); } catch (e) { /* ไม่เป็นไร */ } }
+  function load() {
+    try {
+      var s = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (S.isValid(s)) career = s;
+    } catch (e) { career = null; }
+  }
+
+  function club(id) {
+    for (var i = 0; i < career.clubs.length; i++) if (career.clubs[i].id === id) return career.clubs[i];
+    return { name: '?', short_name: '?' };
+  }
+  function money(x) { return '£' + x + 'm'; }
+  function statusIcon(p) { return p.status === 'i' ? ' 🤕' : p.status === 's' ? ' 🚫' : p.status === 'd' ? ' ⚠️' : ''; }
+  function busy() { return App.isPlaying(); }
+
+  /* ---------- เริ่มอาชีพ / โหลดเซฟ ---------- */
+  function renderStart(body) {
+    var clubs = App.getClubs();
+    var sel = h('select', { id: 'careerClub', 'aria-label': 'เลือกสโมสรที่จะคุม' },
+      clubs.map(function (c) { return h('option', { value: c.id, text: c.name }); }));
+    body.appendChild(h('h3', { text: 'เริ่มโหมดอาชีพ ฤดูกาล 2026-27', style: 'margin:0 0 8px;font-size:15px' }));
+    body.appendChild(h('div', { class: 'status', text: 'เลือกสโมสรที่จะคุม ตลาดซื้อขายเปิดก่อนเริ่มฤดูกาลและช่วงกลางฤดูกาล' }));
+    body.appendChild(h('div', { class: 'row', style: 'margin-top:8px' }, [
+      sel,
+      h('button', { class: 'primary', text: '🏁 เริ่มอาชีพ', onclick: function () {
+        var id = isNaN(+sel.value) ? sel.value : +sel.value;
+        career = S.newCareer(App.getPlayers(), App.getClubs(), id, {});
+        view = 'table'; msg = null; confirmReset = false;
+        save(); render();
+      } })
+    ]));
+    body.appendChild(loadSaveButton());
+  }
+
+  function loadSaveButton() {
+    var input = h('input', { type: 'file', accept: '.json,application/json', style: 'display:none', onchange: function (e) {
+      var f = e.target.files[0];
+      if (!f) return;
+      f.text().then(function (t) {
+        var obj = JSON.parse(t);
+        if (!S.isValid(obj)) throw new Error('bad');
+        career = obj; view = 'table'; msg = { ok: true, msg: 'โหลดเซฟสำเร็จ' };
+        save(); render();
+      }).catch(function () { msg = { ok: false, msg: 'ไฟล์เซฟไม่ถูกต้อง' }; render(); });
+    } });
+    return h('div', { class: 'row', style: 'margin-top:8px' }, [h('label', { class: 'filebtn' }, ['📂 โหลดไฟล์เซฟ', input])]);
+  }
+
+  /* ---------- ส่วนหัว/ปุ่มเล่น ---------- */
+  function playNext(skip) {
+    var fx = S.userFixture(career);
+    if (!fx || busy()) return;
+    msg = null;
+    App.runMatch(fx.h, fx.a, S.formationFor(career, fx.h), S.formationFor(career, fx.a), {
+      skip: skip,
+      players: career.players,
+      onFinish: function (res) {
+        S.applyRound(career, { h: fx.h, a: fx.a, result: res });
+        save(); render();
+      }
+    });
+  }
+
+  function renderHeader(body) {
+    var total = career.fixtures.length, w = S.windowRange(career), open = S.windowOpen(career);
+    var fx = S.userFixture(career);
+    body.appendChild(h('div', { class: 'hdr' }, [
+      h('b', { text: club(career.userClubId).name }), ' · ฤดูกาล ' + career.season + ' · ผ่านมา ' + career.round + '/' + total + ' นัด',
+      h('br'), 'งบ ', h('b', { text: money(career.budget) }),
+      ' · ตลาด: ', h('b', { text: open ? 'เปิด' : 'ปิด' }),
+      open ? '' : ' (เปิดอีกครั้งหลังนัดที่ ' + w.from + ' ถึง ' + w.to + ')'
+    ]));
+
+    if (S.finished(career)) {
+      var st = S.standings(career), pos = 0;
+      st.forEach(function (r, i) { if (r.club.id === career.userClubId) pos = i + 1; });
+      body.appendChild(h('div', { class: 'msg', text: 'จบฤดูกาล! แชมป์: ' + st[0].club.name + ' (' + st[0].pts + ' แต้ม) · ทีมคุณอยู่อันดับ ' + pos }));
+    } else if (fx) {
+      var home = fx.h === career.userClubId;
+      body.appendChild(h('div', { style: 'margin:8px 0;font-weight:600', text: 'นัดต่อไป: ' + club(fx.h).name + ' vs ' + club(fx.a).name + (home ? ' (เหย้า)' : ' (เยือน)') }));
+      var form = h('select', { 'aria-label': 'แผนการเล่น', onchange: function (e) { career.formation = e.target.value; save(); } },
+        Object.keys(E.FORMATIONS).map(function (f) {
+          var o = h('option', { value: f, text: f });
+          if (f === career.formation) o.selected = true;
+          return o;
+        }));
+      var dis = busy() ? { disabled: 'disabled' } : {};
+      body.appendChild(h('div', { class: 'row' }, [
+        form,
+        h('button', Object.assign({ class: 'primary', text: '▶ เล่นนัดต่อไป (2D)', onclick: function () { playNext(false); } }, dis)),
+        h('button', Object.assign({ text: '⏭ จำลองเลย', onclick: function () { playNext(true); } }, dis))
+      ]));
+    }
+
+    if (career.lastResults && career.lastResults.length) {
+      var box = h('div', { class: 'results' });
+      career.lastResults.forEach(function (r) {
+        var mine = r.h === career.userClubId || r.a === career.userClubId;
+        box.appendChild(h('div', { class: mine ? 'me' : '', text: club(r.h).short_name + ' ' + r.hg + '-' + r.ag + ' ' + club(r.a).short_name }));
+      });
+      body.appendChild(h('div', { class: 'status', text: 'ผลนัดที่ผ่านมา' }));
+      body.appendChild(box);
+    }
+    if (msg) body.appendChild(h('div', { class: 'msg' + (msg.ok ? '' : ' err'), text: msg.msg }));
+  }
+
+  function renderTabs(body) {
+    var tabs = [['table', 'ตาราง'], ['market', 'ตลาด'], ['squad', 'ทีมของฉัน'], ['scorers', 'ดาวซัลโวย'], ['save', 'เซฟ']];
+    tabs[3][1] = 'ดาวซัลโว';
+    body.appendChild(h('div', { class: 'subtabs' }, tabs.map(function (t) {
+      return h('button', { class: view === t[0] ? 'on' : '', text: t[1], onclick: function () { view = t[0]; confirmReset = false; render(); } });
+    })));
+  }
+
+  /* ---------- แต่ละหน้า ---------- */
+  function renderTable(body) {
+    var t = h('table', { class: 'lg' });
+    t.appendChild(h('tr', {}, ['#', 'ทีม', 'แข่ง', 'ชนะ', 'เสมอ', 'แพ้', 'ผลต่าง', 'แต้ม'].map(function (x) { return h('th', { text: x }); })));
+    S.standings(career).forEach(function (r, i) {
+      var tr = h('tr', { class: r.club.id === career.userClubId ? 'me' : '' }, [
+        i + 1, r.club.name, r.p, r.w, r.d, r.l, (r.gd > 0 ? '+' : '') + r.gd, h('b', { text: String(r.pts) })
+      ].map(function (v) { return h('td', {}, [typeof v === 'object' ? v : String(v)]); }));
+      t.appendChild(tr);
+    });
+    body.appendChild(t);
+  }
+
+  function playerRow(p, extra) {
+    var c = App.clubColor(club(p.club_id)).css;
+    return h('div', { class: 'mrow' }, [
+      App.imgOrFallback('assets/players/' + p.id + '.png', String(p.name).slice(0, 2).toUpperCase(), c, 'face'),
+      h('div', { class: 'pinfo' }, [
+        h('div', { text: p.name + statusIcon(p) }),
+        h('div', { class: 'pmeta', text: club(p.club_id).short_name + ' · ' + p.position + ' · ค่าพลัง ' + p.rating })
+      ])
+    ].concat(extra));
+  }
+
+  function renderMarket(body) {
+    var open = S.windowOpen(career);
+    body.appendChild(h('div', { class: 'status', text: open ? 'ตลาดเปิด: ราคาที่แสดงคือราคาที่สโมสรเจ้าของขอ' : 'ตลาดปิด ซื้อขายไม่ได้ในตอนนี้' }));
+    var posSel = h('select', { 'aria-label': 'ตำแหน่ง', onchange: function (e) { marketPos = e.target.value; fill(); } },
+      ['ALL', 'GK', 'DEF', 'MID', 'FWD'].map(function (x) {
+        var o = h('option', { value: x, text: x === 'ALL' ? 'ทุกตำแหน่ง' : x });
+        if (x === marketPos) o.selected = true;
+        return o;
+      }));
+    var q = h('input', { type: 'search', placeholder: 'ค้นหาชื่อนักเตะ', value: marketQ, oninput: function (e) { marketQ = e.target.value; fill(); } });
+    var list = h('div');
+    body.appendChild(h('div', { class: 'row', style: 'margin:8px 0' }, [posSel, q]));
+    body.appendChild(list);
+
+    function fill() {
+      list.innerHTML = '';
+      var needle = marketQ.trim().toLowerCase(), n = 0;
+      var cands = career.players.filter(function (p) {
+        return p.club_id !== career.userClubId && (marketPos === 'ALL' || p.position === marketPos) &&
+          (!needle || String(p.name).toLowerCase().indexOf(needle) >= 0 || String(p.second_name || '').toLowerCase().indexOf(needle) >= 0);
+      }).sort(function (a, b) { return b.rating - a.rating; });
+      cands.slice(0, 40).forEach(function (p) {
+        var ask = S.askPrice(p), dis = (!open || busy() || career.budget < ask) ? { disabled: 'disabled' } : {};
+        list.appendChild(playerRow(p, [
+          h('button', Object.assign({ text: 'ซื้อ ' + money(ask), onclick: function () {
+            msg = S.buy(career, p.id); save(); render();
+          } }, dis))
+        ]));
+        n++;
+      });
+      if (!n) list.appendChild(h('div', { class: 'status', text: 'ไม่พบนักเตะ' }));
+      else if (cands.length > 40) list.appendChild(h('div', { class: 'status', text: 'แสดง 40 อันดับแรก จากทั้งหมด ' + cands.length + ' คน ลองค้นหาหรือกรองตำแหน่ง' }));
+    }
+    fill();
+  }
+
+  function renderSquad(body) {
+    var open = S.windowOpen(career);
+    var order = { GK: 0, DEF: 1, MID: 2, FWD: 3 };
+    var mine = S.squadOf(career, career.userClubId).sort(function (a, b) {
+      return order[a.position] - order[b.position] || b.rating - a.rating;
+    });
+    body.appendChild(h('div', { class: 'status', text: 'นักเตะ ' + mine.length + ' คน (ขั้นต่ำ ' + S.SQUAD_MIN + ' สูงสุด ' + S.SQUAD_MAX + ')' }));
+    mine.forEach(function (p) {
+      var bid = S.bidPrice(p), dis = (!open || busy()) ? { disabled: 'disabled' } : {};
+      body.appendChild(playerRow(p, [
+        h('button', Object.assign({ text: 'ขาย ' + money(bid), onclick: function () {
+          msg = S.sell(career, p.id); save(); render();
+        } }, dis))
+      ]));
+    });
+  }
+
+  function renderScorers(body) {
+    var list = S.topScorers(career, 15);
+    if (!list.length) { body.appendChild(h('div', { class: 'status', text: 'ยังไม่มีประตู' })); return; }
+    var t = h('table', { class: 'lg' });
+    t.appendChild(h('tr', {}, ['#', 'นักเตะ', 'ทีม', 'ประตู', 'แอสซิสต์'].map(function (x) { return h('th', { text: x }); })));
+    list.forEach(function (r, i) {
+      t.appendChild(h('tr', {}, [i + 1, r.player.name, club(r.player.club_id).short_name, r.g, r.a].map(function (v) { return h('td', { text: String(v) }); })));
+    });
+    body.appendChild(t);
+  }
+
+  function download() {
+    var url = URL.createObjectURL(new Blob([JSON.stringify(career)], { type: 'application/json' }));
+    var a = document.createElement('a');
+    a.href = url; a.download = 'piithai-fm-career-' + career.season + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+  }
+
+  function renderSave(body) {
+    body.appendChild(h('div', { class: 'status', text: 'เกมบันทึกอัตโนมัติในเบราว์เซอร์นี้ทุกครั้งที่จบนัดหรือซื้อขายนักเตะ ถ้าจะย้ายไปเล่นต่ออีกเครื่อง ให้ดาวน์โหลดไฟล์เซฟแล้วโหลดในเครื่องนั้น' }));
+    body.appendChild(h('div', { class: 'row', style: 'margin-top:8px' }, [
+      h('button', { class: 'primary', text: '💾 ดาวน์โหลดไฟล์เซฟ', onclick: download })
+    ]));
+    body.appendChild(loadSaveButton());
+    body.appendChild(h('div', { class: 'row', style: 'margin-top:8px' }, [
+      h('button', { text: confirmReset ? 'กดอีกครั้งเพื่อยืนยัน: ลบอาชีพนี้' : '🗑 เริ่มอาชีพใหม่', onclick: function () {
+        if (!confirmReset) { confirmReset = true; render(); return; }
+        career = null; confirmReset = false; msg = null;
+        try { localStorage.removeItem(KEY); } catch (e) { /* ไม่เป็นไร */ }
+        render();
+      } })
+    ]));
+  }
+
+  function render() {
+    var body = $('careerBody');
+    body.innerHTML = '';
+    if (!career) { renderStart(body); if (msg) body.appendChild(h('div', { class: 'msg err', text: msg.msg })); return; }
+    renderHeader(body);
+    renderTabs(body);
+    var v = { table: renderTable, market: renderMarket, squad: renderSquad, scorers: renderScorers, save: renderSave }[view];
+    v(body);
+  }
+
+  function setMode(career_) {
+    $('singleCard').style.display = career_ ? 'none' : '';
+    $('careerCard').style.display = career_ ? '' : 'none';
+    $('tabSingle').classList.toggle('on', !career_);
+    $('tabCareer').classList.toggle('on', career_);
+    if (career_) render();
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    load();
+    $('tabSingle').addEventListener('click', function () { setMode(false); });
+    $('tabCareer').addEventListener('click', function () { setMode(true); });
+    /* ข้อมูลหลักเปลี่ยน (โหลดไฟล์ใหม่) ตอนยังไม่มีอาชีพ ให้รายชื่อทีมในหน้าเริ่มอัปเดต */
+    App.onData(function () { if (!career && $('careerCard').style.display !== 'none') render(); });
+  });
+})();
+
+</script>
+<script>
+/* PWA: ลงทะเบียน service worker และแสดงคำแนะนำติดตั้งบน iPhone/iPad */
+(function () {
+  'use strict';
+
+  var HINT_KEY = 'fm_install_hint_dismissed';
+
+  function isStandalone() {
+    return window.navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  }
+  function isIOS() {
+    return /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); /* iPadOS ที่ขอเว็บแบบเดสก์ท็อป */
+  }
+
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () { /* ใช้งานต่อได้แม้ลงทะเบียนไม่สำเร็จ */ });
+    });
+  }
+
+  /* ขอให้เบราว์เซอร์เก็บเซฟเกมไว้ไม่ให้ถูกล้างเอง (ถ้าทำได้) */
+  if (isStandalone() && navigator.storage && navigator.storage.persist) {
+    try { navigator.storage.persist(); } catch (e) { /* ไม่เป็นไร */ }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var box = document.getElementById('installHint');
+    if (!box || isStandalone() || !isIOS()) return;
+    try { if (localStorage.getItem(HINT_KEY)) return; } catch (e) { /* แสดงต่อไป */ }
+    box.style.display = '';
+    document.getElementById('installHintClose').addEventListener('click', function () {
+      box.style.display = 'none';
+      try { localStorage.setItem(HINT_KEY, '1'); } catch (e) { /* ไม่เป็นไร */ }
+    });
+  });
+})();
+
+</script>
+</body>
+</html>
